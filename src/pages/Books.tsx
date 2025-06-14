@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Book, RotateCcw, Plus, Minus, ScrollText, Heart } from "lucide-react";
+import { Book, RotateCcw, Plus, Minus, ScrollText, Heart, Search, BarChart3, Bell } from "lucide-react";
 import BottomTabBar from "@/components/BottomTabBar";
 import DuasSection from "@/components/DuasSection";
 import HadithSection from "@/components/HadithSection";
@@ -13,14 +13,18 @@ import { useToast } from "@/hooks/use-toast";
 import DailyProgress from "@/components/DailyProgress";
 import ReadingMode from "@/components/ReadingMode";
 import QuickAccessWidget from "@/components/QuickAccessWidget";
+import UniversalSearch from "@/components/UniversalSearch";
+import ProgressAnalytics from "@/components/ProgressAnalytics";
+import DailyReminders from "@/components/DailyReminders";
 
 const Books = () => {
   const [dhikrCount, setDhikrCount] = useState(0);
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<'quran' | 'hadith' | 'duas' | 'adhkar' | 'dhikr' | 'bookmarks'>('quran');
+  const [activeTab, setActiveTab] = useState<'quran' | 'hadith' | 'duas' | 'adhkar' | 'dhikr' | 'bookmarks' | 'analytics' | 'reminders'>('quran');
   const [isLoading, setIsLoading] = useState(false);
   const [readingSurahs, setReadingSurahs] = useState<Set<number>>(new Set());
   const [readingModeContent, setReadingModeContent] = useState<any>(null);
+  const [showUniversalSearch, setShowUniversalSearch] = useState(false);
   const { toast } = useToast();
 
   // Popular Surahs for quick access
@@ -47,6 +51,8 @@ const Books = () => {
     { key: 'adhkar', label: 'Adhkar', icon: Book },
     { key: 'dhikr', label: 'Dhikr', icon: RotateCcw },
     { key: 'bookmarks', label: 'Saved', icon: Heart },
+    { key: 'analytics', label: 'Progress', icon: BarChart3 },
+    { key: 'reminders', label: 'Reminders', icon: Bell },
   ];
 
   const addToBookmarks = (item: any, type: 'surah' | 'dua' | 'hadith') => {
@@ -82,16 +88,14 @@ const Books = () => {
     setReadingSurahs(prev => new Set([...prev, surah.number]));
     
     try {
-      // Simulate loading/opening surah
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Open in reading mode with sample content
       setReadingModeContent({
         title: `Surah ${surah.name}`,
         arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
         transliteration: "Bismillahir-Rahmanir-Raheem",
         translation: "In the name of Allah, the Most Gracious, the Most Merciful.",
-        audioUrl: undefined // Add actual audio URL when available
+        audioUrl: undefined
       });
       
       toast({
@@ -113,13 +117,48 @@ const Books = () => {
     setActiveTab(section as any);
   };
 
+  const handleSearchResult = (result: any) => {
+    setShowUniversalSearch(false);
+    
+    switch (result.type) {
+      case 'surah':
+        setActiveTab('quran');
+        break;
+      case 'dua':
+        setActiveTab('duas');
+        break;
+      case 'hadith':
+        setActiveTab('hadith');
+        break;
+      case 'dhikr':
+        setActiveTab('dhikr');
+        break;
+    }
+    
+    toast({
+      title: "Found Result",
+      description: `Navigated to ${result.title}`,
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background pb-20">
       <div className="flex-1 px-4 py-6">
         <div className="max-w-4xl mx-auto space-y-6">
-          <h1 className="text-3xl font-bold text-center mb-8">Islamic Books</h1>
+          {/* Header with Search */}
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold">Islamic Books</h1>
+            <Button
+              variant="outline"
+              onClick={() => setShowUniversalSearch(true)}
+              className="flex items-center gap-2"
+            >
+              <Search className="w-4 h-4" />
+              Search All
+            </Button>
+          </div>
           
-          {/* Daily Progress - Show at top */}
+          {/* Daily Progress - Show at top for Quran */}
           {activeTab === 'quran' && <DailyProgress />}
           
           {/* Tab Navigation */}
@@ -233,6 +272,10 @@ const Books = () => {
           {activeTab === 'dhikr' && <DhikrCounter />}
 
           {activeTab === 'bookmarks' && <BookmarkManager />}
+
+          {activeTab === 'analytics' && <ProgressAnalytics />}
+
+          {activeTab === 'reminders' && <DailyReminders />}
         </div>
       </div>
       
@@ -243,6 +286,13 @@ const Books = () => {
           onClose={() => setReadingModeContent(null)}
         />
       )}
+      
+      {/* Universal Search Modal */}
+      <UniversalSearch
+        isOpen={showUniversalSearch}
+        onClose={() => setShowUniversalSearch(false)}
+        onResult={handleSearchResult}
+      />
       
       {/* Quick Access Widget */}
       <QuickAccessWidget
