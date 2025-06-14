@@ -34,6 +34,9 @@ import IslamicDreamJournal from '@/components/IslamicDreamJournal';
 import CharityImpactTracker from '@/components/CharityImpactTracker';
 import IslamicHabitBuilder from '@/components/IslamicHabitBuilder';
 import VirtualMosqueFinder from '@/components/VirtualMosqueFinder';
+import SpiritualHabitStreaks from '@/components/SpiritualHabitStreaks';
+import IslamicNameMeanings from '@/components/IslamicNameMeanings';
+import FastingTracker from '@/components/FastingTracker';
 
 interface TabContentProps {
   activeTab: string;
@@ -75,6 +78,7 @@ const TabContent: React.FC<TabContentProps> = ({
             <QuranicWordLearning />
             <CharityImpactTracker />
           </div>
+          <SpiritualHabitStreaks />
         </div>
       );
     case 'habits':
@@ -82,6 +86,8 @@ const TabContent: React.FC<TabContentProps> = ({
         <div className="space-y-6">
           <HabitTracker />
           <IslamicHabitBuilder />
+          <SpiritualHabitStreaks />
+          <FastingTracker />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <DailyVerseReflection />
             <PrayerTimeTracker />
@@ -101,6 +107,7 @@ const TabContent: React.FC<TabContentProps> = ({
       return (
         <div className="space-y-6">
           <ContentDiscovery />
+          <IslamicNameMeanings />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <QiblaCompass />
             <VirtualMosqueFinder />
