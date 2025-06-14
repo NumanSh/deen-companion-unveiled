@@ -1,11 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Navigation, MapPin } from 'lucide-react';
-
-interface QiblaCompassProps {
-  userLocation: { lat: number; lon: number } | null;
-}
+import { Navigation, MapPin, Star } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 // Mecca coordinates
 const MECCA_LAT = 21.4225;
@@ -59,8 +56,35 @@ function useDeviceOrientation() {
   return { orientation, isSupported };
 }
 
-const QiblaCompass: React.FC<QiblaCompassProps> = ({ userLocation }) => {
+function useUserLocation() {
+  const [location, setLocation] = useState<{ lat: number; lon: number } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setError("Geolocation not supported");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocation({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+      },
+      () => {
+        // fallback: fetch IP-based location
+        fetch("https://ipapi.co/json/")
+          .then(res => res.json())
+          .then(data => setLocation({ lat: data.latitude, lon: data.longitude }))
+          .catch(() => setError("Could not detect location"));
+      }
+    );
+  }, []);
+
+  return { location, error };
+}
+
+const QiblaCompass: React.FC = () => {
   const { orientation, isSupported } = useDeviceOrientation();
+  const { location: userLocation, error } = useUserLocation();
   const [qiblaDirection, setQiblaDirection] = useState<number>(0);
 
   useEffect(() => {
@@ -72,18 +96,23 @@ const QiblaCompass: React.FC<QiblaCompassProps> = ({ userLocation }) => {
 
   if (!userLocation) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Navigation className="w-5 h-5" />
-            Qibla Direction
+      <Card className="relative backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 border-emerald-200 dark:border-emerald-800 shadow-xl">
+        <CardHeader className="bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950 dark:to-blue-950 border-b border-emerald-100 dark:border-emerald-800">
+          <CardTitle className="flex items-center gap-3 text-2xl">
+            <div className="relative">
+              <Navigation className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
+              <Star className="w-3 h-3 text-amber-500 absolute -top-1 -right-1" />
+            </div>
+            <span className="bg-gradient-to-r from-emerald-700 to-blue-700 dark:from-emerald-400 dark:to-blue-400 bg-clip-text text-transparent font-bold">
+              Qibla Direction
+            </span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <div className="text-center py-8">
             <MapPin className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
             <p className="text-muted-foreground">
-              Location access needed to show Qibla direction
+              {error ? error : "Loading location..."}
             </p>
           </div>
         </CardContent>
@@ -95,28 +124,33 @@ const QiblaCompass: React.FC<QiblaCompassProps> = ({ userLocation }) => {
   const arrowRotation = isSupported ? qiblaDirection - orientation : qiblaDirection;
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="relative backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 border-emerald-200 dark:border-emerald-800 shadow-xl">
+      <CardHeader className="bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950 dark:to-blue-950 border-b border-emerald-100 dark:border-emerald-800">
         <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Navigation className="w-5 h-5" />
-            Qibla Direction
+          <div className="flex items-center gap-3 text-2xl">
+            <div className="relative">
+              <Navigation className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
+              <Star className="w-3 h-3 text-amber-500 absolute -top-1 -right-1" />
+            </div>
+            <span className="bg-gradient-to-r from-emerald-700 to-blue-700 dark:from-emerald-400 dark:to-blue-400 bg-clip-text text-transparent font-bold">
+              Qibla Direction
+            </span>
           </div>
-          <div className="text-sm font-normal text-muted-foreground">
+          <div className="text-sm font-normal text-emerald-700 dark:text-emerald-300">
             {Math.round(qiblaDirection)}°
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-6">
         <div className="flex flex-col items-center space-y-4">
           {/* Compass Circle */}
-          <div className="relative w-48 h-48 rounded-full border-4 border-green-200 bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700">
+          <div className="relative w-48 h-48 rounded-full border-4 border-emerald-200 dark:border-emerald-700 bg-gradient-to-br from-emerald-50 to-blue-100 dark:from-emerald-900/20 dark:to-blue-900/20">
             {/* Cardinal directions */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="absolute -top-6 text-sm font-semibold text-green-800 dark:text-green-200">N</div>
-              <div className="absolute -right-6 text-sm font-semibold text-green-800 dark:text-green-200">E</div>
-              <div className="absolute -bottom-6 text-sm font-semibold text-green-800 dark:text-green-200">S</div>
-              <div className="absolute -left-6 text-sm font-semibold text-green-800 dark:text-green-200">W</div>
+              <div className="absolute -top-6 text-sm font-semibold text-emerald-800 dark:text-emerald-200">N</div>
+              <div className="absolute -right-6 text-sm font-semibold text-emerald-800 dark:text-emerald-200">E</div>
+              <div className="absolute -bottom-6 text-sm font-semibold text-emerald-800 dark:text-emerald-200">S</div>
+              <div className="absolute -left-6 text-sm font-semibold text-emerald-800 dark:text-emerald-200">W</div>
             </div>
             
             {/* Qibla Arrow */}
@@ -124,24 +158,24 @@ const QiblaCompass: React.FC<QiblaCompassProps> = ({ userLocation }) => {
               className="absolute inset-0 flex items-center justify-center transition-transform duration-300 ease-out"
               style={{ transform: `rotate(${arrowRotation}deg)` }}
             >
-              <div className="w-1 h-20 bg-green-600 dark:bg-green-400 rounded-full relative">
-                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-3 border-r-3 border-b-6 border-l-transparent border-r-transparent border-b-green-600 dark:border-b-green-400"></div>
+              <div className="w-1 h-20 bg-emerald-600 dark:bg-emerald-400 rounded-full relative">
+                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-3 border-r-3 border-b-6 border-l-transparent border-r-transparent border-b-emerald-600 dark:border-b-emerald-400"></div>
               </div>
             </div>
             
             {/* Center dot */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-3 h-3 bg-green-600 dark:bg-green-400 rounded-full"></div>
+              <div className="w-3 h-3 bg-emerald-600 dark:bg-emerald-400 rounded-full"></div>
             </div>
           </div>
 
           {/* Information */}
           <div className="text-center space-y-2">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-emerald-700 dark:text-emerald-300 font-medium">
               {isSupported ? 'Point your device towards the arrow' : 'Arrow points towards Mecca'}
             </p>
             {!isSupported && (
-              <p className="text-xs text-orange-600 dark:text-orange-400">
+              <p className="text-xs text-amber-600 dark:text-amber-400">
                 Device orientation not supported. Compass shows fixed direction.
               </p>
             )}
