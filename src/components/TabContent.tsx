@@ -1,78 +1,18 @@
 
 import React from 'react';
-import PersonalDashboard from '@/components/PersonalDashboard';
-import HabitTracker from '@/components/HabitTracker';
-import ContentDiscovery from '@/components/ContentDiscovery';
-import SurahGrid from '@/components/SurahGrid';
-import HadithSection from '@/components/HadithSection';
-import DuasSection from '@/components/DuasSection';
-import MorningEveningAdhkar from '@/components/MorningEveningAdhkar';
-import DhikrCounter from '@/components/DhikrCounter';
-import BookmarkManager from '@/components/BookmarkManager';
-import ProgressAnalytics from '@/components/ProgressAnalytics';
-import DailyReminders from '@/components/DailyReminders';
-import PrayerNotifications from '@/components/PrayerNotifications';
-import IslamicQuoteWidget from '@/components/IslamicQuoteWidget';
-import ReadingStreakCounter from '@/components/ReadingStreakCounter';
-import DailyIslamicGoals from '@/components/DailyIslamicGoals';
-import TasbihCounter from '@/components/TasbihCounter';
-import DailyVerseReflection from '@/components/DailyVerseReflection';
-import QiblaCompass from '@/components/QiblaCompass';
-import IslamicEventCountdown from '@/components/IslamicEventCountdown';
-import CommunityChallenge from '@/components/CommunityChallenge';
-import IslamicLearningPath from '@/components/IslamicLearningPath';
-import SpiritualMoodTracker from '@/components/SpiritualMoodTracker';
-import SadaqahTracker from '@/components/SadaqahTracker';
-import AsmaUlHusna from '@/components/AsmaUlHusna';
-import HijriCalendarWidget from '@/components/HijriCalendarWidget';
-import IslamicKnowledgeQuiz from '@/components/IslamicKnowledgeQuiz';
-import DuaCollectionsManager from '@/components/DuaCollectionsManager';
-import SpiritualJournal from '@/components/SpiritualJournal';
-import PrayerTimeTracker from '@/components/PrayerTimeTracker';
-import IslamicStoriesHub from '@/components/IslamicStoriesHub';
-import QuranicWordLearning from '@/components/QuranicWordLearning';
-import IslamicDreamJournal from '@/components/IslamicDreamJournal';
-import CharityImpactTracker from '@/components/CharityImpactTracker';
-import IslamicHabitBuilder from '@/components/IslamicHabitBuilder';
-import VirtualMosqueFinder from '@/components/VirtualMosqueFinder';
-import SpiritualHabitStreaks from '@/components/SpiritualHabitStreaks';
-import IslamicNameMeanings from '@/components/IslamicNameMeanings';
-import FastingTracker from '@/components/FastingTracker';
-import DailyIslamicChallenges from '@/components/DailyIslamicChallenges';
-import QuranMemorizationTracker from '@/components/QuranMemorizationTracker';
-import IslamicFinanceTracker from '@/components/IslamicFinanceTracker';
-import IslamicWeatherWidget from '@/components/IslamicWeatherWidget';
-import IslamicPrayerTimeAlerts from '@/components/IslamicPrayerTimeAlerts';
-import QuranicVerseOfDay from '@/components/QuranicVerseOfDay';
-import IslamicAudioLibrary from '@/components/IslamicAudioLibrary';
-import IslamicGoalsTracker from '@/components/IslamicGoalsTracker';
-import HijriDateConverter from '@/components/HijriDateConverter';
-import AIHadithCompanion from '@/components/AIHadithCompanion';
-import VirtualStudyCircle from '@/components/VirtualStudyCircle';
-import SmartPrayerWeatherIntegration from '@/components/SmartPrayerWeatherIntegration';
-import IslamicAchievementSystem from '@/components/IslamicAchievementSystem';
-import DigitalTafsirReader from '@/components/DigitalTafsirReader';
-import HadithSearchEngine from '@/components/HadithSearchEngine';
-import IslamicScholarQuotes from '@/components/IslamicScholarQuotes';
-import FiqhQASection from '@/components/FiqhQASection';
-import TafsirComparisonTool from '@/components/TafsirComparisonTool';
-import IslamicBookLibrary from '@/components/IslamicBookLibrary';
-import IslamicDateEventsTracker from '@/components/IslamicDateEventsTracker';
-import QuranVerseContextExplorer from '@/components/QuranVerseContextExplorer';
-import IslamicWisdomCollection from '@/components/IslamicWisdomCollection';
-import IslamicArticleLibrary from '@/components/IslamicArticleLibrary';
-// New components
-import IslamicPrayerTracker from '@/components/IslamicPrayerTracker';
-import DigitalMushafReader from '@/components/DigitalMushafReader';
-import IslamicFatwaDatabase from '@/components/IslamicFatwaDatabase';
-import SmartSalahReminder from '@/components/SmartSalahReminder';
-import IslamicCalendarEvents from '@/components/IslamicCalendarEvents';
-// New innovative components
-import QuranTranslationComparison from '@/components/QuranTranslationComparison';
-import IslamicHabitVisualization from '@/components/IslamicHabitVisualization';
-import PersonalizedContentEngine from '@/components/PersonalizedContentEngine';
-import VirtualIslamicStudyGroup from '@/components/VirtualIslamicStudyGroup';
-import IslamicMilestoneTracker from '@/components/IslamicMilestoneTracker';
+import DashboardTab from '@/components/tabs/DashboardTab';
+import HabitsTab from '@/components/tabs/HabitsTab';
+import DiscoverTab from '@/components/tabs/DiscoverTab';
+import QuranTab from '@/components/tabs/QuranTab';
+import {
+  HadithTab,
+  DuasTab,
+  AdhkarTab,
+  DhikrTab,
+  BookmarksTab,
+  AnalyticsTab,
+  RemindersTab
+} from '@/components/tabs/OtherTabs';
 
 interface TabContentProps {
   activeTab: string;
@@ -91,215 +31,36 @@ const TabContent: React.FC<TabContentProps> = ({
 }) => {
   switch (activeTab) {
     case 'dashboard':
-      return (
-        <div className="space-y-6">
-          <PersonalDashboard />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <IslamicQuoteWidget />
-            <QuranicVerseOfDay />
-          </div>
-          <SmartPrayerWeatherIntegration />
-          <IslamicPrayerTracker />
-          <PersonalizedContentEngine />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ReadingStreakCounter />
-            <DailyIslamicChallenges />
-          </div>
-          <IslamicAchievementSystem />
-          <IslamicMilestoneTracker />
-          <IslamicCalendarEvents />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <DailyIslamicGoals />
-            <IslamicGoalsTracker />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <PrayerTimeTracker />
-            <HijriDateConverter />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <IslamicEventCountdown />
-            <CommunityChallenge />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <SpiritualMoodTracker />
-            <HijriCalendarWidget />
-          </div>
-          <SpiritualHabitStreaks />
-        </div>
-      );
+      return <DashboardTab />;
     case 'habits':
-      return (
-        <div className="space-y-6">
-          <HabitTracker />
-          <IslamicPrayerTracker />
-          <IslamicHabitVisualization />
-          <IslamicAchievementSystem />
-          <IslamicMilestoneTracker />
-          <DailyIslamicChallenges />
-          <IslamicHabitBuilder />
-          <IslamicGoalsTracker />
-          <SpiritualHabitStreaks />
-          <FastingTracker />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <DailyVerseReflection />
-            <PrayerTimeTracker />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <SpiritualMoodTracker />
-            <SadaqahTracker />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <CommunityChallenge />
-            <SpiritualJournal />
-          </div>
-          <IslamicDreamJournal />
-        </div>
-      );
+      return <HabitsTab />;
     case 'discover':
-      return (
-        <div className="space-y-6">
-          <ContentDiscovery />
-          <PersonalizedContentEngine />
-          <VirtualIslamicStudyGroup />
-          <IslamicWisdomCollection />
-          <IslamicFatwaDatabase />
-          <HadithSearchEngine />
-          <IslamicScholarQuotes />
-          <FiqhQASection />
-          <TafsirComparisonTool />
-          <QuranVerseContextExplorer />
-          <IslamicBookLibrary />
-          <IslamicArticleLibrary />
-          <VirtualStudyCircle />
-          <IslamicAudioLibrary />
-          <AIHadithCompanion />
-          <IslamicNameMeanings />
-          <QuranMemorizationTracker />
-          <IslamicFinanceTracker />
-          <HijriDateConverter />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <QiblaCompass />
-            <VirtualMosqueFinder />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <IslamicLearningPath />
-            <IslamicKnowledgeQuiz />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <AsmaUlHusna />
-            <IslamicStoriesHub />
-          </div>
-          <IslamicEventCountdown />
-        </div>
-      );
+      return <DiscoverTab />;
     case 'quran':
       return (
-        <div className="space-y-6">
-          <QuranicVerseOfDay />
-          <DigitalMushafReader />
-          <QuranTranslationComparison />
-          <DigitalTafsirReader />
-          <TafsirComparisonTool />
-          <QuranVerseContextExplorer />
-          <SurahGrid
-            onAddToBookmarks={onAddToBookmarks}
-            onSurahRead={onSurahRead}
-            readingSurahs={readingSurahs}
-            isLoading={isLoading}
-          />
-          <QuranMemorizationTracker />
-          <QuranicWordLearning />
-          <DailyVerseReflection />
-          <AsmaUlHusna />
-        </div>
+        <QuranTab
+          onAddToBookmarks={onAddToBookmarks}
+          onSurahRead={onSurahRead}
+          readingSurahs={readingSurahs}
+          isLoading={isLoading}
+        />
       );
     case 'hadith':
-      return (
-        <div className="space-y-6">
-          <HadithSearchEngine />
-          <AIHadithCompanion />
-          <HadithSection />
-          <IslamicScholarQuotes />
-        </div>
-      );
+      return <HadithTab />;
     case 'duas':
-      return (
-        <div className="space-y-6">
-          <DuasSection />
-          <DuaCollectionsManager />
-        </div>
-      );
+      return <DuasTab />;
     case 'adhkar':
-      return <MorningEveningAdhkar />;
+      return <AdhkarTab />;
     case 'dhikr':
-      return (
-        <div className="space-y-6">
-          <DhikrCounter />
-          <TasbihCounter />
-          <AsmaUlHusna />
-        </div>
-      );
+      return <DhikrTab />;
     case 'bookmarks':
-      return <BookmarkManager />;
+      return <BookmarksTab />;
     case 'analytics':
-      return (
-        <div className="space-y-6">
-          <ProgressAnalytics />
-          <IslamicHabitVisualization />
-          <IslamicAchievementSystem />
-          <IslamicMilestoneTracker />
-          <IslamicFinanceTracker />
-          <IslamicGoalsTracker />
-          <PrayerTimeTracker />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <SpiritualMoodTracker />
-            <SadaqahTracker />
-          </div>
-        </div>
-      );
+      return <AnalyticsTab />;
     case 'reminders':
-      return (
-        <div className="space-y-6">
-          <DailyReminders />
-          <SmartSalahReminder />
-          <SmartPrayerWeatherIntegration />
-          <IslamicPrayerTimeAlerts />
-          <IslamicCalendarEvents />
-          <IslamicDateEventsTracker />
-        </div>
-      );
+      return <RemindersTab />;
     default:
-      return (
-        <div className="space-y-6">
-          <PersonalDashboard />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <IslamicQuoteWidget />
-            <QuranicVerseOfDay />
-          </div>
-          <SmartPrayerWeatherIntegration />
-          <IslamicPrayerTracker />
-          <PersonalizedContentEngine />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ReadingStreakCounter />
-            <DailyIslamicChallenges />
-          </div>
-          <IslamicAchievementSystem />
-          <IslamicMilestoneTracker />
-          <IslamicCalendarEvents />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <DailyIslamicGoals />
-            <IslamicGoalsTracker />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <IslamicEventCountdown />
-            <CommunityChallenge />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <SpiritualMoodTracker />
-            <HijriCalendarWidget />
-          </div>
-        </div>
-      );
+      return <DashboardTab />;
   }
 };
 
