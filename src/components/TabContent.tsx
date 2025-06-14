@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PersonalDashboard from '@/components/PersonalDashboard';
 import HabitTracker from '@/components/HabitTracker';
@@ -15,6 +14,11 @@ import PrayerNotifications from '@/components/PrayerNotifications';
 import IslamicQuoteWidget from '@/components/IslamicQuoteWidget';
 import ReadingStreakCounter from '@/components/ReadingStreakCounter';
 import DailyIslamicGoals from '@/components/DailyIslamicGoals';
+import TasbihCounter from '@/components/TasbihCounter';
+import DailyVerseReflection from '@/components/DailyVerseReflection';
+import QiblaCompass from '@/components/QiblaCompass';
+import IslamicEventCountdown from '@/components/IslamicEventCountdown';
+import CommunityChallenge from '@/components/CommunityChallenge';
 
 interface TabContentProps {
   activeTab: string;
@@ -44,20 +48,43 @@ const TabContent: React.FC<TabContentProps> = ({
             <DailyIslamicGoals />
             <PrayerNotifications />
           </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <IslamicEventCountdown />
+            <CommunityChallenge />
+          </div>
         </div>
       );
     case 'habits':
-      return <HabitTracker />;
+      return (
+        <div className="space-y-6">
+          <HabitTracker />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <DailyVerseReflection />
+            <CommunityChallenge />
+          </div>
+        </div>
+      );
     case 'discover':
-      return <ContentDiscovery />;
+      return (
+        <div className="space-y-6">
+          <ContentDiscovery />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <QiblaCompass />
+            <IslamicEventCountdown />
+          </div>
+        </div>
+      );
     case 'quran':
       return (
-        <SurahGrid
-          onAddToBookmarks={onAddToBookmarks}
-          onSurahRead={onSurahRead}
-          readingSurahs={readingSurahs}
-          isLoading={isLoading}
-        />
+        <div className="space-y-6">
+          <SurahGrid
+            onAddToBookmarks={onAddToBookmarks}
+            onSurahRead={onSurahRead}
+            readingSurahs={readingSurahs}
+            isLoading={isLoading}
+          />
+          <DailyVerseReflection />
+        </div>
       );
     case 'hadith':
       return <HadithSection />;
@@ -66,7 +93,12 @@ const TabContent: React.FC<TabContentProps> = ({
     case 'adhkar':
       return <MorningEveningAdhkar />;
     case 'dhikr':
-      return <DhikrCounter />;
+      return (
+        <div className="space-y-6">
+          <DhikrCounter />
+          <TasbihCounter />
+        </div>
+      );
     case 'bookmarks':
       return <BookmarkManager />;
     case 'analytics':
@@ -84,6 +116,10 @@ const TabContent: React.FC<TabContentProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <DailyIslamicGoals />
             <PrayerNotifications />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <IslamicEventCountdown />
+            <CommunityChallenge />
           </div>
         </div>
       );
