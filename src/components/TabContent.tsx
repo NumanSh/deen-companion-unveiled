@@ -11,6 +11,10 @@ import DhikrCounter from '@/components/DhikrCounter';
 import BookmarkManager from '@/components/BookmarkManager';
 import ProgressAnalytics from '@/components/ProgressAnalytics';
 import DailyReminders from '@/components/DailyReminders';
+import PrayerNotifications from '@/components/PrayerNotifications';
+import IslamicQuoteWidget from '@/components/IslamicQuoteWidget';
+import ReadingStreakCounter from '@/components/ReadingStreakCounter';
+import DailyIslamicGoals from '@/components/DailyIslamicGoals';
 
 interface TabContentProps {
   activeTab: string;
@@ -29,7 +33,19 @@ const TabContent: React.FC<TabContentProps> = ({
 }) => {
   switch (activeTab) {
     case 'dashboard':
-      return <PersonalDashboard />;
+      return (
+        <div className="space-y-6">
+          <PersonalDashboard />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <IslamicQuoteWidget />
+            <ReadingStreakCounter />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <DailyIslamicGoals />
+            <PrayerNotifications />
+          </div>
+        </div>
+      );
     case 'habits':
       return <HabitTracker />;
     case 'discover':
@@ -58,7 +74,19 @@ const TabContent: React.FC<TabContentProps> = ({
     case 'reminders':
       return <DailyReminders />;
     default:
-      return <PersonalDashboard />;
+      return (
+        <div className="space-y-6">
+          <PersonalDashboard />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <IslamicQuoteWidget />
+            <ReadingStreakCounter />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <DailyIslamicGoals />
+            <PrayerNotifications />
+          </div>
+        </div>
+      );
   }
 };
 
