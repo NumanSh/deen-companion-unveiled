@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import BottomTabBar from '@/components/BottomTabBar';
 import TabNavigation from '@/components/TabNavigation';
@@ -8,7 +7,7 @@ import { BookOpen, Heart, Search, Star } from 'lucide-react';
 
 const Books = () => {
   const [activeTab, setActiveTab] = useState('quran');
-  const [readingSurahs, setReadingSurahs] = useState<number[]>([]);
+  const [readingSurahs, setReadingSurahs] = useState<Set<number>>(new Set());
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -20,11 +19,15 @@ const Books = () => {
   };
 
   const handleSurahRead = (surahNumber: number) => {
-    setReadingSurahs(prev => 
-      prev.includes(surahNumber) 
-        ? prev.filter(id => id !== surahNumber)
-        : [...prev, surahNumber]
-    );
+    setReadingSurahs(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(surahNumber)) {
+        newSet.delete(surahNumber);
+      } else {
+        newSet.add(surahNumber);
+      }
+      return newSet;
+    });
   };
 
   return (
