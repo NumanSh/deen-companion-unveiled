@@ -21,10 +21,47 @@ interface SurahResponse {
   ayahs: VerseResponse[];
 }
 
-interface ApiResponse {
-  code: number;
-  status: string;
-  data: SurahResponse;
+// New API interfaces for quranapi.pages.dev
+interface QuranApiVerse {
+  id: number;
+  verse_key: string;
+  text_uthmani: string;
+  text_simple: string;
+  juz_number: number;
+  hizb_number: number;
+  rub_number: number;
+  page_number: number;
+  sajdah_number?: number;
+}
+
+interface QuranApiChapter {
+  id: number;
+  revelation_place: string;
+  revelation_order: number;
+  bismillah_pre: boolean;
+  name_simple: string;
+  name_complex: string;
+  name_arabic: string;
+  verses_count: number;
+  pages: number[];
+  translated_name: {
+    language_name: string;
+    name: string;
+  };
+}
+
+interface QuranApiResponse {
+  verses: QuranApiVerse[];
+  meta: {
+    total_count: number;
+    current_page: number;
+    next_page?: number;
+    total_pages: number;
+  };
+}
+
+interface QuranApiChapterResponse {
+  chapter: QuranApiChapter;
 }
 
 // Expanded fallback Quran data with complete surahs
@@ -163,14 +200,50 @@ const fallbackQuranData: { [key: number]: { arabic: SurahResponse; translation: 
   }
 };
 
+// Helper function to convert QuranAPI data to our format
+const convertQuranApiToSurahResponse = (
+  verses: QuranApiVerse[], 
+  chapterInfo: QuranApiChapter,
+  isTranslation: boolean = false
+): SurahResponse => {
+  return {
+    number: chapterInfo.id,
+    name: isTranslation ? chapterInfo.name_simple : chapterInfo.name_arabic,
+    englishName: chapterInfo.name_simple,
+    englishNameTranslation: chapterInfo.translated_name.name,
+    numberOfAyahs: chapterInfo.verses_count,
+    revelationType: chapterInfo.revelation_place === 'makkah' ? 'Meccan' : 'Medinan',
+    ayahs: verses.map((verse, index) => ({
+      number: verse.id,
+      text: isTranslation ? verse.text_simple : verse.text_uthmani,
+      numberInSurah: index + 1,
+      juz: verse.juz_number,
+      manzil: Math.ceil(verse.juz_number / 4),
+      page: verse.page_number,
+      ruku: verse.rub_number,
+      hizbQuarter: verse.hizb_number,
+      sajda: !!verse.sajdah_number
+    }))
+  };
+};
+
 export const fetchSurahWithAyahs = async (surahNumber: number): Promise<SurahResponse> => {
   try {
-    const response = await fetch(`https://alquran.cloud/api/v1/surah/${surahNumber}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    // First get chapter info
+    const chapterResponse = await fetch(`https://api.quranapi.pages.dev/api/chapters/${surahNumber}`);
+    if (!chapterResponse.ok) {
+      throw new Error(`HTTP error! status: ${chapterResponse.status}`);
     }
-    const data: ApiResponse = await response.json();
-    return data.data;
+    const chapterData: QuranApiChapterResponse = await chapterResponse.json();
+    
+    // Then get verses
+    const versesResponse = await fetch(`https://api.quranapi.pages.dev/api/verses/by_chapter/${surahNumber}?text_type=uthmani`);
+    if (!versesResponse.ok) {
+      throw new Error(`HTTP error! status: ${versesResponse.status}`);
+    }
+    const versesData: QuranApiResponse = await versesResponse.json();
+    
+    return convertQuranApiToSurahResponse(versesData.verses, chapterData.chapter);
   } catch (error) {
     console.error('Error fetching surah:', error);
     throw error;
@@ -178,7 +251,7 @@ export const fetchSurahWithAyahs = async (surahNumber: number): Promise<SurahRes
 };
 
 export const fetchSurahWithTranslation = async (surahNumber: number): Promise<{ arabic: SurahResponse; translation: SurahResponse }> => {
-  console.log(`Attempting to fetch surah ${surahNumber}...`);
+  console.log(`Attempting to fetch surah ${surahNumber} from new API...`);
   
   // Check fallback data first for better reliability
   if (fallbackQuranData[surahNumber]) {
@@ -187,28 +260,37 @@ export const fetchSurahWithTranslation = async (surahNumber: number): Promise<{ 
   }
   
   try {
-    const [arabicResponse, translationResponse] = await Promise.all([
-      fetch(`https://alquran.cloud/api/v1/surah/${surahNumber}`),
-      fetch(`https://alquran.cloud/api/v1/surah/${surahNumber}/en.asad`)
-    ]);
-
-    if (!arabicResponse.ok || !translationResponse.ok) {
-      throw new Error('Failed to fetch surah data');
+    // Get chapter info
+    const chapterResponse = await fetch(`https://api.quranapi.pages.dev/api/chapters/${surahNumber}`);
+    if (!chapterResponse.ok) {
+      throw new Error(`Failed to fetch chapter info: ${chapterResponse.status}`);
     }
+    const chapterData: QuranApiChapterResponse = await chapterResponse.json();
 
-    const [arabicData, translationData] = await Promise.all([
-      arabicResponse.json(),
-      translationResponse.json()
-    ]);
+    // Get Arabic verses
+    const arabicResponse = await fetch(`https://api.quranapi.pages.dev/api/verses/by_chapter/${surahNumber}?text_type=uthmani`);
+    if (!arabicResponse.ok) {
+      throw new Error(`Failed to fetch Arabic verses: ${arabicResponse.status}`);
+    }
+    const arabicData: QuranApiResponse = await arabicResponse.json();
+
+    // Get English translation (using Sahih International)
+    const translationResponse = await fetch(`https://api.quranapi.pages.dev/api/verses/by_chapter/${surahNumber}?translation=131`);
+    if (!translationResponse.ok) {
+      throw new Error(`Failed to fetch translation: ${translationResponse.status}`);
+    }
+    const translationData: QuranApiResponse = await translationResponse.json();
+
+    console.log(`Successfully fetched surah ${surahNumber} from new API`);
 
     return {
-      arabic: arabicData.data,
-      translation: translationData.data
+      arabic: convertQuranApiToSurahResponse(arabicData.verses, chapterData.chapter, false),
+      translation: convertQuranApiToSurahResponse(translationData.verses, chapterData.chapter, true)
     };
   } catch (error) {
-    console.error('Error fetching surah with translation:', error);
+    console.error('Error fetching surah with translation from new API:', error);
     
-    // Return enhanced mock data as fallback with actual verses for common surahs
+    // Return enhanced mock data as fallback
     const mockSurah: SurahResponse = {
       number: surahNumber,
       name: `سورة ${surahNumber}`,
