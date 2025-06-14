@@ -2,14 +2,16 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Book, Heart, ArrowLeft } from 'lucide-react';
+import { Book, Heart, ArrowLeft, Copy, Languages } from 'lucide-react';
 import LoadingSpinner from '@/components/ui/loading-spinner';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 
 interface Surah {
   number: number;
   name: string;
   meaning: string;
   verses?: string[];
+  translations?: string[];
 }
 
 interface SurahGridProps {
@@ -27,6 +29,8 @@ const SurahGrid: React.FC<SurahGridProps> = ({
 }) => {
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'reading'>('list');
+  const [showTranslation, setShowTranslation] = useState(true);
+  const { copyToClipboard } = useCopyToClipboard();
 
   const popularSurahs: Surah[] = [
     { 
@@ -41,6 +45,15 @@ const SurahGrid: React.FC<SurahGridProps> = ({
         "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",
         "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ",
         "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ"
+      ],
+      translations: [
+        "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
+        "All praise is due to Allah, Lord of the worlds -",
+        "The Entirely Merciful, the Especially Merciful,",
+        "Sovereign of the Day of Recompense.",
+        "It is You we worship and You we ask for help.",
+        "Guide us to the straight path -",
+        "The path of those upon whom You have bestowed favor, not of those who have evoked Your anger or of those who are astray."
       ]
     },
     { 
@@ -53,6 +66,13 @@ const SurahGrid: React.FC<SurahGridProps> = ({
         "اللَّهُ الصَّمَدُ",
         "لَمْ يَلِدْ وَلَمْ يُولَدْ",
         "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
+      ],
+      translations: [
+        "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
+        "Say, \"He is Allah, [who is] One,",
+        "Allah, the Eternal Refuge.",
+        "He neither begets nor is born,",
+        "Nor is there to Him any equivalent.\""
       ]
     },
     { 
@@ -66,6 +86,14 @@ const SurahGrid: React.FC<SurahGridProps> = ({
         "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ",
         "وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ",
         "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
+      ],
+      translations: [
+        "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
+        "Say, \"I seek refuge in the Lord of daybreak",
+        "From the evil of that which He created",
+        "And from the evil of darkness when it settles",
+        "And from the evil of the blowers in knots",
+        "And from the evil of an envier when he envies.\""
       ]
     },
     { 
@@ -80,6 +108,15 @@ const SurahGrid: React.FC<SurahGridProps> = ({
         "مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ",
         "الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ",
         "مِنَ الْجِنَّةِ وَالنَّاسِ"
+      ],
+      translations: [
+        "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
+        "Say, \"I seek refuge in the Lord of mankind,",
+        "The Sovereign of mankind.",
+        "The God of mankind,",
+        "From the evil of the retreating whisperer -",
+        "Who whispers [evil] into the breasts of mankind -",
+        "From among the jinn and mankind.\""
       ]
     },
     { number: 2, name: "Al-Baqarah", meaning: "The Cow" },
@@ -95,6 +132,27 @@ const SurahGrid: React.FC<SurahGridProps> = ({
       setViewMode('reading');
     } else {
       onSurahRead(surah);
+    }
+  };
+
+  const handleCopyVerse = (arabic: string, translation?: string) => {
+    const textToCopy = translation 
+      ? `${arabic}\n\n${translation}`
+      : arabic;
+    copyToClipboard(textToCopy, "Verse copied to clipboard");
+  };
+
+  const handleCopyFullSurah = (surah: Surah) => {
+    if (surah.verses) {
+      const fullText = surah.verses.map((verse, index) => {
+        const translation = surah.translations?.[index];
+        return translation ? `${verse}\n${translation}` : verse;
+      }).join('\n\n');
+      
+      copyToClipboard(
+        `Surah ${surah.name} (${surah.meaning})\n\n${fullText}`,
+        "Full Surah copied to clipboard"
+      );
     }
   };
 
@@ -120,14 +178,33 @@ const SurahGrid: React.FC<SurahGridProps> = ({
               <p className="text-sm text-amber-600">{surah.meaning}</p>
             </div>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onAddToBookmarks(surah, 'surah')}
-              className="text-amber-700 hover:text-amber-900"
-            >
-              <Heart className="w-5 h-5" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowTranslation(!showTranslation)}
+                className="text-amber-700 hover:text-amber-900"
+                title="Toggle Translation"
+              >
+                <Languages className="w-5 h-5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleCopyFullSurah(surah)}
+                className="text-amber-700 hover:text-amber-900"
+              >
+                <Copy className="w-5 h-5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onAddToBookmarks(surah, 'surah')}
+                className="text-amber-700 hover:text-amber-900"
+              >
+                <Heart className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
 
           {/* Decorative Border */}
@@ -145,21 +222,40 @@ const SurahGrid: React.FC<SurahGridProps> = ({
               </div>
 
               {/* Verses */}
-              <div className="space-y-6" dir="rtl">
+              <div className="space-y-6">
                 {surah.verses.map((verse, index) => (
-                  <div key={index} className="relative">
-                    <p className="text-right leading-loose text-2xl font-arabic text-gray-800 mb-3" 
-                       style={{ 
-                         fontFamily: 'Amiri, Scheherazade, Arabic Typesetting, serif',
-                         lineHeight: '2.2'
-                       }}>
-                      {verse}
-                      {index > 0 && (
-                        <span className="inline-block mx-2 bg-amber-200 text-amber-800 text-sm px-2 py-1 rounded-full border border-amber-300 shadow-sm">
-                          {index}
-                        </span>
-                      )}
-                    </p>
+                  <div key={index} className="relative group">
+                    {/* Arabic Text */}
+                    <div className="flex items-start justify-between mb-3" dir="rtl">
+                      <p className="text-right leading-loose text-2xl font-arabic text-gray-800 flex-1" 
+                         style={{ 
+                           fontFamily: 'Amiri, Scheherazade, Arabic Typesetting, serif',
+                           lineHeight: '2.2'
+                         }}>
+                        {verse}
+                        {index > 0 && (
+                          <span className="inline-block mx-2 bg-amber-200 text-amber-800 text-sm px-2 py-1 rounded-full border border-amber-300 shadow-sm">
+                            {index}
+                          </span>
+                        )}
+                      </p>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopyVerse(verse, surah.translations?.[index])}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity ml-2 h-8 w-8"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </Button>
+                    </div>
+
+                    {/* English Translation */}
+                    {showTranslation && surah.translations?.[index] && (
+                      <p className="text-gray-600 text-base leading-relaxed mb-4 italic">
+                        {surah.translations[index]}
+                      </p>
+                    )}
+
                     {index < surah.verses.length - 1 && (
                       <div className="flex justify-center my-4">
                         <div className="w-16 h-px bg-gradient-to-r from-transparent via-amber-300 to-transparent"></div>
