@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Book, Heart, ArrowLeft, Copy, Languages } from 'lucide-react';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Surah {
   number: number;
@@ -27,6 +28,7 @@ const SurahGrid: React.FC<SurahGridProps> = ({
   readingSurahs, 
   isLoading 
 }) => {
+  const { t } = useLanguage();
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'reading'>('list');
   const [showTranslation, setShowTranslation] = useState(true);
@@ -36,7 +38,7 @@ const SurahGrid: React.FC<SurahGridProps> = ({
     { 
       number: 1, 
       name: "Al-Fatihah", 
-      meaning: "The Opening",
+      meaning: t('the-opening'),
       verses: [
         "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
         "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
@@ -47,19 +49,19 @@ const SurahGrid: React.FC<SurahGridProps> = ({
         "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ"
       ],
       translations: [
-        "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
-        "All praise is due to Allah, Lord of the worlds -",
-        "The Entirely Merciful, the Especially Merciful,",
-        "Sovereign of the Day of Recompense.",
-        "It is You we worship and You we ask for help.",
-        "Guide us to the straight path -",
-        "The path of those upon whom You have bestowed favor, not of those who have evoked Your anger or of those who are astray."
+        t('bismillah-translation'),
+        t('alhamdulillah-translation'),
+        t('rahman-rahim-translation'),
+        t('malik-yawm-translation'),
+        t('iyyaka-nabudu-translation'),
+        t('ihdina-sirat-translation'),
+        t('sirat-alladhina-translation')
       ]
     },
     { 
       number: 112, 
       name: "Al-Ikhlas", 
-      meaning: "The Sincerity",
+      meaning: t('the-sincerity'),
       verses: [
         "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
         "قُلْ هُوَ اللَّهُ أَحَدٌ",
@@ -68,17 +70,17 @@ const SurahGrid: React.FC<SurahGridProps> = ({
         "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"
       ],
       translations: [
-        "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
-        "Say, \"He is Allah, [who is] One,",
-        "Allah, the Eternal Refuge.",
-        "He neither begets nor is born,",
-        "Nor is there to Him any equivalent.\""
+        t('bismillah-translation'),
+        t('qul-huwa-allah-translation'),
+        t('allah-samad-translation'),
+        t('lam-yalid-translation'),
+        t('walam-yakun-translation')
       ]
     },
     { 
       number: 113, 
       name: "Al-Falaq", 
-      meaning: "The Daybreak",
+      meaning: t('the-daybreak'),
       verses: [
         "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
         "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",
@@ -88,18 +90,18 @@ const SurahGrid: React.FC<SurahGridProps> = ({
         "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"
       ],
       translations: [
-        "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
-        "Say, \"I seek refuge in the Lord of daybreak",
-        "From the evil of that which He created",
-        "And from the evil of darkness when it settles",
-        "And from the evil of the blowers in knots",
-        "And from the evil of an envier when he envies.\""
+        t('bismillah-translation'),
+        t('qul-auzu-birabb-falaq'),
+        t('min-sharri-ma-khalaq'),
+        t('min-sharri-ghasiq'),
+        t('min-sharri-naffathat'),
+        t('min-sharri-hasid')
       ]
     },
     { 
       number: 114, 
       name: "An-Nas", 
-      meaning: "Mankind",
+      meaning: t('mankind'),
       verses: [
         "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
         "قُلْ أَعُوذُ بِرَبِّ النَّاسِ",
@@ -110,20 +112,20 @@ const SurahGrid: React.FC<SurahGridProps> = ({
         "مِنَ الْجِنَّةِ وَالنَّاسِ"
       ],
       translations: [
-        "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
-        "Say, \"I seek refuge in the Lord of mankind,",
-        "The Sovereign of mankind.",
-        "The God of mankind,",
-        "From the evil of the retreating whisperer -",
-        "Who whispers [evil] into the breasts of mankind -",
-        "From among the jinn and mankind.\""
+        t('bismillah-translation'),
+        t('qul-auzu-birabb-nas'),
+        t('maliki-nas'),
+        t('ilahi-nas'),
+        t('min-sharri-waswas'),
+        t('alladhi-yuwaswis'),
+        t('min-jinnati-wanas')
       ]
     },
-    { number: 2, name: "Al-Baqarah", meaning: "The Cow" },
-    { number: 18, name: "Al-Kahf", meaning: "The Cave" },
+    { number: 2, name: "Al-Baqarah", meaning: t('the-cow') },
+    { number: 18, name: "Al-Kahf", meaning: t('the-cave') },
     { number: 36, name: "Ya-Sin", meaning: "Ya-Sin" },
-    { number: 55, name: "Ar-Rahman", meaning: "The Beneficent" },
-    { number: 67, name: "Al-Mulk", meaning: "The Sovereignty" },
+    { number: 55, name: "Ar-Rahman", meaning: t('the-beneficent') },
+    { number: 67, name: "Al-Mulk", meaning: t('the-sovereignty') },
   ];
 
   const handleSurahClick = (surah: Surah) => {
@@ -139,7 +141,7 @@ const SurahGrid: React.FC<SurahGridProps> = ({
     const textToCopy = translation 
       ? `${arabic}\n\n${translation}`
       : arabic;
-    copyToClipboard(textToCopy, "Verse copied to clipboard");
+    copyToClipboard(textToCopy, t('verse-copied-clipboard'));
   };
 
   const handleCopyFullSurah = (surah: Surah) => {
@@ -150,8 +152,8 @@ const SurahGrid: React.FC<SurahGridProps> = ({
       }).join('\n\n');
       
       copyToClipboard(
-        `Surah ${surah.name} (${surah.meaning})\n\n${fullText}`,
-        "Full Surah copied to clipboard"
+        `${t('surah')} ${surah.name} (${surah.meaning})\n\n${fullText}`,
+        t('full-surah-copied-clipboard')
       );
     }
   };
@@ -170,7 +172,7 @@ const SurahGrid: React.FC<SurahGridProps> = ({
               className="flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back to Surahs
+              {t('back-to-surahs')}
             </Button>
             
             <div className="text-center">
@@ -184,7 +186,7 @@ const SurahGrid: React.FC<SurahGridProps> = ({
                 size="icon"
                 onClick={() => setShowTranslation(!showTranslation)}
                 className="text-amber-700 hover:text-amber-900"
-                title="Toggle Translation"
+                title={t('toggle-translation')}
               >
                 <Languages className="w-5 h-5" />
               </Button>
@@ -268,7 +270,7 @@ const SurahGrid: React.FC<SurahGridProps> = ({
               {/* Surah Number */}
               <div className="text-center mt-8 pt-6 border-t border-amber-200">
                 <div className="inline-block bg-amber-100 px-4 py-2 rounded-full border border-amber-300 shadow-sm">
-                  <span className="text-amber-800 font-semibold">Surah {surah.number}</span>
+                  <span className="text-amber-800 font-semibold">{t('surah')} {surah.number}</span>
                 </div>
               </div>
             </div>
@@ -286,7 +288,7 @@ const SurahGrid: React.FC<SurahGridProps> = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Book className="w-5 h-5 text-green-600" />
-          القرآن الكريم - Popular Surahs
+          {t('quran-karim')} - {t('popular-surahs')}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -306,7 +308,7 @@ const SurahGrid: React.FC<SurahGridProps> = ({
                   <h3 className="font-semibold text-lg flex items-center gap-2">
                     {surah.name}
                     {readingSurahs.has(surah.number) && (
-                      <span className="w-2 h-2 bg-green-500 rounded-full" title="Recently read" />
+                      <span className="w-2 h-2 bg-green-500 rounded-full" title={t('recently-read')} />
                     )}
                   </h3>
                   <p className="text-sm text-muted-foreground">{surah.meaning}</p>

@@ -22,16 +22,16 @@ const CharityImpactTracker: React.FC = () => {
     {
       id: '1',
       amount: 50,
-      cause: 'Food for Orphans',
+      cause: t('food-for-orphans'),
       date: '2024-01-10',
-      organization: 'Local Islamic Center'
+      organization: t('local-islamic-center')
     },
     {
       id: '2',
       amount: 100,
-      cause: 'Water Wells',
+      cause: t('water-wells'),
       date: '2024-01-05',
-      organization: 'Islamic Relief'
+      organization: t('islamic-relief')
     }
   ]);
   
@@ -56,7 +56,7 @@ const CharityImpactTracker: React.FC = () => {
       amount: parseFloat(newAmount),
       cause: newCause,
       date: new Date().toISOString().split('T')[0],
-      organization: 'Personal Charity'
+      organization: t('personal-charity')
     };
 
     setDonations([donation, ...donations]);
@@ -65,7 +65,7 @@ const CharityImpactTracker: React.FC = () => {
     
     toast({
       title: t('donation-recorded'),
-      description: `$${newAmount} for ${newCause} has been added to your charity tracker.`,
+      description: `$${newAmount} ${t('for')} ${newCause} ${t('has-been-added-charity-tracker')}.`,
     });
   };
 

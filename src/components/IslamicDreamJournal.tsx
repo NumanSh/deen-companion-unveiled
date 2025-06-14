@@ -23,10 +23,10 @@ const IslamicDreamJournal: React.FC = () => {
     {
       id: '1',
       date: '2024-01-15',
-      dream: 'I saw myself praying in a beautiful mosque with golden light',
-      interpretation: 'This could signify spiritual growth and divine guidance. Light in dreams often represents knowledge and righteousness.',
+      dream: t('sample-dream-mosque-light'),
+      interpretation: t('sample-dream-interpretation'),
       mood: 'positive',
-      tags: ['prayer', 'mosque', 'light']
+      tags: [t('prayer'), t('mosque'), t('light')]
     }
   ]);
   const [newDream, setNewDream] = useState('');
@@ -40,9 +40,9 @@ const IslamicDreamJournal: React.FC = () => {
       id: Date.now().toString(),
       date: new Date().toISOString().split('T')[0],
       dream: newDream,
-      interpretation: 'Reflect on this dream in light of Islamic teachings. Consider seeking guidance from knowledgeable sources.',
+      interpretation: t('reflect-dream-islamic-teachings'),
       mood: 'neutral',
-      tags: ['personal']
+      tags: [t('personal')]
     };
 
     setDreams([dream, ...dreams]);
@@ -60,6 +60,14 @@ const IslamicDreamJournal: React.FC = () => {
       case 'positive': return 'bg-green-100 text-green-800 border-green-200';
       case 'negative': return 'bg-red-100 text-red-800 border-red-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getMoodText = (mood: string) => {
+    switch (mood) {
+      case 'positive': return t('positive');
+      case 'negative': return t('negative');
+      default: return t('neutral');
     }
   };
 
@@ -127,7 +135,7 @@ const IslamicDreamJournal: React.FC = () => {
                   </span>
                 </div>
                 <Badge className={getMoodColor(dream.mood)}>
-                  {dream.mood}
+                  {getMoodText(dream.mood)}
                 </Badge>
               </div>
               

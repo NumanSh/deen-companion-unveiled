@@ -26,36 +26,36 @@ const QuranicWordLearning: React.FC = () => {
     {
       arabic: 'رَبّ',
       transliteration: 'Rabb',
-      meaning: 'Lord, Master, Sustainer',
-      example: 'رَبِّ الْعَالَمِينَ - Lord of all worlds',
+      meaning: t('lord-master-sustainer'),
+      example: `رَبِّ الْعَالَمِينَ - ${t('lord-of-all-worlds')}`,
       learned: false
     },
     {
       arabic: 'رَحْمَن',
       transliteration: 'Rahman',
-      meaning: 'The Most Gracious',
-      example: 'الرَّحْمَٰنِ الرَّحِيمِ - The Most Gracious, Most Merciful',
+      meaning: t('most-gracious'),
+      example: `الرَّحْمَٰنِ الرَّحِيمِ - ${t('most-gracious-merciful')}`,
       learned: false
     },
     {
       arabic: 'صَلاة',
       transliteration: 'Salah',
-      meaning: 'Prayer',
-      example: 'أَقِيمُوا الصَّلَاةَ - Establish prayer',
+      meaning: t('prayer'),
+      example: `أَقِيمُوا الصَّلَاةَ - ${t('establish-prayer')}`,
       learned: false
     },
     {
       arabic: 'زَكاة',
       transliteration: 'Zakah',
-      meaning: 'Obligatory charity',
-      example: 'آتُوا الزَّكَاةَ - Give zakah',
+      meaning: t('obligatory-charity'),
+      example: `آتُوا الزَّكَاةَ - ${t('give-zakah')}`,
       learned: false
     },
     {
       arabic: 'حَمْد',
       transliteration: 'Hamd',
-      meaning: 'Praise',
-      example: 'الْحَمْدُ لِلَّهِ - Praise be to Allah',
+      meaning: t('praise'),
+      example: `الْحَمْدُ لِلَّهِ - ${t('praise-be-allah')}`,
       learned: false
     }
   ];
@@ -67,7 +67,7 @@ const QuranicWordLearning: React.FC = () => {
     setLearnedWords(prev => new Set([...prev, currentWordIndex]));
     toast({
       title: t('word-learned'),
-      description: `You've learned "${currentWord.transliteration}" - ${currentWord.meaning}`,
+      description: `${t('youve-learned')} "${currentWord.transliteration}" - ${currentWord.meaning}`,
     });
   };
 
@@ -160,7 +160,7 @@ const QuranicWordLearning: React.FC = () => {
               {t('previous')}
             </Button>
             <span className="text-sm text-gray-500 self-center">
-              {currentWordIndex + 1} of {words.length}
+              {currentWordIndex + 1} {t('of')} {words.length}
             </span>
             <Button 
               variant="outline" 
