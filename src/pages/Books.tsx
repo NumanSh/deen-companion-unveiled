@@ -10,8 +10,10 @@ import UniversalSearch from "@/components/UniversalSearch";
 import MainHeader from "@/components/MainHeader";
 import TabNavigation from "@/components/TabNavigation";
 import TabContent from "@/components/TabContent";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Books = () => {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'dashboard' | 'quran' | 'hadith' | 'duas' | 'adhkar' | 'dhikr' | 'bookmarks' | 'analytics' | 'reminders' | 'habits' | 'discover'>('dashboard');
   const [isLoading, setIsLoading] = useState(false);
   const [readingSurahs, setReadingSurahs] = useState<Set<number>>(new Set());
@@ -36,13 +38,13 @@ const Books = () => {
       bookmarks.push(bookmark);
       localStorage.setItem('islamic-app-bookmarks', JSON.stringify(bookmarks));
       toast({
-        title: "Added to bookmarks",
-        description: `${bookmark.title} has been saved to your bookmarks.`,
+        title: t('added-to-bookmarks'),
+        description: t('item-saved-bookmarks', { title: bookmark.title }),
       });
     } else {
       toast({
-        title: "Already bookmarked",
-        description: "This item is already in your bookmarks.",
+        title: t('already-bookmarked'),
+        description: t('item-already-bookmarked'),
       });
     }
   };
@@ -55,21 +57,21 @@ const Books = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       setReadingModeContent({
-        title: `Surah ${surah.name}`,
+        title: `${t('surah')} ${surah.name}`,
         arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
         transliteration: "Bismillahir-Rahmanir-Raheem",
-        translation: "In the name of Allah, the Most Gracious, the Most Merciful.",
+        translation: t('bismillah-translation'),
         audioUrl: undefined
       });
       
       toast({
-        title: "Surah Loaded",
-        description: `Surah ${surah.name} is ready for reading.`,
+        title: t('surah-loaded'),
+        description: t('surah-ready-reading', { name: surah.name }),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to load the Surah. Please try again.",
+        title: t('error'),
+        description: t('failed-load-surah'),
         variant: "destructive",
       });
     } finally {
@@ -100,8 +102,8 @@ const Books = () => {
     }
     
     toast({
-      title: "Found Result",
-      description: `Navigated to ${result.title}`,
+      title: t('found-result'),
+      description: t('navigated-to', { title: result.title }),
     });
   };
 

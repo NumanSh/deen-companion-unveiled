@@ -6,7 +6,7 @@ export type Language = 'ar' | 'en';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, any>) => string;
   isRTL: boolean;
 }
 
@@ -56,6 +56,15 @@ const translations = {
     all: 'الكل',
     of: 'من',
     for: 'لـ',
+    translation: 'الترجمة',
+    transliteration: 'النطق',
+    reference: 'المرجع',
+    error: 'خطأ',
+    'show-less': 'عرض أقل',
+    'show-translation': 'عرض الترجمة',
+    'click-to-copy': 'انقر للنسخ',
+    travel: 'السفر',
+    protection: 'الحماية',
     
     // Settings
     'app-name': 'رفيق الدين',
@@ -239,6 +248,43 @@ const translations = {
     'full-surah-copied-clipboard': 'تم نسخ السورة كاملة إلى الحافظة',
     'recently-read': 'قُرئت مؤخراً',
     
+    // Duas Section
+    'daily-duas': 'الأدعية اليومية',
+    'daily-duas-supplications': 'الأدعية اليومية (التضرعات)',
+    'search-duas-placeholder': 'البحث في الأدعية أو النطق أو الترجمة...',
+    'morning-dua': 'دعاء الصباح',
+    'evening-dua': 'دعاء المساء',
+    'morning-dua-translation': 'أصبحنا وأصبح الملك لله، والحمد لله',
+    'evening-dua-translation': 'أمسينا وأمسى الملك لله، والحمد لله',
+    'food-drink': 'الطعام والشراب',
+    'before-eating': 'قبل الطعام',
+    'after-eating': 'بعد الطعام',
+    'before-eating-translation': 'باسم الله.',
+    'after-eating-translation': 'الحمد لله الذي أطعمني هذا ورزقنيه من غير حول مني ولا قوة',
+    'when-starting-journey': 'عند بدء الرحلة',
+    'travel-dua-translation': 'سبحان الذي سخر لنا هذا وما كنا له مقرنين وإنا إلى ربنا لمنقلبون',
+    'ayat-kursi': 'آية الكرسي',
+    'ayat-kursi-translation': 'الله لا إله إلا هو الحي القيوم',
+    'copy-arabic-text': 'نسخ النص العربي',
+    'no-duas-found': 'لم يتم العثور على أدعية تطابق بحثك.',
+    
+    // Bookmarks
+    'added-to-bookmarks': 'تم إضافته إلى المحفوظات',
+    'removed-from-bookmarks': 'تم إزالته من المحفوظات',
+    'already-bookmarked': 'محفوظ مسبقاً',
+    'item-already-bookmarked': 'هذا العنصر محفوظ مسبقاً في مفضلتك.',
+    'item-saved-bookmarks': '{title} تم حفظه في مفضلتك.',
+    'dua-saved-bookmarks': '{title} تم حفظه في مفضلتك.',
+    'dua-removed-bookmarks': '{title} تم إزالته من مفضلتك.',
+    'dua-arabic-copied': 'تم نسخ النص العربي لـ {title}',
+    
+    // Toast messages
+    'surah-loaded': 'تم تحميل السورة',
+    'surah-ready-reading': 'سورة {name} جاهزة للقراءة.',
+    'failed-load-surah': 'فشل في تحميل السورة. يرجى المحاولة مرة أخرى.',
+    'found-result': 'تم العثور على النتيجة',
+    'navigated-to': 'تم الانتقال إلى {title}',
+    
     // Quran verse translations
     'bismillah-translation': 'بسم الله الرحمن الرحيم',
     'alhamdulillah-translation': 'الحمد لله رب العالمين',
@@ -313,6 +359,15 @@ const translations = {
     all: 'All',
     of: 'of',
     for: 'for',
+    translation: 'Translation',
+    transliteration: 'Transliteration',
+    reference: 'Reference',
+    error: 'Error',
+    'show-less': 'Show less',
+    'show-translation': 'Show translation',
+    'click-to-copy': 'Click to copy',
+    travel: 'Travel',
+    protection: 'Protection',
     
     // Settings
     'app-name': 'Deen Companion',
@@ -496,6 +551,43 @@ const translations = {
     'full-surah-copied-clipboard': 'Full Surah copied to clipboard',
     'recently-read': 'Recently read',
     
+    // Duas Section
+    'daily-duas': 'Daily Duas',
+    'daily-duas-supplications': 'Daily Duas (Supplications)',
+    'search-duas-placeholder': 'Search duas, transliteration, or translation...',
+    'morning-dua': 'Morning Dua',
+    'evening-dua': 'Evening Dua',
+    'morning-dua-translation': 'We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah.',
+    'evening-dua-translation': 'We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah.',
+    'food-drink': 'Food & Drink',
+    'before-eating': 'Before Eating',
+    'after-eating': 'After Eating',
+    'before-eating-translation': 'In the name of Allah.',
+    'after-eating-translation': 'All praise is due to Allah who has fed me this food and provided it for me without any might or power on my part.',
+    'when-starting-journey': 'When Starting Journey',
+    'travel-dua-translation': 'Glory unto Him Who created this transportation for us though we were unable to create it on our own. And unto our Lord we shall return.',
+    'ayat-kursi': 'Ayat al-Kursi',
+    'ayat-kursi-translation': 'Allah - there is no deity except Him, the Ever-Living, the Sustainer of existence.',
+    'copy-arabic-text': 'Copy Arabic text',
+    'no-duas-found': 'No duas found matching your search.',
+    
+    // Bookmarks
+    'added-to-bookmarks': 'Added to bookmarks',
+    'removed-from-bookmarks': 'Removed from bookmarks',
+    'already-bookmarked': 'Already bookmarked',
+    'item-already-bookmarked': 'This item is already in your bookmarks.',
+    'item-saved-bookmarks': '{title} has been saved to your bookmarks.',
+    'dua-saved-bookmarks': '{title} has been saved to your bookmarks.',
+    'dua-removed-bookmarks': '{title} has been removed from your bookmarks.',
+    'dua-arabic-copied': '{title} Arabic text copied',
+    
+    // Toast messages
+    'surah-loaded': 'Surah Loaded',
+    'surah-ready-reading': 'Surah {name} is ready for reading.',
+    'failed-load-surah': 'Failed to load the Surah. Please try again.',
+    'found-result': 'Found Result',
+    'navigated-to': 'Navigated to {title}',
+    
     // Quran verse translations
     'bismillah-translation': 'In the name of Allah, the Entirely Merciful, the Especially Merciful.',
     'alhamdulillah-translation': 'All praise is due to Allah, Lord of the worlds -',
@@ -538,8 +630,17 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     document.documentElement.lang = language;
   }, [language]);
 
-  const t = (key: string): string => {
-    return translations[language][key] || key;
+  const t = (key: string, params?: Record<string, any>): string => {
+    let translation = translations[language][key] || key;
+    
+    // Simple parameter replacement
+    if (params) {
+      Object.keys(params).forEach(param => {
+        translation = translation.replace(`{${param}}`, params[param]);
+      });
+    }
+    
+    return translation;
   };
 
   const isRTL = language === 'ar';

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import { Heart, Search, BookOpen, Copy, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Dua = {
   id: string;
@@ -31,88 +33,89 @@ type Bookmark = {
   timestamp: number;
 };
 
-const duaCategories: DuaCategory[] = [
-  {
-    id: "daily",
-    name: "Daily Duas",
-    duas: [
-      {
-        id: "morning",
-        title: "Morning Dua",
-        arabic: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ",
-        transliteration: "Asbahna wa asbahal-mulku lillahi, walhamdu lillah",
-        translation: "We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah.",
-        reference: "Muslim"
-      },
-      {
-        id: "evening",
-        title: "Evening Dua",
-        arabic: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ",
-        transliteration: "Amsayna wa amsal-mulku lillahi, walhamdu lillah",
-        translation: "We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah.",
-        reference: "Muslim"
-      }
-    ]
-  },
-  {
-    id: "eating",
-    name: "Food & Drink",
-    duas: [
-      {
-        id: "before-eating",
-        title: "Before Eating",
-        arabic: "بِسْمِ اللَّهِ",
-        transliteration: "Bismillah",
-        translation: "In the name of Allah.",
-        reference: "Bukhari & Muslim"
-      },
-      {
-        id: "after-eating",
-        title: "After Eating",
-        arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ",
-        transliteration: "Alhamdu lillahil-ladhi at'amani hadha wa razaqaneehi min ghayri hawlin minnee wa la quwwah",
-        translation: "All praise is due to Allah who has fed me this food and provided it for me without any might or power on my part.",
-        reference: "Tirmidhi"
-      }
-    ]
-  },
-  {
-    id: "travel",
-    name: "Travel",
-    duas: [
-      {
-        id: "travel-dua",
-        title: "When Starting Journey",
-        arabic: "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ",
-        transliteration: "Subhanal-ladhi sakhkhara lana hadha wa ma kunna lahu muqrineen, wa inna ila rabbina la munqaliboon",
-        translation: "Glory unto Him Who created this transportation for us though we were unable to create it on our own. And unto our Lord we shall return.",
-        reference: "Quran 43:13-14"
-      }
-    ]
-  },
-  {
-    id: "protection",
-    name: "Protection",
-    duas: [
-      {
-        id: "ayat-kursi",
-        title: "Ayat al-Kursi",
-        arabic: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ",
-        transliteration: "Allahu la ilaha illa huwal-hayyul-qayyum",
-        translation: "Allah - there is no deity except Him, the Ever-Living, the Sustainer of existence.",
-        reference: "Quran 2:255"
-      }
-    ]
-  }
-];
-
 const DuasSection: React.FC = () => {
+  const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>("daily");
   const [searchTerm, setSearchTerm] = useState("");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [expandedDua, setExpandedDua] = useState<string | null>(null);
   const { toast } = useToast();
   const { copyToClipboard, copied } = useCopyToClipboard();
+
+  const duaCategories: DuaCategory[] = [
+    {
+      id: "daily",
+      name: t('daily-duas'),
+      duas: [
+        {
+          id: "morning",
+          title: t('morning-dua'),
+          arabic: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ",
+          transliteration: "Asbahna wa asbahal-mulku lillahi, walhamdu lillah",
+          translation: t('morning-dua-translation'),
+          reference: "Muslim"
+        },
+        {
+          id: "evening",
+          title: t('evening-dua'),
+          arabic: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ",
+          transliteration: "Amsayna wa amsal-mulku lillahi, walhamdu lillah",
+          translation: t('evening-dua-translation'),
+          reference: "Muslim"
+        }
+      ]
+    },
+    {
+      id: "eating",
+      name: t('food-drink'),
+      duas: [
+        {
+          id: "before-eating",
+          title: t('before-eating'),
+          arabic: "بِسْمِ اللَّهِ",
+          transliteration: "Bismillah",
+          translation: t('before-eating-translation'),
+          reference: "Bukhari & Muslim"
+        },
+        {
+          id: "after-eating",
+          title: t('after-eating'),
+          arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ",
+          transliteration: "Alhamdu lillahil-ladhi at'amani hadha wa razaqaneehi min ghayri hawlin minnee wa la quwwah",
+          translation: t('after-eating-translation'),
+          reference: "Tirmidhi"
+        }
+      ]
+    },
+    {
+      id: "travel",
+      name: t('travel'),
+      duas: [
+        {
+          id: "travel-dua",
+          title: t('when-starting-journey'),
+          arabic: "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ",
+          transliteration: "Subhanal-ladhi sakhkhara lana hadha wa ma kunna lahu muqrineen, wa inna ila rabbina la munqaliboon",
+          translation: t('travel-dua-translation'),
+          reference: "Quran 43:13-14"
+        }
+      ]
+    },
+    {
+      id: "protection",
+      name: t('protection'),
+      duas: [
+        {
+          id: "ayat-kursi",
+          title: t('ayat-kursi'),
+          arabic: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ",
+          transliteration: "Allahu la ilaha illa huwal-hayyul-qayyum",
+          translation: t('ayat-kursi-translation'),
+          reference: "Quran 2:255"
+        }
+      ]
+    }
+  ];
 
   useEffect(() => {
     const saved = localStorage.getItem('islamic-app-bookmarks');
@@ -152,8 +155,8 @@ const DuasSection: React.FC = () => {
       bookmarks.push(bookmark);
       setFavorites(prev => new Set([...prev, duaId]));
       toast({
-        title: "Added to bookmarks",
-        description: `${dua.title} has been saved to your bookmarks.`,
+        title: t('added-to-bookmarks'),
+        description: t('dua-saved-bookmarks', { title: dua.title }),
       });
     } else {
       bookmarks.splice(existingIndex, 1);
@@ -163,8 +166,8 @@ const DuasSection: React.FC = () => {
         return newSet;
       });
       toast({
-        title: "Removed from bookmarks",
-        description: `${dua.title} has been removed from your bookmarks.`,
+        title: t('removed-from-bookmarks'),
+        description: t('dua-removed-bookmarks', { title: dua.title }),
       });
     }
     
@@ -180,7 +183,7 @@ const DuasSection: React.FC = () => {
     ) || [];
 
   const handleCopyArabic = (dua: Dua) => {
-    copyToClipboard(dua.arabic, `${dua.title} Arabic text copied`);
+    copyToClipboard(dua.arabic, t('dua-arabic-copied', { title: dua.title }));
   };
 
   return (
@@ -188,7 +191,7 @@ const DuasSection: React.FC = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <BookOpen className="w-5 h-5 text-blue-600" />
-          Daily Duas (Supplications)
+          {t('daily-duas-supplications')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -196,7 +199,7 @@ const DuasSection: React.FC = () => {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
-            placeholder="Search duas, transliteration, or translation..."
+            placeholder={t('search-duas-placeholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
@@ -233,7 +236,7 @@ const DuasSection: React.FC = () => {
                     size="icon"
                     onClick={() => handleCopyArabic(dua)}
                     className="h-8 w-8"
-                    title="Copy Arabic text"
+                    title={t('copy-arabic-text')}
                   >
                     {copied ? (
                       <CheckCircle className="w-4 h-4 text-green-500" />
@@ -264,7 +267,7 @@ const DuasSection: React.FC = () => {
                 <p className="text-2xl leading-loose font-arabic cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded transition-colors" 
                    dir="rtl"
                    onClick={() => handleCopyArabic(dua)}
-                   title="Click to copy">
+                   title={t('click-to-copy')}>
                   {dua.arabic}
                 </p>
               </div>
@@ -272,20 +275,20 @@ const DuasSection: React.FC = () => {
               {/* Show more details when expanded */}
               <div className="space-y-2">
                 <div>
-                  <p className="text-sm font-medium text-blue-600 mb-1">Transliteration:</p>
+                  <p className="text-sm font-medium text-blue-600 mb-1">{t('transliteration')}:</p>
                   <p className="text-sm italic">{dua.transliteration}</p>
                 </div>
 
                 {(expandedDua === dua.id || searchTerm) && (
                   <>
                     <div>
-                      <p className="text-sm font-medium text-green-600 mb-1">Translation:</p>
+                      <p className="text-sm font-medium text-green-600 mb-1">{t('translation')}:</p>
                       <p className="text-sm">{dua.translation}</p>
                     </div>
                     
                     {dua.reference && (
                       <div>
-                        <p className="text-sm font-medium text-purple-600 mb-1">Reference:</p>
+                        <p className="text-sm font-medium text-purple-600 mb-1">{t('reference')}:</p>
                         <p className="text-xs text-gray-600">{dua.reference}</p>
                       </div>
                     )}
@@ -298,7 +301,7 @@ const DuasSection: React.FC = () => {
                   onClick={() => setExpandedDua(expandedDua === dua.id ? null : dua.id)}
                   className="text-xs"
                 >
-                  {expandedDua === dua.id ? "Show less" : "Show translation"}
+                  {expandedDua === dua.id ? t('show-less') : t('show-translation')}
                 </Button>
               </div>
             </div>
@@ -308,7 +311,7 @@ const DuasSection: React.FC = () => {
         {filteredDuas.length === 0 && (
           <div className="text-center py-8 text-gray-500">
             <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
-            <p>No duas found matching your search.</p>
+            <p>{t('no-duas-found')}</p>
           </div>
         )}
       </CardContent>
