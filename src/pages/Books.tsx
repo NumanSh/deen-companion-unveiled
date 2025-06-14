@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,11 +5,12 @@ import { Book, RotateCcw, Plus, Minus, ScrollText } from "lucide-react";
 import BottomTabBar from "@/components/BottomTabBar";
 import DuasSection from "@/components/DuasSection";
 import HadithSection from "@/components/HadithSection";
+import MorningEveningAdhkar from "@/components/MorningEveningAdhkar";
 
 const Books = () => {
   const [dhikrCount, setDhikrCount] = useState(0);
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<'quran' | 'hadith' | 'duas' | 'dhikr'>('quran');
+  const [activeTab, setActiveTab] = useState<'quran' | 'hadith' | 'duas' | 'adhkar' | 'dhikr'>('quran');
 
   // Popular Surahs for quick access
   const popularSurahs = [
@@ -33,6 +33,7 @@ const Books = () => {
     { key: 'quran', label: 'Quran', icon: Book },
     { key: 'hadith', label: 'Hadith', icon: ScrollText },
     { key: 'duas', label: 'Duas', icon: Book },
+    { key: 'adhkar', label: 'Adhkar', icon: Book },
     { key: 'dhikr', label: 'Dhikr', icon: RotateCcw },
   ];
 
@@ -121,6 +122,8 @@ const Books = () => {
           {activeTab === 'hadith' && <HadithSection />}
 
           {activeTab === 'duas' && <DuasSection />}
+
+          {activeTab === 'adhkar' && <MorningEveningAdhkar />}
 
           {activeTab === 'dhikr' && (
             <div className="space-y-6">
