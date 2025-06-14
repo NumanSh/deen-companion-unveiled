@@ -1,3 +1,4 @@
+
 import React from 'react';
 import PersonalDashboard from '@/components/PersonalDashboard';
 import HabitTracker from '@/components/HabitTracker';
@@ -19,6 +20,11 @@ import DailyVerseReflection from '@/components/DailyVerseReflection';
 import QiblaCompass from '@/components/QiblaCompass';
 import IslamicEventCountdown from '@/components/IslamicEventCountdown';
 import CommunityChallenge from '@/components/CommunityChallenge';
+import IslamicLearningPath from '@/components/IslamicLearningPath';
+import SpiritualMoodTracker from '@/components/SpiritualMoodTracker';
+import SadaqahTracker from '@/components/SadaqahTracker';
+import AsmaUlHusna from '@/components/AsmaUlHusna';
+import HijriCalendarWidget from '@/components/HijriCalendarWidget';
 
 interface TabContentProps {
   activeTab: string;
@@ -52,6 +58,10 @@ const TabContent: React.FC<TabContentProps> = ({
             <IslamicEventCountdown />
             <CommunityChallenge />
           </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <SpiritualMoodTracker />
+            <HijriCalendarWidget />
+          </div>
         </div>
       );
     case 'habits':
@@ -62,6 +72,10 @@ const TabContent: React.FC<TabContentProps> = ({
             <DailyVerseReflection />
             <CommunityChallenge />
           </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <SpiritualMoodTracker />
+            <SadaqahTracker />
+          </div>
         </div>
       );
     case 'discover':
@@ -71,6 +85,10 @@ const TabContent: React.FC<TabContentProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <QiblaCompass />
             <IslamicEventCountdown />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <IslamicLearningPath />
+            <AsmaUlHusna />
           </div>
         </div>
       );
@@ -84,6 +102,7 @@ const TabContent: React.FC<TabContentProps> = ({
             isLoading={isLoading}
           />
           <DailyVerseReflection />
+          <AsmaUlHusna />
         </div>
       );
     case 'hadith':
@@ -97,12 +116,19 @@ const TabContent: React.FC<TabContentProps> = ({
         <div className="space-y-6">
           <DhikrCounter />
           <TasbihCounter />
+          <AsmaUlHusna />
         </div>
       );
     case 'bookmarks':
       return <BookmarkManager />;
     case 'analytics':
-      return <ProgressAnalytics />;
+      return (
+        <div className="space-y-6">
+          <ProgressAnalytics />
+          <SpiritualMoodTracker />
+          <SadaqahTracker />
+        </div>
+      );
     case 'reminders':
       return <DailyReminders />;
     default:
@@ -120,6 +146,10 @@ const TabContent: React.FC<TabContentProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <IslamicEventCountdown />
             <CommunityChallenge />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <SpiritualMoodTracker />
+            <HijriCalendarWidget />
           </div>
         </div>
       );
