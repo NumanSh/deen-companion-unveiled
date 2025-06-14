@@ -1,33 +1,86 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Clock, Calendar, MapPin, RefreshCw } from "lucide-react";
 import { useHijriDate } from "@/hooks/useHijriDate";
+import { useToast } from "@/hooks/use-toast";
 
 // Helper: Get user's coordinates
 function useUserLocation() {
   const [location, setLocation] = React.useState<{ lat: number, lon: number } | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(false);
 
-  React.useEffect(() => {
+  const getCurrentLocation = React.useCallback(() => {
+    setLoading(true);
+    setError(null);
+    
     if (!navigator.geolocation) {
       setError("Geolocation not supported");
+      setLoading(false);
       return;
     }
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setLocation({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+        setLoading(false);
+        localStorage.setItem('userLocation', JSON.stringify({
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          timestamp: Date.now()
+        }));
       },
-      () => {
-        // fallback: fetch IP-based location
+      (err) => {
+        console.log('Geolocation error:', err);
+        // Fallback: try IP-based location
         fetch("https://ipapi.co/json/")
           .then(res => res.json())
-          .then(data => setLocation({ lat: data.latitude, lon: data.longitude }))
-          .catch(() => setError("Could not detect location"));
+          .then(data => {
+            if (data.latitude && data.longitude) {
+              setLocation({ lat: data.latitude, lon: data.longitude });
+              localStorage.setItem('userLocation', JSON.stringify({
+                lat: data.latitude,
+                lon: data.longitude,
+                timestamp: Date.now()
+              }));
+            } else {
+              setError("Could not detect location");
+            }
+          })
+          .catch(() => setError("Could not detect location"))
+          .finally(() => setLoading(false));
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000 // 5 minutes
       }
     );
   }, []);
 
-  return { location, error };
+  React.useEffect(() => {
+    // Try to load saved location first
+    const savedLocation = localStorage.getItem('userLocation');
+    if (savedLocation) {
+      try {
+        const parsed = JSON.parse(savedLocation);
+        // Use saved location if it's less than 1 hour old
+        if (Date.now() - parsed.timestamp < 3600000) {
+          setLocation({ lat: parsed.lat, lon: parsed.lon });
+          return;
+        }
+      } catch (e) {
+        console.error('Error parsing saved location:', e);
+      }
+    }
+    
+    // Get fresh location
+    getCurrentLocation();
+  }, [getCurrentLocation]);
+
+  return { location, error, loading, refresh: getCurrentLocation };
 }
 
 // Helper: Fetch prayer times and calculate next prayer
@@ -37,18 +90,24 @@ function usePrayerTimes(lat: number | null, lon: number | null) {
     nextPrayer: string;
     nextTime: string;
     timeUntilNext: string;
+    city: string;
   } | null>(null);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (lat == null || lon == null) return;
     
+    setLoading(true);
     const today = new Date();
     const dateStr = `${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}`;
     
-    fetch(`https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lon}&method=2`)
-      .then(res => res.json())
-      .then(data => {
-        const timings: Record<string, string> = data.data.timings;
+    Promise.all([
+      fetch(`https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lon}&method=2`),
+      fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`)
+    ])
+      .then(([prayerRes, locationRes]) => Promise.all([prayerRes.json(), locationRes.json()]))
+      .then(([prayerData, locationData]) => {
+        const timings: Record<string, string> = prayerData.data.timings;
         const prayerOrder = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
         const now = today.getHours() * 60 + today.getMinutes();
         
@@ -79,6 +138,8 @@ function usePrayerTimes(lat: number | null, lon: number | null) {
         const minutesUntil = minsUntil % 60;
         const timeUntilNext = `${hoursUntil}h ${minutesUntil}m`;
         
+        const city = locationData.city || locationData.locality || locationData.principalSubdivision || 'Unknown Location';
+        
         setPrayerData({
           prayers: {
             Fajr: timings.Fajr,
@@ -90,12 +151,14 @@ function usePrayerTimes(lat: number | null, lon: number | null) {
           nextPrayer,
           nextTime,
           timeUntilNext,
+          city
         });
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, [lat, lon]);
 
-  return prayerData;
+  return { prayerData, loading };
 }
 
 // Current date hook
@@ -113,10 +176,19 @@ function useCurrentDate() {
 }
 
 const PrayerTimesWidget: React.FC = () => {
-  const { location, error } = useUserLocation();
-  const prayerData = usePrayerTimes(location?.lat ?? null, location?.lon ?? null);
+  const { location, error, loading: locationLoading, refresh } = useUserLocation();
+  const { prayerData, loading: prayerLoading } = usePrayerTimes(location?.lat ?? null, location?.lon ?? null);
   const currentDate = useCurrentDate();
   const hijriDate = useHijriDate();
+  const { toast } = useToast();
+
+  const handleRefreshLocation = () => {
+    refresh();
+    toast({
+      title: "Refreshing Location",
+      description: "Getting your current location for accurate prayer times...",
+    });
+  };
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
@@ -130,6 +202,8 @@ const PrayerTimesWidget: React.FC = () => {
   const formatHijriDate = (hijri: { year: number; month: string; day: number }) => {
     return `${hijri.day} ${hijri.month} ${hijri.year} AH`;
   };
+
+  const isLoading = locationLoading || prayerLoading;
 
   return (
     <div className="space-y-4 w-full max-w-2xl mx-auto">
@@ -148,6 +222,31 @@ const PrayerTimesWidget: React.FC = () => {
           <p className="text-blue-700 dark:text-blue-300 text-sm font-medium">
             {formatHijriDate(hijriDate)}
           </p>
+        </CardContent>
+      </Card>
+
+      {/* Location Status */}
+      <Card className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900 dark:to-green-900">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-emerald-900 dark:text-emerald-100 font-medium">
+                {isLoading ? 'Getting location...' : 
+                 error ? 'Location unavailable' : 
+                 prayerData?.city || 'Location detected'}
+              </span>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleRefreshLocation}
+              disabled={isLoading}
+              className="border-emerald-300 text-emerald-700 hover:bg-emerald-100"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -177,7 +276,20 @@ const PrayerTimesWidget: React.FC = () => {
           <CardTitle className="text-center text-xl">Today's Prayer Times</CardTitle>
         </CardHeader>
         <CardContent>
-          {prayerData ? (
+          {isLoading ? (
+            <div className="text-center py-8">
+              <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-blue-500" />
+              <p className="text-muted-foreground">Loading prayer times...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-8">
+              <p className="text-red-500 mb-4">{error}</p>
+              <Button onClick={handleRefreshLocation} variant="outline">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Try Again
+              </Button>
+            </div>
+          ) : prayerData ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {Object.entries(prayerData.prayers).map(([prayer, time]) => (
                 <div
@@ -208,7 +320,7 @@ const PrayerTimesWidget: React.FC = () => {
           ) : (
             <div className="text-center py-8">
               <p className="text-muted-foreground">
-                {error ? error : "Loading prayer times..."}
+                Prayer times will appear once location is detected
               </p>
             </div>
           )}

@@ -2,6 +2,7 @@
 import React from 'react';
 import BottomTabBar from '@/components/BottomTabBar';
 import EnhancedDashboard from '@/components/EnhancedDashboard';
+import NewUserWelcome from '@/components/NewUserWelcome';
 
 const Home = () => {
   return (
@@ -23,6 +24,7 @@ const Home = () => {
 
       <div className="flex-1 px-4 py-6 relative">
         <div className="max-w-6xl mx-auto">
+          <NewUserWelcome />
           <EnhancedDashboard />
         </div>
       </div>

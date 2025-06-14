@@ -64,11 +64,10 @@ const PrayerTimeTracker: React.FC = () => {
         setTodaysPrayers(todayRecord.prayers);
       }
     }
+  }, []); // Fixed: removed prayerHistory dependency to prevent infinite loop
 
-    calculateStats();
-  }, [prayerHistory]);
-
-  const calculateStats = () => {
+  useEffect(() => {
+    // Calculate stats when prayer history changes
     const last7Days = prayerHistory.slice(-7);
     let totalPossible = last7Days.length * 5;
     let totalCompleted = 0;
@@ -89,7 +88,7 @@ const PrayerTimeTracker: React.FC = () => {
       streak: currentStreak,
       weeklyAverage: totalPossible > 0 ? (totalCompleted / totalPossible) * 100 : 0
     });
-  };
+  }, [prayerHistory]); // Only depend on prayerHistory
 
   const togglePrayer = (prayerKey: string) => {
     const newPrayerState = {

@@ -1,11 +1,13 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
-import { Target, Plus, Award } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Target, Plus, Award, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface IslamicGoal {
   id: string;
@@ -14,17 +16,21 @@ interface IslamicGoal {
   completed: boolean;
   category: 'prayer' | 'quran' | 'dhikr' | 'charity' | 'other';
   reward?: string;
+  isCustom?: boolean;
 }
 
 const DailyIslamicGoals: React.FC = () => {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  const [newGoalTitle, setNewGoalTitle] = useState('');
+  const [showAddGoal, setShowAddGoal] = useState(false);
   
   const [goals, setGoals] = useState<IslamicGoal[]>([
     {
       id: '1',
       title: t('complete-5-daily-prayers'),
       description: t('perform-obligatory-prayers'),
-      completed: true,
+      completed: false,
       category: 'prayer',
       reward: '+50 ' + t('points')
     },
@@ -32,7 +38,7 @@ const DailyIslamicGoals: React.FC = () => {
       id: '2',
       title: t('read-1-page-of-quran'),
       description: t('daily-quran-recitation'),
-      completed: true,
+      completed: false,
       category: 'quran',
       reward: '+30 ' + t('points')
     },
@@ -62,14 +68,68 @@ const DailyIslamicGoals: React.FC = () => {
     }
   ]);
 
+  useEffect(() => {
+    // Load goals from localStorage
+    const today = new Date().toDateString();
+    const savedGoals = localStorage.getItem(`dailyGoals_${today}`);
+    if (savedGoals) {
+      setGoals(JSON.parse(savedGoals));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save goals to localStorage whenever they change
+    const today = new Date().toDateString();
+    localStorage.setItem(`dailyGoals_${today}`, JSON.stringify(goals));
+  }, [goals]);
+
   const toggleGoal = (goalId: string) => {
     setGoals(prev => prev.map(goal => 
       goal.id === goalId ? { ...goal, completed: !goal.completed } : goal
     ));
+
+    const goal = goals.find(g => g.id === goalId);
+    if (goal) {
+      toast({
+        title: !goal.completed ? 'Goal Completed! 🎉' : 'Goal Unmarked',
+        description: `${goal.title} ${!goal.completed ? 'completed' : 'unmarked'}`,
+      });
+    }
+  };
+
+  const addCustomGoal = () => {
+    if (newGoalTitle.trim()) {
+      const newGoal: IslamicGoal = {
+        id: Date.now().toString(),
+        title: newGoalTitle.trim(),
+        description: 'Custom goal',
+        completed: false,
+        category: 'other',
+        reward: '+15 ' + t('points'),
+        isCustom: true
+      };
+      
+      setGoals(prev => [...prev, newGoal]);
+      setNewGoalTitle('');
+      setShowAddGoal(false);
+      
+      toast({
+        title: 'Goal Added! ✅',
+        description: 'Your custom goal has been added to today\'s goals',
+      });
+    }
+  };
+
+  const removeCustomGoal = (goalId: string) => {
+    setGoals(prev => prev.filter(goal => goal.id !== goalId));
+    toast({
+      title: 'Goal Removed',
+      description: 'Custom goal has been removed',
+    });
   };
 
   const completedGoals = goals.filter(goal => goal.completed).length;
-  const progressPercentage = (completedGoals / goals.length) * 100;
+  const progressPercentage = goals.length > 0 ? (completedGoals / goals.length) * 100 : 0;
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -125,6 +185,16 @@ const DailyIslamicGoals: React.FC = () => {
                 <h4 className={`font-medium ${goal.completed ? 'line-through text-green-700 dark:text-green-300' : ''}`}>
                   {goal.title}
                 </h4>
+                {goal.isCustom && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeCustomGoal(goal.id)}
+                    className="ml-auto p-1 h-6 w-6 text-red-500 hover:text-red-700"
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                )}
               </div>
               <p className={`text-sm mt-1 ${goal.completed ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
                 {goal.description}
@@ -150,10 +220,31 @@ const DailyIslamicGoals: React.FC = () => {
           </div>
         )}
 
-        <Button variant="outline" className="w-full mt-4">
-          <Plus className="w-4 h-4 mr-2" />
-          {t('add-custom-goal')}
-        </Button>
+        {/* Add Custom Goal */}
+        {showAddGoal ? (
+          <div className="p-3 border rounded-lg bg-blue-50 dark:bg-blue-900/20">
+            <Input
+              placeholder="Enter your custom goal..."
+              value={newGoalTitle}
+              onChange={(e) => setNewGoalTitle(e.target.value)}
+              className="mb-3"
+              onKeyPress={(e) => e.key === 'Enter' && addCustomGoal()}
+            />
+            <div className="flex gap-2">
+              <Button onClick={addCustomGoal} size="sm" disabled={!newGoalTitle.trim()}>
+                Add Goal
+              </Button>
+              <Button onClick={() => setShowAddGoal(false)} variant="outline" size="sm">
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Button variant="outline" className="w-full mt-4" onClick={() => setShowAddGoal(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            {t('add-custom-goal')}
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Clock, CheckCircle, AlertCircle, Calendar, Target, TrendingUp } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Clock, CheckCircle, AlertCircle, Calendar, Target, TrendingUp, Edit3, Save, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface PrayerRecord {
@@ -33,6 +34,8 @@ const IslamicPrayerTracker = () => {
     isha: 0
   });
   const [streak, setStreak] = useState(0);
+  const [editingQada, setEditingQada] = useState<string | null>(null);
+  const [tempQadaValue, setTempQadaValue] = useState('');
 
   const prayers = [
     { name: 'fajr', displayName: 'الفجر', time: '05:30' },
@@ -43,34 +46,46 @@ const IslamicPrayerTracker = () => {
   ];
 
   useEffect(() => {
+    // Load qada count from localStorage
+    const savedQada = localStorage.getItem('qada-counter');
+    if (savedQada) {
+      setQadaCount(JSON.parse(savedQada));
+    }
+
     // Initialize today's prayers
     const today = new Date().toISOString().split('T')[0];
-    const initialPrayers = prayers.map(prayer => ({
-      id: `${prayer.name}-${today}`,
-      prayer: prayer.name,
-      date: today,
-      status: 'missed' as const,
-      time: prayer.time
-    }));
-    setTodaysPrayers(initialPrayers);
+    const savedTodaysPrayers = localStorage.getItem(`prayers-${today}`);
+    
+    if (savedTodaysPrayers) {
+      setTodaysPrayers(JSON.parse(savedTodaysPrayers));
+    } else {
+      const initialPrayers = prayers.map(prayer => ({
+        id: `${prayer.name}-${today}`,
+        prayer: prayer.name,
+        date: today,
+        status: 'missed' as const,
+        time: prayer.time
+      }));
+      setTodaysPrayers(initialPrayers);
+    }
 
-    // Sample qada counts
-    setQadaCount({
-      fajr: 3,
-      dhuhr: 1,
-      asr: 2,
-      maghrib: 0,
-      isha: 1
-    });
-    setStreak(7);
+    // Load streak
+    const savedStreak = localStorage.getItem('prayer-streak');
+    if (savedStreak) {
+      setStreak(parseInt(savedStreak));
+    }
   }, []);
 
   const markPrayerComplete = (prayerId: string) => {
-    setTodaysPrayers(prev => prev.map(prayer => 
+    const updatedPrayers = todaysPrayers.map(prayer => 
       prayer.id === prayerId 
-        ? { ...prayer, status: 'prayed' }
+        ? { ...prayer, status: 'prayed' as const }
         : prayer
-    ));
+    );
+    setTodaysPrayers(updatedPrayers);
+    
+    const today = new Date().toISOString().split('T')[0];
+    localStorage.setItem(`prayers-${today}`, JSON.stringify(updatedPrayers));
     
     toast({
       title: 'صلاة مكتملة! 🤲',
@@ -79,16 +94,22 @@ const IslamicPrayerTracker = () => {
   };
 
   const markPrayerMissed = (prayerId: string, prayerName: string) => {
-    setTodaysPrayers(prev => prev.map(prayer => 
+    const updatedPrayers = todaysPrayers.map(prayer => 
       prayer.id === prayerId 
-        ? { ...prayer, status: 'missed' }
+        ? { ...prayer, status: 'missed' as const }
         : prayer
-    ));
+    );
+    setTodaysPrayers(updatedPrayers);
 
-    setQadaCount(prev => ({
-      ...prev,
-      [prayerName]: prev[prayerName as keyof QadaCounter] + 1
-    }));
+    const newQadaCount = {
+      ...qadaCount,
+      [prayerName]: qadaCount[prayerName as keyof QadaCounter] + 1
+    };
+    setQadaCount(newQadaCount);
+    localStorage.setItem('qada-counter', JSON.stringify(newQadaCount));
+
+    const today = new Date().toISOString().split('T')[0];
+    localStorage.setItem(`prayers-${today}`, JSON.stringify(updatedPrayers));
 
     toast({
       title: 'صلاة فائتة',
@@ -99,16 +120,44 @@ const IslamicPrayerTracker = () => {
 
   const makeUpQadaPrayer = (prayerName: string) => {
     if (qadaCount[prayerName as keyof QadaCounter] > 0) {
-      setQadaCount(prev => ({
-        ...prev,
-        [prayerName]: Math.max(0, prev[prayerName as keyof QadaCounter] - 1)
-      }));
+      const newQadaCount = {
+        ...qadaCount,
+        [prayerName]: Math.max(0, qadaCount[prayerName as keyof QadaCounter] - 1)
+      };
+      setQadaCount(newQadaCount);
+      localStorage.setItem('qada-counter', JSON.stringify(newQadaCount));
 
       toast({
         title: 'قضاء الصلاة! ✅',
         description: `تم قضاء صلاة ${prayers.find(p => p.name === prayerName)?.displayName}`,
       });
     }
+  };
+
+  const startEditingQada = (prayerName: string) => {
+    setEditingQada(prayerName);
+    setTempQadaValue(qadaCount[prayerName as keyof QadaCounter].toString());
+  };
+
+  const saveQadaEdit = (prayerName: string) => {
+    const newValue = parseInt(tempQadaValue) || 0;
+    const newQadaCount = {
+      ...qadaCount,
+      [prayerName]: Math.max(0, newValue)
+    };
+    setQadaCount(newQadaCount);
+    localStorage.setItem('qada-counter', JSON.stringify(newQadaCount));
+    setEditingQada(null);
+    
+    toast({
+      title: 'تم التحديث',
+      description: `تم تحديث عدد صلوات ${prayers.find(p => p.name === prayerName)?.displayName} للقضاء`,
+    });
+  };
+
+  const cancelQadaEdit = () => {
+    setEditingQada(null);
+    setTempQadaValue('');
   };
 
   const getTotalQada = () => {
@@ -208,15 +257,44 @@ const IslamicPrayerTracker = () => {
           <div className="grid grid-cols-1 gap-3">
             {prayers.map((prayer) => {
               const count = qadaCount[prayer.name as keyof QadaCounter];
+              const isEditing = editingQada === prayer.name;
               return (
                 <div key={prayer.name} className="flex items-center justify-between p-3 border rounded-lg bg-orange-50">
                   <div className="flex items-center gap-3">
                     <div className="font-medium">{prayer.displayName}</div>
-                    <Badge variant={count > 0 ? "destructive" : "secondary"}>
-                      {count} للقضاء
-                    </Badge>
+                    {isEditing ? (
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="number"
+                          value={tempQadaValue}
+                          onChange={(e) => setTempQadaValue(e.target.value)}
+                          className="w-20 h-8"
+                          min="0"
+                        />
+                        <Button size="sm" onClick={() => saveQadaEdit(prayer.name)}>
+                          <Save className="w-3 h-3" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={cancelQadaEdit}>
+                          <X className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <Badge variant={count > 0 ? "destructive" : "secondary"}>
+                          {count} للقضاء
+                        </Badge>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => startEditingQada(prayer.name)}
+                          className="p-1 h-6 w-6"
+                        >
+                          <Edit3 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
-                  {count > 0 && (
+                  {!isEditing && count > 0 && (
                     <Button
                       size="sm"
                       onClick={() => makeUpQadaPrayer(prayer.name)}

@@ -17,10 +17,12 @@ import SadaqahTracker from '@/components/SadaqahTracker';
 import CommunityChallenge from '@/components/CommunityChallenge';
 import SpiritualJournal from '@/components/SpiritualJournal';
 import IslamicDreamJournal from '@/components/IslamicDreamJournal';
+import NewUserWelcome from '@/components/NewUserWelcome';
 
 const HabitsTab = () => {
   return (
     <div className="space-y-6">
+      <NewUserWelcome />
       <HabitTracker />
       <IslamicPrayerTracker />
       <IslamicHabitVisualization />
