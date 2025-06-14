@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Book, Heart, ArrowLeft, Copy, Languages, Play, Pause } from 'lucide-react';
+import { Book, Heart, ArrowLeft, Copy, Languages, Play, Pause, Loader2 } from 'lucide-react';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { fetchSurahWithTranslation } from '@/services/quranApi';
+import { useToast } from '@/hooks/use-toast';
 
 interface Surah {
   number: number;
@@ -13,6 +15,19 @@ interface Surah {
   verses?: string[];
   translations?: string[];
   totalVerses?: number;
+}
+
+interface ApiSurahData {
+  number: number;
+  name: string;
+  englishName: string;
+  englishNameTranslation: string;
+  numberOfAyahs: number;
+  ayahs: Array<{
+    number: number;
+    text: string;
+    numberInSurah: number;
+  }>;
 }
 
 interface SurahGridProps {
@@ -33,7 +48,10 @@ const SurahGrid: React.FC<SurahGridProps> = ({
   const [viewMode, setViewMode] = useState<'list' | 'reading'>('list');
   const [showTranslation, setShowTranslation] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [apiSurahData, setApiSurahData] = useState<{ arabic: ApiSurahData; translation: ApiSurahData } | null>(null);
+  const [loadingApiData, setLoadingApiData] = useState(false);
   const { copyToClipboard } = useCopyToClipboard();
+  const { toast } = useToast();
 
   // Complete list of all 114 Quran surahs
   const allSurahs: Surah[] = [
@@ -239,157 +257,196 @@ const SurahGrid: React.FC<SurahGridProps> = ({
     }
   ];
 
-  const handleSurahClick = (surah: Surah) => {
-    if (surah.verses) {
+  const handleSurahClick = async (surah: Surah) => {
+    setLoadingApiData(true);
+    try {
+      const data = await fetchSurahWithTranslation(surah.number);
+      setApiSurahData(data);
       setSelectedSurah(surah.number);
       setViewMode('reading');
-    } else {
-      onSurahRead(surah);
+      toast({
+        title: 'Surah Loaded',
+        description: `${data.arabic.englishName} has been loaded successfully`,
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to load surah. Please try again.',
+        variant: 'destructive',
+      });
+      // Fallback to local data if available
+      if (surah.verses) {
+        setSelectedSurah(surah.number);
+        setViewMode('reading');
+      }
+    } finally {
+      setLoadingApiData(false);
     }
   };
 
-  const handleCopyVerse = (arabic: string, translation?: string) => {
-    const textToCopy = translation 
-      ? `${arabic}\n\n${translation}`
-      : arabic;
-    copyToClipboard(textToCopy, 'Verse copied to clipboard');
-  };
-
-  const handleCopyFullSurah = (surah: Surah) => {
-    if (surah.verses) {
-      const fullText = surah.verses.map((verse, index) => {
-        const translation = surah.translations?.[index];
-        return translation ? `${verse}\n${translation}` : verse;
+  const handleCopyFullSurah = () => {
+    if (apiSurahData) {
+      const fullText = apiSurahData.arabic.ayahs.map((ayah, index) => {
+        const translation = apiSurahData.translation.ayahs[index]?.text;
+        return translation ? `${ayah.text}\n${translation}` : ayah.text;
       }).join('\n\n');
       
       copyToClipboard(
-        `Surah ${surah.name} (${surah.meaning})\n\n${fullText}`,
+        `Surah ${apiSurahData.arabic.englishName} (${apiSurahData.arabic.englishNameTranslation})\n\n${fullText}`,
         'Full surah copied to clipboard'
       );
     }
   };
 
-  if (viewMode === 'reading' && selectedSurah) {
-    const surah = allSurahs.find(s => s.number === selectedSurah);
-    if (surah?.verses) {
-      return (
-        <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
-          {/* Header */}
-          <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-emerald-200 p-4 flex items-center justify-between shadow-sm">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setViewMode('list')}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Surahs
-            </Button>
-            
-            <div className="text-center">
-              <h1 className="text-lg font-bold text-emerald-800">سُورَةُ {surah.name}</h1>
-              <p className="text-sm text-emerald-600">{surah.meaning}</p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowTranslation(!showTranslation)}
-                className="text-emerald-700 hover:text-emerald-900"
-                title="Toggle translation"
-              >
-                <Languages className="w-5 h-5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="text-emerald-700 hover:text-emerald-900"
-              >
-                {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleCopyFullSurah(surah)}
-                className="text-emerald-700 hover:text-emerald-900"
-              >
-                <Copy className="w-5 h-5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onAddToBookmarks(surah, 'surah')}
-                className="text-emerald-700 hover:text-emerald-900"
-              >
-                <Heart className="w-5 h-5" />
-              </Button>
-            </div>
+  // Traditional Quran Page Reading View
+  if (viewMode === 'reading' && selectedSurah && apiSurahData) {
+    const { arabic: arabicSurah, translation: translationSurah } = apiSurahData;
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-amber-100">
+        {/* Header */}
+        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-amber-200 p-4 flex items-center justify-between shadow-sm">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setViewMode('list');
+              setApiSurahData(null);
+            }}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Surahs
+          </Button>
+          
+          <div className="text-center">
+            <h1 className="text-lg font-bold text-amber-800">سُورَةُ {arabicSurah.name}</h1>
+            <p className="text-sm text-amber-600">{arabicSurah.englishNameTranslation}</p>
           </div>
 
-          {/* Quran Content - Side by Side Ayat Layout */}
-          <div className="max-w-6xl mx-auto px-6 py-8">
-            <div className="bg-white rounded-lg shadow-lg border border-emerald-200 p-8">
-              {/* Surah Header */}
-              <div className="text-center mb-8 pb-6 border-b border-emerald-200">
-                <div className="inline-block bg-emerald-100 px-6 py-3 rounded-full border border-emerald-300 shadow-sm">
-                  <span className="text-emerald-800 font-semibold text-lg">سُورَةُ {surah.name}</span>
-                </div>
-                <p className="text-emerald-600 mt-2 text-sm">({surah.meaning})</p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowTranslation(!showTranslation)}
+              className="text-amber-700 hover:text-amber-900"
+              title="Toggle translation"
+            >
+              <Languages className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsPlaying(!isPlaying)}
+              className="text-amber-700 hover:text-amber-900"
+            >
+              {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleCopyFullSurah}
+              className="text-amber-700 hover:text-amber-900"
+            >
+              <Copy className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onAddToBookmarks(arabicSurah, 'surah')}
+              className="text-amber-700 hover:text-amber-900"
+            >
+              <Heart className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Traditional Quran Page Layout */}
+        <div className="max-w-4xl mx-auto px-6 py-8">
+          <div className="bg-white rounded-lg shadow-xl border-8 border-amber-300" 
+               style={{
+                 background: 'linear-gradient(135deg, #fefdfb 0%, #fcf6e8 100%)',
+                 boxShadow: '0 20px 40px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6)'
+               }}>
+            
+            {/* Decorative Header */}
+            <div className="text-center py-6 border-b-4 border-amber-400" 
+                 style={{
+                   background: 'linear-gradient(90deg, #f7931e 0%, #fbb040 50%, #f7931e 100%)',
+                   borderTopLeftRadius: '8px',
+                   borderTopRightRadius: '8px'
+                 }}>
+              <div className="text-white">
+                <h2 className="text-2xl font-bold mb-1" dir="rtl">سُورَةُ {arabicSurah.name}</h2>
+                <p className="text-amber-100 text-sm">{arabicSurah.englishNameTranslation}</p>
+                <p className="text-amber-200 text-xs mt-1">{arabicSurah.numberOfAyahs} آیات</p>
+              </div>
+            </div>
+
+            {/* Quran Text - Traditional Continuous Flow */}
+            <div className="p-8" dir="rtl">
+              <div className="leading-loose text-justify" 
+                   style={{ 
+                     fontFamily: 'Amiri, Scheherazade New, Arabic Typesetting, serif',
+                     fontSize: '20px',
+                     lineHeight: '2.2',
+                     textAlign: 'justify'
+                   }}>
+                
+                {/* Continuous Arabic text with verse markers */}
+                <p className="text-gray-800">
+                  {arabicSurah.ayahs.map((ayah, index) => (
+                    <span key={ayah.numberInSurah} className="inline">
+                      {ayah.text}
+                      {/* Verse number in circle - traditional style */}
+                      <span className="inline-flex items-center justify-center w-8 h-8 mx-2 my-1 text-xs font-bold text-white bg-amber-500 rounded-full border-2 border-amber-600" 
+                            style={{ 
+                              background: 'radial-gradient(circle, #f7931e 0%, #e67e22 100%)',
+                              boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                            }}>
+                        {ayah.numberInSurah}
+                      </span>
+                      {index < arabicSurah.ayahs.length - 1 && ' '}
+                    </span>
+                  ))}
+                </p>
               </div>
 
-              {/* Verses in Grid Layout - Side by Side */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {surah.verses.map((verse, index) => (
-                  <div key={index} className="relative group bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 rounded-lg p-4 hover:shadow-md transition-all">
-                    {/* Verse Number */}
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="bg-emerald-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">
-                        {index === 0 ? "۞" : index}
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleCopyVerse(verse, surah.translations?.[index])}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-
-                    {/* Arabic Text */}
-                    <div className="mb-4" dir="rtl">
-                      <p className="text-right leading-loose text-xl font-arabic text-gray-800" 
-                         style={{ 
-                           fontFamily: 'Amiri, Scheherazade, Arabic Typesetting, serif',
-                           lineHeight: '2'
-                         }}>
-                        {verse}
+              {/* Translation Section */}
+              {showTranslation && (
+                <div className="mt-8 pt-6 border-t-2 border-amber-200">
+                  <h3 className="text-lg font-semibold text-amber-800 mb-4 text-center" dir="ltr">
+                    English Translation
+                  </h3>
+                  <div className="space-y-3" dir="ltr">
+                    {translationSurah.ayahs.map((ayah) => (
+                      <p key={ayah.numberInSurah} className="text-gray-700 leading-relaxed">
+                        <span className="inline-flex items-center justify-center w-6 h-6 mr-2 text-xs font-bold text-white bg-amber-500 rounded-full">
+                          {ayah.numberInSurah}
+                        </span>
+                        {ayah.text}
                       </p>
-                    </div>
-
-                    {/* English Translation */}
-                    {showTranslation && surah.translations?.[index] && (
-                      <p className="text-gray-600 text-sm leading-relaxed italic border-t border-emerald-100 pt-3">
-                        {surah.translations[index]}
-                      </p>
-                    )}
+                    ))}
                   </div>
-                ))}
-              </div>
-
-              {/* Surah Info */}
-              <div className="text-center mt-8 pt-6 border-t border-emerald-200">
-                <div className="inline-block bg-emerald-100 px-4 py-2 rounded-full border border-emerald-300 shadow-sm">
-                  <span className="text-emerald-800 font-semibold">Surah {surah.number} • {surah.verses.length} Ayat</span>
                 </div>
-              </div>
+              )}
+            </div>
+
+            {/* Decorative Footer */}
+            <div className="text-center py-4 border-t-4 border-amber-400" 
+                 style={{
+                   background: 'linear-gradient(90deg, #f7931e 0%, #fbb040 50%, #f7931e 100%)',
+                   borderBottomLeftRadius: '8px',
+                   borderBottomRightRadius: '8px'
+                 }}>
+              <p className="text-white text-sm">
+                صدق الله العظيم • {arabicSurah.englishName} • Page {selectedSurah}
+              </p>
             </div>
           </div>
         </div>
-      );
-    }
+      </div>
+    );
   }
 
   return (
@@ -401,10 +458,18 @@ const SurahGrid: React.FC<SurahGridProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
+        {/* Loading state for API data */}
+        {loadingApiData && (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+            <span className="ml-2 text-emerald-600">Loading surah from API...</span>
+          </div>
+        )}
+
         {/* Search and Filter Options */}
         <div className="mb-6 p-4 bg-emerald-50 rounded-lg border border-emerald-200">
           <h3 className="font-semibold text-emerald-800 mb-2">Complete Quran Surahs (114 Surahs)</h3>
-          <p className="text-sm text-emerald-600">Click on any surah to read its verses • Full Arabic text with English translations</p>
+          <p className="text-sm text-emerald-600">Click on any surah to read its verses • Full Arabic text with English translations from API</p>
         </div>
 
         {/* Surahs Grid */}
@@ -450,11 +515,9 @@ const SurahGrid: React.FC<SurahGridProps> = ({
                   >
                     <Heart className="w-4 h-4" />
                   </Button>
-                  {surah.verses && (
-                    <div className="bg-emerald-500 text-white px-2 py-1 rounded text-xs font-medium">
-                      READ
-                    </div>
-                  )}
+                  <div className="bg-emerald-500 text-white px-2 py-1 rounded text-xs font-medium">
+                    API
+                  </div>
                 </div>
               </div>
             </div>
