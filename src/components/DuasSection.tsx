@@ -1,10 +1,10 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Heart, Search, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 type Dua = {
   id: string;
@@ -101,15 +101,61 @@ const DuasSection: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [expandedDua, setExpandedDua] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const saved = localStorage.getItem('islamic-app-bookmarks');
+    if (saved) {
+      const bookmarks = JSON.parse(saved);
+      const duaFavorites = new Set(
+        bookmarks.filter((b: any) => b.type === 'dua').map((b: any) => b.id.replace('dua-', ''))
+      );
+      setFavorites(duaFavorites);
+    }
+  }, []);
 
   const toggleFavorite = (duaId: string) => {
-    const newFavorites = new Set(favorites);
-    if (newFavorites.has(duaId)) {
-      newFavorites.delete(duaId);
+    const dua = duaCategories
+      .flatMap(cat => cat.duas)
+      .find(d => d.id === duaId);
+    
+    if (!dua) return;
+
+    const bookmark = {
+      id: `dua-${duaId}`,
+      type: 'dua' as const,
+      title: dua.title,
+      subtitle: dua.transliteration,
+      data: dua,
+      timestamp: Date.now()
+    };
+
+    const saved = localStorage.getItem('islamic-app-bookmarks');
+    const bookmarks = saved ? JSON.parse(saved) : [];
+    
+    const existingIndex = bookmarks.findIndex((b: any) => b.id === bookmark.id);
+    
+    if (existingIndex === -1) {
+      bookmarks.push(bookmark);
+      setFavorites(prev => new Set([...prev, duaId]));
+      toast({
+        title: "Added to bookmarks",
+        description: `${dua.title} has been saved to your bookmarks.`,
+      });
     } else {
-      newFavorites.add(duaId);
+      bookmarks.splice(existingIndex, 1);
+      setFavorites(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(duaId);
+        return newSet;
+      });
+      toast({
+        title: "Removed from bookmarks",
+        description: `${dua.title} has been removed from your bookmarks.`,
+      });
     }
-    setFavorites(newFavorites);
+    
+    localStorage.setItem('islamic-app-bookmarks', JSON.stringify(bookmarks));
   };
 
   const filteredDuas = duaCategories
