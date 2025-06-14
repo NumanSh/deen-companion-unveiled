@@ -26,6 +26,7 @@ import SmartPrayerWeatherIntegration from '@/components/SmartPrayerWeatherIntegr
 import IslamicPrayerTimeAlerts from '@/components/IslamicPrayerTimeAlerts';
 import IslamicCalendarEvents from '@/components/IslamicCalendarEvents';
 import IslamicDateEventsTracker from '@/components/IslamicDateEventsTracker';
+import IslamicFinanceCalculator from '@/components/IslamicFinanceCalculator';
 
 export const HadithTab = () => (
   <div className="space-y-6">
@@ -61,7 +62,7 @@ export const AnalyticsTab = () => (
     <IslamicHabitVisualization />
     <IslamicAchievementSystem />
     <IslamicMilestoneTracker />
-    <IslamicFinanceTracker />
+    <IslamicFinanceCalculator />
     <IslamicGoalsTracker />
     <PrayerTimeTracker />
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

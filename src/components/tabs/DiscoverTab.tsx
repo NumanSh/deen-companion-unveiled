@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ContentDiscovery from '@/components/ContentDiscovery';
 import PersonalizedContentEngine from '@/components/PersonalizedContentEngine';
@@ -26,12 +25,31 @@ import IslamicKnowledgeQuiz from '@/components/IslamicKnowledgeQuiz';
 import AsmaUlHusna from '@/components/AsmaUlHusna';
 import IslamicStoriesHub from '@/components/IslamicStoriesHub';
 import IslamicEventCountdown from '@/components/IslamicEventCountdown';
+import AISpiritualAdvisor from '@/components/AISpiritualAdvisor';
+import VirtualHajjPreparation from '@/components/VirtualHajjPreparation';
+import IslamicDreamInterpretation from '@/components/IslamicDreamInterpretation';
+import CommunityPrayerRequests from '@/components/CommunityPrayerRequests';
+import IslamicFinanceCalculator from '@/components/IslamicFinanceCalculator';
+import QuranVerseMoodMatcher from '@/components/QuranVerseMoodMatcher';
 
 const DiscoverTab = () => {
   return (
     <div className="space-y-6">
       <ContentDiscovery />
       <PersonalizedContentEngine />
+      
+      {/* New AI-Powered Features */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <AISpiritualAdvisor />
+        <QuranVerseMoodMatcher />
+      </div>
+      
+      <VirtualHajjPreparation />
+      <IslamicDreamInterpretation />
+      <CommunityPrayerRequests />
+      <IslamicFinanceCalculator />
+      
+      {/* Existing Components */}
       <VirtualIslamicStudyGroup />
       <IslamicWisdomCollection />
       <IslamicFatwaDatabase />
