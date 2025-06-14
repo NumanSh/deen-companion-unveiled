@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -72,6 +71,116 @@ const hadithCollections: Hadith[] = [
     narrator: 'Mu\'awiya (RA)',
     reference: 'Sahih Bukhari 71',
     category: 'Knowledge'
+  },
+  {
+    id: '6',
+    collection: 'Sahih Bukhari',
+    book: 'Book of Faith',
+    hadithNumber: '13',
+    arabic: 'لَا يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لِأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ',
+    english: 'None of you truly believes until he loves for his brother what he loves for himself.',
+    narrator: 'Anas ibn Malik (RA)',
+    reference: 'Sahih Bukhari 13',
+    category: 'Faith'
+  },
+  {
+    id: '7',
+    collection: 'Sahih Muslim',
+    book: 'Book of Prayer',
+    hadithNumber: '233',
+    arabic: 'مَنْ صَلَّى الْبَرْدَيْنِ دَخَلَ الْجَنَّةَ',
+    english: 'Whoever prays the two cool prayers (Fajr and Asr) will enter Paradise.',
+    narrator: 'Abu Musa Al-Ash\'ari (RA)',
+    reference: 'Sahih Muslim 233',
+    category: 'Prayer'
+  },
+  {
+    id: '8',
+    collection: 'Sahih Muslim',
+    book: 'Book of Faith',
+    hadithNumber: '55',
+    arabic: 'الدِّينُ النَّصِيحَةُ',
+    english: 'Religion is sincere advice.',
+    narrator: 'Tamim Ad-Dari (RA)',
+    reference: 'Sahih Muslim 55',
+    category: 'Faith'
+  },
+  {
+    id: '9',
+    collection: 'Sunan Ibn Majah',
+    book: 'Book of Rulings',
+    hadithNumber: '2341',
+    arabic: 'لَا ضَرَرَ وَلَا ضِرَارَ',
+    english: 'There should be neither harming nor reciprocating harm.',
+    narrator: 'Abu Sa\'id Al-Khudri (RA)',
+    reference: 'Sunan Ibn Majah 2341',
+    category: 'Justice'
+  },
+  {
+    id: '10',
+    collection: 'Sahih Muslim',
+    book: 'Book of Wills',
+    hadithNumber: '1631',
+    arabic: 'إِذَا مَاتَ الْإِنْسَانُ انْقَطَعَ عَنْهُ عَمَلُهُ إِلَّا مِنْ ثَلَاثَةٍ',
+    english: 'When a person dies, his deeds come to an end except for three things.',
+    narrator: 'Abu Hurairah (RA)',
+    reference: 'Sahih Muslim 1631',
+    category: 'Death'
+  },
+  {
+    id: '11',
+    collection: 'Sahih Bukhari',
+    book: 'Book of Fasting',
+    hadithNumber: '1904',
+    arabic: 'كُلُّ عَمَلِ ابْنِ آدَمَ لَهُ إِلَّا الصَّوْمَ فَإِنَّهُ لِي وَأَنَا أَجْزِي بِهِ',
+    english: 'Every deed of the son of Adam is for him except fasting; it is for Me and I shall reward for it.',
+    narrator: 'Abu Hurairah (RA)',
+    reference: 'Sahih Bukhari 1904',
+    category: 'Fasting'
+  },
+  {
+    id: '12',
+    collection: 'At-Tabarani',
+    book: 'Al-Mu\'jam Al-Awsat',
+    hadithNumber: '6026',
+    arabic: 'خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ',
+    english: 'The best of people are those who are most beneficial to others.',
+    narrator: 'Abdullah ibn Umar (RA)',
+    reference: 'At-Tabarani 6026',
+    category: 'Character'
+  },
+  {
+    id: '13',
+    collection: 'Jami\' At-Tirmidhi',
+    book: 'Book of Righteousness',
+    hadithNumber: '1987',
+    arabic: 'اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ',
+    english: 'Fear Allah wherever you are.',
+    narrator: 'Abu Dharr Al-Ghifari (RA)',
+    reference: 'Jami\' At-Tirmidhi 1987',
+    category: 'Taqwa'
+  },
+  {
+    id: '14',
+    collection: 'Sahih Muslim',
+    book: 'Book of Zakat',
+    hadithNumber: '1017',
+    arabic: 'مَنْ سَنَّ فِي الْإِسْلَامِ سُنَّةً حَسَنَةً فَلَهُ أَجْرُهَا وَأَجْرُ مَنْ عَمِلَ بِهَا',
+    english: 'Whoever establishes a good practice in Islam will have its reward and the reward of those who act upon it.',
+    narrator: 'Jarir ibn Abdullah (RA)',
+    reference: 'Sahih Muslim 1017',
+    category: 'Good Deeds'
+  },
+  {
+    id: '15',
+    collection: 'Sahih Muslim',
+    book: 'Book of Faith',
+    hadithNumber: '91',
+    arabic: 'إِنَّ اللَّهَ جَمِيلٌ يُحِبُّ الْجَمَالَ',
+    english: 'Verily, Allah is beautiful and He loves beauty.',
+    narrator: 'Abdullah ibn Mas\'ud (RA)',
+    reference: 'Sahih Muslim 91',
+    category: 'Beauty'
   }
 ];
 
@@ -81,7 +190,7 @@ const HadithSection: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCollection, setSelectedCollection] = useState<string>('All');
 
-  const collections = ['All', 'Sahih Bukhari', 'Sahih Muslim', 'Sunan Abu Dawud', 'Jami\' At-Tirmidhi'];
+  const collections = ['All', 'Sahih Bukhari', 'Sahih Muslim', 'Sunan Abu Dawud', 'Jami\' At-Tirmidhi', 'Sunan Ibn Majah', 'At-Tabarani'];
 
   const toggleFavorite = (hadithId: string) => {
     setFavorites(prev => 
@@ -97,6 +206,7 @@ const HadithSection: React.FC = () => {
 
   const filteredHadith = hadithCollections.filter(hadith => {
     const matchesSearch = hadith.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         hadith.arabic.includes(searchTerm) ||
                          hadith.narrator.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          hadith.category.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCollection = selectedCollection === 'All' || hadith.collection === selectedCollection;
