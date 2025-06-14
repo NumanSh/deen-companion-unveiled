@@ -8,9 +8,23 @@ import { BookOpen, Heart, Search, Star } from 'lucide-react';
 
 const Books = () => {
   const [activeTab, setActiveTab] = useState('quran');
+  const [readingSurahs, setReadingSurahs] = useState<number[]>([]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+  };
+
+  const handleAddToBookmarks = (surahNumber: number) => {
+    // Add bookmark functionality
+    console.log('Adding to bookmarks:', surahNumber);
+  };
+
+  const handleSurahRead = (surahNumber: number) => {
+    setReadingSurahs(prev => 
+      prev.includes(surahNumber) 
+        ? prev.filter(id => id !== surahNumber)
+        : [...prev, surahNumber]
+    );
   };
 
   return (
@@ -71,7 +85,13 @@ const Books = () => {
           </Card>
 
           {/* Tab Content */}
-          <TabContent activeTab={activeTab} />
+          <TabContent 
+            activeTab={activeTab} 
+            onAddToBookmarks={handleAddToBookmarks}
+            onSurahRead={handleSurahRead}
+            readingSurahs={readingSurahs}
+            isLoading={false}
+          />
         </div>
       </div>
       
