@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Language = 'ar' | 'en';
@@ -169,8 +170,6 @@ const translations = {
     'complete-daily-prayers': 'أكمل الصلوات الخمس',
     'read-page-quran': 'اقرأ صفحة من القرآن',
     
-    // ... keep existing code (rest of translations)
-    
     // Dream Journal
     'islamic-dream-journal': 'يومية الأحلام الإسلامية',
     'add-dream': 'إضافة حلم',
@@ -307,8 +306,6 @@ const translations = {
     'daily-duas': 'الأدعية اليومية',
     'daily-duas-supplications': 'الأدعية اليومية (التضرعات)',
     'search-duas-placeholder': 'البحث في الأدعية أو النطق أو الترجمة...',
-    'morning-dua': 'دعاء الصباح',
-    'evening-dua': 'دعاء المساء',
     'morning-dua-translation': 'أصبحنا وأصبح الملك لله، والحمد لله',
     'evening-dua-translation': 'أمسينا وأمسى الملك لله، والحمد لله',
     'food-drink': 'الطعام والشراب',
@@ -527,8 +524,6 @@ const translations = {
     points: 'points',
     'complete-daily-prayers': 'Complete 5 Daily Prayers',
     'read-page-quran': 'Read 1 Page of Quran',
-    
-    // ... keep existing code (rest of English translations)
     
     // Dream Journal
     'islamic-dream-journal': 'Islamic Dream Journal',
