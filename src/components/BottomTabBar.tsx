@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, Settings, Calendar } from "lucide-react";
+import { Home, Settings, Calendar, Book } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type TabItem = {
@@ -23,6 +23,12 @@ const tabs: TabItem[] = [
     label: "Calendar",
     icon: <Calendar size={24} />,
     href: "/calendar",
+  },
+  {
+    key: "books",
+    label: "Books",
+    icon: <Book size={24} />,
+    href: "/books",
   },
   {
     key: "settings",
