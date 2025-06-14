@@ -1,4 +1,3 @@
-
 import React from 'react';
 import HadithSearchEngine from '@/components/HadithSearchEngine';
 import AIHadithCompanion from '@/components/AIHadithCompanion';
@@ -7,6 +6,8 @@ import IslamicScholarQuotes from '@/components/IslamicScholarQuotes';
 import DuasSection from '@/components/DuasSection';
 import DuaCollectionsManager from '@/components/DuaCollectionsManager';
 import MorningEveningAdhkar from '@/components/MorningEveningAdhkar';
+import AthkarCounter from '@/components/AthkarCounter';
+import AthkarCollectionBrowser from '@/components/AthkarCollectionBrowser';
 import DhikrCounter from '@/components/DhikrCounter';
 import TasbihCounter from '@/components/TasbihCounter';
 import AsmaUlHusna from '@/components/AsmaUlHusna';
@@ -44,7 +45,13 @@ export const DuasTab = () => (
   </div>
 );
 
-export const AdhkarTab = () => <MorningEveningAdhkar />;
+export const AdhkarTab = () => (
+  <div className="space-y-6">
+    <MorningEveningAdhkar />
+    <AthkarCounter />
+    <AthkarCollectionBrowser />
+  </div>
+);
 
 export const DhikrTab = () => (
   <div className="space-y-6">
