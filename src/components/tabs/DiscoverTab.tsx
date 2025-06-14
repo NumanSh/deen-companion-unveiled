@@ -32,12 +32,18 @@ import CommunityPrayerRequests from '@/components/CommunityPrayerRequests';
 import IslamicFinanceCalculator from '@/components/IslamicFinanceCalculator';
 import QuranVerseMoodMatcher from '@/components/QuranVerseMoodMatcher';
 
-// New AI-powered components
+// Existing AI-powered components
 import AIQuranStudyCompanion from '@/components/AIQuranStudyCompanion';
 import SmartIslamicLearningAssistant from '@/components/SmartIslamicLearningAssistant';
 import AIIslamicLifeCoach from '@/components/AIIslamicLifeCoach';
 import IntelligentPrayerAnalytics from '@/components/IntelligentPrayerAnalytics';
 import AIIslamicNewsInsights from '@/components/AIIslamicNewsInsights';
+
+// New AI-powered components
+import AIIslamicCalendar from '@/components/AIIslamicCalendar';
+import SmartIslamicGoalSetter from '@/components/SmartIslamicGoalSetter';
+import AIPersonalizedDhikr from '@/components/AIPersonalizedDhikr';
+import SmartQuranCompanion from '@/components/SmartQuranCompanion';
 
 const DiscoverTab = () => {
   return (
@@ -45,10 +51,25 @@ const DiscoverTab = () => {
       <ContentDiscovery />
       <PersonalizedContentEngine />
       
-      {/* Latest AI-Powered Features */}
+      {/* 🚀 Newest AI-Powered Features */}
+      <div className="bg-gradient-to-r from-pink-100 to-rose-100 dark:from-pink-900 dark:to-rose-900 p-4 rounded-lg border border-pink-200 dark:border-pink-700">
+        <h3 className="text-lg font-semibold text-pink-800 dark:text-pink-200 mb-4 text-center">
+          🌟 Latest AI Innovations
+        </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <AIIslamicCalendar />
+          <SmartIslamicGoalSetter />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <AIPersonalizedDhikr />
+          <SmartQuranCompanion />
+        </div>
+      </div>
+      
+      {/* Previous AI-Powered Features */}
       <div className="bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900 dark:to-blue-900 p-4 rounded-lg border border-purple-200 dark:border-purple-700">
         <h3 className="text-lg font-semibold text-purple-800 dark:text-purple-200 mb-4 text-center">
-          🚀 Latest AI-Powered Features
+          🚀 AI-Powered Features
         </h3>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <AIQuranStudyCompanion />
@@ -74,7 +95,6 @@ const DiscoverTab = () => {
       <CommunityPrayerRequests />
       <IslamicFinanceCalculator />
       
-      {/* Existing Components */}
       <VirtualIslamicStudyGroup />
       <IslamicWisdomCollection />
       <IslamicFatwaDatabase />
