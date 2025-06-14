@@ -1,7 +1,8 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Book, RotateCcw, Plus, Minus, ScrollText, Heart, Search, BarChart3, Bell } from "lucide-react";
+import { Book, RotateCcw, Plus, Minus, ScrollText, Heart, Search, BarChart3, Bell, Home, Target, Compass } from "lucide-react";
 import BottomTabBar from "@/components/BottomTabBar";
 import DuasSection from "@/components/DuasSection";
 import HadithSection from "@/components/HadithSection";
@@ -16,11 +17,14 @@ import QuickAccessWidget from "@/components/QuickAccessWidget";
 import UniversalSearch from "@/components/UniversalSearch";
 import ProgressAnalytics from "@/components/ProgressAnalytics";
 import DailyReminders from "@/components/DailyReminders";
+import PersonalDashboard from "@/components/PersonalDashboard";
+import HabitTracker from "@/components/HabitTracker";
+import ContentDiscovery from "@/components/ContentDiscovery";
 
 const Books = () => {
   const [dhikrCount, setDhikrCount] = useState(0);
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<'quran' | 'hadith' | 'duas' | 'adhkar' | 'dhikr' | 'bookmarks' | 'analytics' | 'reminders'>('quran');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'quran' | 'hadith' | 'duas' | 'adhkar' | 'dhikr' | 'bookmarks' | 'analytics' | 'reminders' | 'habits' | 'discover'>('dashboard');
   const [isLoading, setIsLoading] = useState(false);
   const [readingSurahs, setReadingSurahs] = useState<Set<number>>(new Set());
   const [readingModeContent, setReadingModeContent] = useState<any>(null);
@@ -45,11 +49,14 @@ const Books = () => {
   const decrementDhikr = () => setDhikrCount(prev => Math.max(0, prev - 1));
 
   const tabs = [
+    { key: 'dashboard', label: 'Dashboard', icon: Home },
     { key: 'quran', label: 'Quran', icon: Book },
     { key: 'hadith', label: 'Hadith', icon: ScrollText },
     { key: 'duas', label: 'Duas', icon: Book },
     { key: 'adhkar', label: 'Adhkar', icon: Book },
     { key: 'dhikr', label: 'Dhikr', icon: RotateCcw },
+    { key: 'habits', label: 'Habits', icon: Target },
+    { key: 'discover', label: 'Discover', icon: Compass },
     { key: 'bookmarks', label: 'Saved', icon: Heart },
     { key: 'analytics', label: 'Progress', icon: BarChart3 },
     { key: 'reminders', label: 'Reminders', icon: Bell },
@@ -147,7 +154,7 @@ const Books = () => {
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Header with Search */}
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Islamic Books</h1>
+            <h1 className="text-3xl font-bold">Deen Companion</h1>
             <Button
               variant="outline"
               onClick={() => setShowUniversalSearch(true)}
@@ -158,24 +165,24 @@ const Books = () => {
             </Button>
           </div>
           
-          {/* Daily Progress - Show at top for Quran */}
-          {activeTab === 'quran' && <DailyProgress />}
+          {/* Daily Progress - Show at top for Dashboard */}
+          {activeTab === 'dashboard' && <DailyProgress />}
           
           {/* Tab Navigation */}
-          <div className="flex flex-wrap justify-center gap-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+          <div className="flex flex-wrap justify-center gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key as any)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-1 px-2 py-2 rounded-md text-xs font-medium transition-colors ${
                     activeTab === tab.key
                       ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3 h-3" />
                   {tab.label}
                 </button>
               );
@@ -183,6 +190,12 @@ const Books = () => {
           </div>
 
           {/* Tab Content */}
+          {activeTab === 'dashboard' && <PersonalDashboard />}
+
+          {activeTab === 'habits' && <HabitTracker />}
+
+          {activeTab === 'discover' && <ContentDiscovery />}
+
           {activeTab === 'quran' && (
             <Card>
               <CardHeader>
