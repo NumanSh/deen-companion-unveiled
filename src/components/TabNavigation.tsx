@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, Book, ScrollText, RotateCcw, Target, Compass, Heart, BarChart3, Bell } from 'lucide-react';
+import { Home, Book, ScrollText, RotateCcw, Target, Compass, Heart, BarChart3, Bell, BookOpen } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Tab {
@@ -20,12 +20,12 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange })
   const tabs: Tab[] = [
     { key: 'dashboard', labelKey: 'dashboard', icon: Home },
     { key: 'quran', labelKey: 'quran', icon: Book },
+    { key: 'discover', labelKey: 'study-tools', icon: BookOpen },
     { key: 'hadith', labelKey: 'hadith', icon: ScrollText },
     { key: 'duas', labelKey: 'duas', icon: Book },
     { key: 'adhkar', labelKey: 'adhkar', icon: Book },
     { key: 'dhikr', labelKey: 'dhikr', icon: RotateCcw },
     { key: 'habits', labelKey: 'habits', icon: Target },
-    { key: 'discover', labelKey: 'discover', icon: Compass },
     { key: 'bookmarks', labelKey: 'saved', icon: Heart },
     { key: 'analytics', labelKey: 'progress', icon: BarChart3 },
     { key: 'reminders', labelKey: 'reminders', icon: Bell },
@@ -46,7 +46,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange })
             }`}
           >
             <Icon className="w-3 h-3" />
-            {t(tab.labelKey)}
+            {tab.key === 'discover' ? 'Study Tools' : t(tab.labelKey)}
           </button>
         );
       })}
