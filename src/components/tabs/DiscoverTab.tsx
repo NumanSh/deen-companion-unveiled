@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ContentDiscovery from '@/components/ContentDiscovery';
 import PersonalizedContentEngine from '@/components/PersonalizedContentEngine';
@@ -38,12 +39,16 @@ import SmartIslamicLearningAssistant from '@/components/SmartIslamicLearningAssi
 import AIIslamicLifeCoach from '@/components/AIIslamicLifeCoach';
 import IntelligentPrayerAnalytics from '@/components/IntelligentPrayerAnalytics';
 import AIIslamicNewsInsights from '@/components/AIIslamicNewsInsights';
-
-// New AI-powered components
 import AIIslamicCalendar from '@/components/AIIslamicCalendar';
 import SmartIslamicGoalSetter from '@/components/SmartIslamicGoalSetter';
 import AIPersonalizedDhikr from '@/components/AIPersonalizedDhikr';
 import SmartQuranCompanion from '@/components/SmartQuranCompanion';
+
+// New cutting-edge AI features
+import AIIslamicScholarChat from '@/components/AIIslamicScholarChat';
+import SmartHadithAuthenticityChecker from '@/components/SmartHadithAuthenticityChecker';
+import AIIslamicDreamAnalysis from '@/components/AIIslamicDreamAnalysis';
+import DorarAqeedaIntegration from '@/components/DorarAqeedaIntegration';
 
 const DiscoverTab = () => {
   return (
@@ -51,7 +56,29 @@ const DiscoverTab = () => {
       <ContentDiscovery />
       <PersonalizedContentEngine />
       
-      {/* 🚀 Newest AI-Powered Features */}
+      {/* 🚀 Revolutionary AI Features */}
+      <div className="bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900 dark:to-teal-900 p-4 rounded-lg border border-emerald-200 dark:border-emerald-700">
+        <h3 className="text-lg font-semibold text-emerald-800 dark:text-emerald-200 mb-4 text-center">
+          🌟 Revolutionary AI Islamic Features
+        </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <AIIslamicScholarChat />
+          <SmartHadithAuthenticityChecker />
+        </div>
+        <div className="mt-6">
+          <AIIslamicDreamAnalysis />
+        </div>
+      </div>
+
+      {/* 📚 Dorar.net Integration */}
+      <div className="bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900 dark:to-emerald-900 p-4 rounded-lg border border-green-200 dark:border-green-700">
+        <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-4 text-center">
+          📚 موقع الدرر السنية - العقيدة الإسلامية
+        </h3>
+        <DorarAqeedaIntegration />
+      </div>
+      
+      {/* 🚀 Latest AI Innovations */}
       <div className="bg-gradient-to-r from-pink-100 to-rose-100 dark:from-pink-900 dark:to-rose-900 p-4 rounded-lg border border-pink-200 dark:border-pink-700">
         <h3 className="text-lg font-semibold text-pink-800 dark:text-pink-200 mb-4 text-center">
           🌟 Latest AI Innovations
