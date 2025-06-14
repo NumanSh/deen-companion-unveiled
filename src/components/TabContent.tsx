@@ -42,6 +42,11 @@ import DailyIslamicChallenges from '@/components/DailyIslamicChallenges';
 import QuranMemorizationTracker from '@/components/QuranMemorizationTracker';
 import IslamicFinanceTracker from '@/components/IslamicFinanceTracker';
 import IslamicWeatherWidget from '@/components/IslamicWeatherWidget';
+import IslamicPrayerTimeAlerts from '@/components/IslamicPrayerTimeAlerts';
+import QuranicVerseOfDay from '@/components/QuranicVerseOfDay';
+import IslamicAudioLibrary from '@/components/IslamicAudioLibrary';
+import IslamicGoalsTracker from '@/components/IslamicGoalsTracker';
+import HijriDateConverter from '@/components/HijriDateConverter';
 
 interface TabContentProps {
   activeTab: string;
@@ -65,7 +70,11 @@ const TabContent: React.FC<TabContentProps> = ({
           <PersonalDashboard />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <IslamicQuoteWidget />
+            <QuranicVerseOfDay />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <IslamicWeatherWidget />
+            <IslamicPrayerTimeAlerts />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <ReadingStreakCounter />
@@ -73,7 +82,11 @@ const TabContent: React.FC<TabContentProps> = ({
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <DailyIslamicGoals />
+            <IslamicGoalsTracker />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <PrayerTimeTracker />
+            <HijriDateConverter />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <IslamicEventCountdown />
@@ -82,10 +95,6 @@ const TabContent: React.FC<TabContentProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <SpiritualMoodTracker />
             <HijriCalendarWidget />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <QuranicWordLearning />
-            <CharityImpactTracker />
           </div>
           <SpiritualHabitStreaks />
         </div>
@@ -96,6 +105,7 @@ const TabContent: React.FC<TabContentProps> = ({
           <HabitTracker />
           <DailyIslamicChallenges />
           <IslamicHabitBuilder />
+          <IslamicGoalsTracker />
           <SpiritualHabitStreaks />
           <FastingTracker />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -117,9 +127,11 @@ const TabContent: React.FC<TabContentProps> = ({
       return (
         <div className="space-y-6">
           <ContentDiscovery />
+          <IslamicAudioLibrary />
           <IslamicNameMeanings />
           <QuranMemorizationTracker />
           <IslamicFinanceTracker />
+          <HijriDateConverter />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <QiblaCompass />
             <VirtualMosqueFinder />
@@ -138,6 +150,7 @@ const TabContent: React.FC<TabContentProps> = ({
     case 'quran':
       return (
         <div className="space-y-6">
+          <QuranicVerseOfDay />
           <SurahGrid
             onAddToBookmarks={onAddToBookmarks}
             onSurahRead={onSurahRead}
@@ -176,6 +189,7 @@ const TabContent: React.FC<TabContentProps> = ({
         <div className="space-y-6">
           <ProgressAnalytics />
           <IslamicFinanceTracker />
+          <IslamicGoalsTracker />
           <PrayerTimeTracker />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <SpiritualMoodTracker />
@@ -184,14 +198,23 @@ const TabContent: React.FC<TabContentProps> = ({
         </div>
       );
     case 'reminders':
-      return <DailyReminders />;
+      return (
+        <div className="space-y-6">
+          <DailyReminders />
+          <IslamicPrayerTimeAlerts />
+        </div>
+      );
     default:
       return (
         <div className="space-y-6">
           <PersonalDashboard />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <IslamicQuoteWidget />
+            <QuranicVerseOfDay />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <IslamicWeatherWidget />
+            <IslamicPrayerTimeAlerts />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <ReadingStreakCounter />
@@ -199,7 +222,7 @@ const TabContent: React.FC<TabContentProps> = ({
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <DailyIslamicGoals />
-            <PrayerTimeTracker />
+            <IslamicGoalsTracker />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <IslamicEventCountdown />
