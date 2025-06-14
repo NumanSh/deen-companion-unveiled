@@ -10,6 +10,9 @@ import BookmarkManager from "@/components/BookmarkManager";
 import DhikrCounter from "@/components/DhikrCounter";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useToast } from "@/hooks/use-toast";
+import DailyProgress from "@/components/DailyProgress";
+import ReadingMode from "@/components/ReadingMode";
+import QuickAccessWidget from "@/components/QuickAccessWidget";
 
 const Books = () => {
   const [dhikrCount, setDhikrCount] = useState(0);
@@ -17,6 +20,7 @@ const Books = () => {
   const [activeTab, setActiveTab] = useState<'quran' | 'hadith' | 'duas' | 'adhkar' | 'dhikr' | 'bookmarks'>('quran');
   const [isLoading, setIsLoading] = useState(false);
   const [readingSurahs, setReadingSurahs] = useState<Set<number>>(new Set());
+  const [readingModeContent, setReadingModeContent] = useState<any>(null);
   const { toast } = useToast();
 
   // Popular Surahs for quick access
@@ -80,7 +84,16 @@ const Books = () => {
     try {
       // Simulate loading/opening surah
       await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log(`Opening Surah ${surah.name}`);
+      
+      // Open in reading mode with sample content
+      setReadingModeContent({
+        title: `Surah ${surah.name}`,
+        arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+        transliteration: "Bismillahir-Rahmanir-Raheem",
+        translation: "In the name of Allah, the Most Gracious, the Most Merciful.",
+        audioUrl: undefined // Add actual audio URL when available
+      });
+      
       toast({
         title: "Surah Loaded",
         description: `Surah ${surah.name} is ready for reading.`,
@@ -93,8 +106,11 @@ const Books = () => {
       });
     } finally {
       setIsLoading(false);
-      // Keep the surah marked as read for this session
     }
+  };
+
+  const handleQuickAccess = (section: string) => {
+    setActiveTab(section as any);
   };
 
   return (
@@ -102,6 +118,9 @@ const Books = () => {
       <div className="flex-1 px-4 py-6">
         <div className="max-w-4xl mx-auto space-y-6">
           <h1 className="text-3xl font-bold text-center mb-8">Islamic Books</h1>
+          
+          {/* Daily Progress - Show at top */}
+          {activeTab === 'quran' && <DailyProgress />}
           
           {/* Tab Navigation */}
           <div className="flex flex-wrap justify-center gap-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
@@ -216,6 +235,22 @@ const Books = () => {
           {activeTab === 'bookmarks' && <BookmarkManager />}
         </div>
       </div>
+      
+      {/* Reading Mode Modal */}
+      {readingModeContent && (
+        <ReadingMode
+          content={readingModeContent}
+          onClose={() => setReadingModeContent(null)}
+        />
+      )}
+      
+      {/* Quick Access Widget */}
+      <QuickAccessWidget
+        onDhikr={() => handleQuickAccess('dhikr')}
+        onBookmarks={() => handleQuickAccess('bookmarks')}
+        onQuran={() => handleQuickAccess('quran')}
+        onDuas={() => handleQuickAccess('duas')}
+      />
       
       <BottomTabBar />
     </div>
