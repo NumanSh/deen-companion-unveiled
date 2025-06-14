@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Language = 'ar' | 'en';
@@ -80,11 +79,6 @@ const translations = {
     // Main Header
     'app-name': 'رفيق الدين',
     'search-all': 'البحث في الكل',
-    
-    // Tab Navigation - Additional missing keys
-    'saved': 'المحفوظات',
-    'progress': 'التقدم',
-    'reminders': 'التذكيرات',
     
     // Common
     save: 'حفظ',
