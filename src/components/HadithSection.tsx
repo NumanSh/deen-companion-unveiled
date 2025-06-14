@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Heart, Search, ChevronDown, ChevronUp } from "lucide-react";
+import { BookOpen, Heart, Search, ChevronDown, ChevronUp, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Hadith = {
@@ -104,122 +104,194 @@ const HadithSection: React.FC = () => {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-blue-600" />
-          Hadith Collections
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Search and Filter */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Search hadith..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <select
-            value={selectedCollection}
-            onChange={(e) => setSelectedCollection(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            {collections.map(collection => (
-              <option key={collection} value={collection}>{collection}</option>
-            ))}
-          </select>
-        </div>
+    <div className="relative">
+      {/* Islamic Pattern Background */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <div className="w-full h-full bg-gradient-to-br from-emerald-600 via-blue-600 to-purple-600"></div>
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
+          <defs>
+            <pattern id="islamic-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M20,0 L40,20 L20,40 L0,20 Z" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.3"/>
+              <circle cx="20" cy="20" r="8" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.2"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#islamic-pattern)"/>
+        </svg>
+      </div>
 
-        {/* Hadith List */}
-        <div className="space-y-4">
-          {filteredHadith.map((hadith) => (
-            <div
-              key={hadith.id}
-              className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+      <Card className="relative backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 border-emerald-200 dark:border-emerald-800 shadow-xl">
+        <CardHeader className="bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950 dark:to-blue-950 border-b border-emerald-100 dark:border-emerald-800">
+          <CardTitle className="flex items-center gap-3 text-2xl">
+            <div className="relative">
+              <BookOpen className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
+              <Star className="w-3 h-3 text-amber-500 absolute -top-1 -right-1" />
+            </div>
+            <span className="bg-gradient-to-r from-emerald-700 to-blue-700 dark:from-emerald-400 dark:to-blue-400 bg-clip-text text-transparent font-bold">
+              Hadith Collections
+            </span>
+          </CardTitle>
+          <p className="text-sm text-emerald-700 dark:text-emerald-300 mt-2 font-medium">
+            Authentic sayings and teachings of Prophet Muhammad ﷺ
+          </p>
+        </CardHeader>
+        
+        <CardContent className="space-y-6 p-6">
+          {/* Enhanced Search and Filter */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-500 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search hadith by content, narrator, or category..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-emerald-400 dark:placeholder-emerald-500 transition-all duration-200"
+              />
+            </div>
+            <select
+              value={selectedCollection}
+              onChange={(e) => setSelectedCollection(e.target.value)}
+              className="px-4 py-3 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 min-w-[200px] transition-all duration-200"
             >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                      {hadith.collection}
-                    </span>
-                    <span className="text-xs text-gray-500">•</span>
-                    <span className="text-xs text-gray-600 dark:text-gray-400">
-                      {hadith.reference}
-                    </span>
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                    <span className="font-medium">Category:</span> {hadith.category}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => toggleFavorite(hadith.id)}
-                    className={cn(
-                      "p-2",
-                      favorites.includes(hadith.id) && "text-red-500"
-                    )}
-                  >
-                    <Heart className={cn(
-                      "w-4 h-4",
-                      favorites.includes(hadith.id) && "fill-current"
-                    )} />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => toggleExpanded(hadith.id)}
-                    className="p-2"
-                  >
-                    {expandedHadith === hadith.id ? (
-                      <ChevronUp className="w-4 h-4" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
+              {collections.map(collection => (
+                <option key={collection} value={collection}>{collection}</option>
+              ))}
+            </select>
+          </div>
 
-              <div className="space-y-3">
-                <div className="text-base leading-relaxed">
-                  {hadith.english}
+          {/* Enhanced Hadith List */}
+          <div className="space-y-6">
+            {filteredHadith.map((hadith) => (
+              <div
+                key={hadith.id}
+                className={cn(
+                  "group relative border-2 rounded-2xl p-6 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer",
+                  "bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-850",
+                  "border-emerald-100 dark:border-emerald-800 hover:border-emerald-300 dark:hover:border-emerald-600",
+                  expandedHadith === hadith.id && "ring-2 ring-emerald-200 dark:ring-emerald-700 border-emerald-300 dark:border-emerald-600"
+                )}
+                onClick={() => toggleExpanded(hadith.id)}
+              >
+                {/* Decorative Corner Elements */}
+                <div className="absolute top-4 right-4 w-8 h-8 opacity-20">
+                  <svg viewBox="0 0 24 24" className="w-full h-full text-emerald-600">
+                    <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" fill="currentColor"/>
+                  </svg>
                 </div>
-                
-                {expandedHadith === hadith.id && (
-                  <div className="space-y-3 pt-3 border-t border-gray-100 dark:border-gray-600">
-                    <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                      <div className="text-right text-lg leading-relaxed font-arabic">
-                        {hadith.arabic}
+
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
+                        {hadith.collection}
+                      </span>
+                      <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                        {hadith.reference}
+                      </span>
+                    </div>
+                    <div className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      <span className="font-semibold">Category:</span>
+                      <span className="ml-1">{hadith.category}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 ml-4">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(hadith.id);
+                      }}
+                      className={cn(
+                        "p-2 rounded-full transition-all duration-200 hover:scale-110",
+                        favorites.includes(hadith.id) 
+                          ? "text-red-500 hover:text-red-600 bg-red-50 dark:bg-red-900/20" 
+                          : "text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                      )}
+                    >
+                      <Heart className={cn(
+                        "w-5 h-5 transition-transform duration-200",
+                        favorites.includes(hadith.id) && "fill-current scale-110"
+                      )} />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleExpanded(hadith.id);
+                      }}
+                      className="p-2 rounded-full hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all duration-200"
+                    >
+                      {expandedHadith === hadith.id ? (
+                        <ChevronUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400 transition-transform duration-200 rotate-180" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5 text-emerald-600 dark:text-emerald-400 transition-transform duration-200" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-medium">
+                    "{hadith.english}"
+                  </div>
+                  
+                  {expandedHadith === hadith.id && (
+                    <div className="space-y-4 pt-4 border-t-2 border-emerald-100 dark:border-emerald-800 animate-accordion-down">
+                      {/* Arabic Text with Enhanced Styling */}
+                      <div className="relative bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950/50 dark:to-blue-950/50 p-6 rounded-xl border border-emerald-200 dark:border-emerald-700">
+                        <div className="absolute top-2 right-2 text-emerald-300 dark:text-emerald-600 opacity-50">
+                          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L13.09 5.26L16 6L13.09 6.74L12 10L10.91 6.74L8 6L10.91 5.26L12 2Z"/>
+                          </svg>
+                        </div>
+                        <div className="text-right text-xl leading-loose font-arabic text-emerald-800 dark:text-emerald-200" style={{ fontFamily: 'Arial, sans-serif' }}>
+                          {hadith.arabic}
+                        </div>
+                      </div>
+                      
+                      {/* Narrator Information */}
+                      <div className="bg-amber-50 dark:bg-amber-950/30 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                          <span className="text-sm font-bold text-amber-800 dark:text-amber-200">Narrator:</span>
+                        </div>
+                        <p className="text-amber-700 dark:text-amber-300 font-medium">{hadith.narrator}</p>
+                      </div>
+                      
+                      {/* Source Information */}
+                      <div className="bg-purple-50 dark:bg-purple-950/30 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                          <span className="text-sm font-bold text-purple-800 dark:text-purple-200">Source:</span>
+                        </div>
+                        <p className="text-purple-700 dark:text-purple-300 font-medium">
+                          {hadith.book} - {hadith.reference}
+                        </p>
                       </div>
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Narrator:</span> {hadith.narrator}
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">Source:</span> {hadith.book} - {hadith.reference}
-                    </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {filteredHadith.length === 0 && (
-          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-            <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
-            <p>No hadith found matching your search.</p>
+            ))}
           </div>
-        )}
-      </CardContent>
-    </Card>
+
+          {filteredHadith.length === 0 && (
+            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+              <div className="relative mb-6">
+                <BookOpen className="w-16 h-16 mx-auto opacity-30" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Search className="w-6 h-6 opacity-50" />
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">No hadith found</h3>
+              <p className="text-sm">Try adjusting your search terms or filters</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
