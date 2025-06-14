@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Book, RotateCcw, Plus, Minus } from "lucide-react";
 import BottomTabBar from "@/components/BottomTabBar";
+import DuasSection from "@/components/DuasSection";
 
 const Books = () => {
   const [dhikrCount, setDhikrCount] = useState(0);
@@ -31,6 +32,9 @@ const Books = () => {
       <div className="flex-1 px-4 py-6">
         <div className="max-w-4xl mx-auto space-y-6">
           <h1 className="text-3xl font-bold text-center mb-8">Islamic Books</h1>
+          
+          {/* Duas Section - NEW */}
+          <DuasSection />
           
           {/* Dhikr Counter */}
           <Card className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
