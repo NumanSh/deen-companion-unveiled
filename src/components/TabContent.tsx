@@ -52,6 +52,11 @@ import VirtualStudyCircle from '@/components/VirtualStudyCircle';
 import SmartPrayerWeatherIntegration from '@/components/SmartPrayerWeatherIntegration';
 import IslamicAchievementSystem from '@/components/IslamicAchievementSystem';
 import DigitalTafsirReader from '@/components/DigitalTafsirReader';
+import HadithSearchEngine from '@/components/HadithSearchEngine';
+import IslamicScholarQuotes from '@/components/IslamicScholarQuotes';
+import FiqhQASection from '@/components/FiqhQASection';
+import TafsirComparisonTool from '@/components/TafsirComparisonTool';
+import IslamicBookLibrary from '@/components/IslamicBookLibrary';
 
 interface TabContentProps {
   activeTab: string;
@@ -131,6 +136,11 @@ const TabContent: React.FC<TabContentProps> = ({
       return (
         <div className="space-y-6">
           <ContentDiscovery />
+          <HadithSearchEngine />
+          <IslamicScholarQuotes />
+          <FiqhQASection />
+          <TafsirComparisonTool />
+          <IslamicBookLibrary />
           <VirtualStudyCircle />
           <IslamicAudioLibrary />
           <AIHadithCompanion />
@@ -158,6 +168,7 @@ const TabContent: React.FC<TabContentProps> = ({
         <div className="space-y-6">
           <QuranicVerseOfDay />
           <DigitalTafsirReader />
+          <TafsirComparisonTool />
           <SurahGrid
             onAddToBookmarks={onAddToBookmarks}
             onSurahRead={onSurahRead}
@@ -173,8 +184,10 @@ const TabContent: React.FC<TabContentProps> = ({
     case 'hadith':
       return (
         <div className="space-y-6">
+          <HadithSearchEngine />
           <AIHadithCompanion />
           <HadithSection />
+          <IslamicScholarQuotes />
         </div>
       );
     case 'duas':
