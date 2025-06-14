@@ -32,13 +32,38 @@ import CommunityPrayerRequests from '@/components/CommunityPrayerRequests';
 import IslamicFinanceCalculator from '@/components/IslamicFinanceCalculator';
 import QuranVerseMoodMatcher from '@/components/QuranVerseMoodMatcher';
 
+// New AI-powered components
+import AIQuranStudyCompanion from '@/components/AIQuranStudyCompanion';
+import SmartIslamicLearningAssistant from '@/components/SmartIslamicLearningAssistant';
+import AIIslamicLifeCoach from '@/components/AIIslamicLifeCoach';
+import IntelligentPrayerAnalytics from '@/components/IntelligentPrayerAnalytics';
+import AIIslamicNewsInsights from '@/components/AIIslamicNewsInsights';
+
 const DiscoverTab = () => {
   return (
     <div className="space-y-6">
       <ContentDiscovery />
       <PersonalizedContentEngine />
       
-      {/* New AI-Powered Features */}
+      {/* Latest AI-Powered Features */}
+      <div className="bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900 dark:to-blue-900 p-4 rounded-lg border border-purple-200 dark:border-purple-700">
+        <h3 className="text-lg font-semibold text-purple-800 dark:text-purple-200 mb-4 text-center">
+          🚀 Latest AI-Powered Features
+        </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <AIQuranStudyCompanion />
+          <SmartIslamicLearningAssistant />
+        </div>
+        <div className="mt-6">
+          <AIIslamicLifeCoach />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <IntelligentPrayerAnalytics />
+          <AIIslamicNewsInsights />
+        </div>
+      </div>
+      
+      {/* Existing AI-Powered Features */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AISpiritualAdvisor />
         <QuranVerseMoodMatcher />
