@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Language = 'ar' | 'en';
@@ -32,6 +31,29 @@ const translations = {
     home: 'الرئيسية',
     explore: 'استكشف',
     notes: 'الملاحظات',
+    
+    // Challenge/Community related
+    'join-challenge': 'انضم للتحدي',
+    'other-challenges': 'تحديات أخرى',
+    'daily-charity': 'الصدقة اليومية',
+    'complete-quran-ramadan': 'أكمل القرآن في رمضان',
+    'night-prayer-challenge': 'تحدي صلاة الليل',
+    'days': 'أيام',
+    
+    // Calendar and Events
+    'hijri-calendar': 'التقويم الهجري',
+    'upcoming-events': 'الأحداث القادمة',
+    'islamic-new-year': 'رأس السنة الهجرية',
+    'day-of-ashura': 'يوم عاشوراء',
+    'blessed-event-approaching': 'الحدث المبارك يقترب قريباً',
+    'dhul-hijjah': 'ذو الحجة',
+    'saturday': 'السبت',
+    'gregorian': 'الميلادي',
+    
+    // Spiritual Wellness
+    'spiritual-wellness-tracker': 'متتبع الصحة الروحية',
+    'how-spiritual-state-today': 'كيف حالتك الروحية اليوم؟',
+    'good': 'جيد',
     
     // Common
     save: 'حفظ',
@@ -387,6 +409,29 @@ const translations = {
     home: 'Home',
     explore: 'Explore',
     notes: 'Notes',
+    
+    // Challenge/Community related
+    'join-challenge': 'Join Challenge',
+    'other-challenges': 'Other Challenges',
+    'daily-charity': 'Daily Charity',
+    'complete-quran-ramadan': 'Complete Quran in Ramadan',
+    'night-prayer-challenge': 'Night Prayer Challenge',
+    'days': 'days',
+    
+    // Calendar and Events
+    'hijri-calendar': 'Hijri Calendar',
+    'upcoming-events': 'Upcoming Events',
+    'islamic-new-year': 'Islamic New Year',
+    'day-of-ashura': 'Day of Ashura',
+    'blessed-event-approaching': 'The blessed event is approaching soon',
+    'dhul-hijjah': 'Dhul Hijjah',
+    'saturday': 'Saturday',
+    'gregorian': 'Gregorian',
+    
+    // Spiritual Wellness
+    'spiritual-wellness-tracker': 'Spiritual Wellness Tracker',
+    'how-spiritual-state-today': 'How is your spiritual state today?',
+    'good': 'Good',
     
     // Common
     save: 'Save',
