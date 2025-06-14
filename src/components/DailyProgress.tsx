@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Circle, BookOpen, Heart, Clock, Star } from 'lucide-react';
@@ -12,66 +12,142 @@ interface DailyTask {
   completed: boolean;
   icon: React.ReactNode;
   points: number;
+  completedAt?: Date;
 }
 
 const DailyProgress: React.FC = () => {
   const { toast } = useToast();
-  const [dailyTasks, setDailyTasks] = useState<DailyTask[]>([
-    {
-      id: 'quran',
-      title: 'Read Quran',
-      description: 'Read at least 10 verses',
-      completed: true,
-      icon: <BookOpen className="w-4 h-4" />,
-      points: 10
-    },
-    {
-      id: 'prayers',
-      title: 'Five Daily Prayers',
-      description: 'Complete all 5 prayers on time',
-      completed: false,
-      icon: <Clock className="w-4 h-4" />,
-      points: 15
-    },
-    {
-      id: 'dhikr',
-      title: 'Morning/Evening Dhikr',
-      description: '100 times SubhanAllah',
-      completed: true,
-      icon: <Heart className="w-4 h-4" />,
-      points: 8
-    },
-    {
-      id: 'reflection',
-      title: 'Daily Reflection',
-      description: 'Contemplate verse of the day',
-      completed: false,
-      icon: <Star className="w-4 h-4" />,
-      points: 5
+  const [dailyTasks, setDailyTasks] = useState<DailyTask[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load tasks from localStorage or create default tasks
+  useEffect(() => {
+    const loadDailyTasks = () => {
+      const today = new Date().toDateString();
+      const savedTasks = localStorage.getItem(`dailyTasks_${today}`);
+      
+      if (savedTasks) {
+        const parsedTasks = JSON.parse(savedTasks);
+        setDailyTasks(parsedTasks.map((task: any) => ({
+          ...task,
+          completedAt: task.completedAt ? new Date(task.completedAt) : undefined,
+          icon: getTaskIcon(task.id)
+        })));
+      } else {
+        // Create fresh daily tasks
+        const defaultTasks: DailyTask[] = [
+          {
+            id: 'quran',
+            title: 'Read Quran',
+            description: 'Read at least 10 verses',
+            completed: false,
+            icon: <BookOpen className="w-4 h-4" />,
+            points: 10
+          },
+          {
+            id: 'prayers',
+            title: 'Five Daily Prayers',
+            description: 'Complete all 5 prayers on time',
+            completed: false,
+            icon: <Clock className="w-4 h-4" />,
+            points: 15
+          },
+          {
+            id: 'dhikr',
+            title: 'Morning/Evening Dhikr',
+            description: '100 times SubhanAllah',
+            completed: false,
+            icon: <Heart className="w-4 h-4" />,
+            points: 8
+          },
+          {
+            id: 'reflection',
+            title: 'Daily Reflection',
+            description: 'Contemplate verse of the day',
+            completed: false,
+            icon: <Star className="w-4 h-4" />,
+            points: 5
+          }
+        ];
+        setDailyTasks(defaultTasks);
+      }
+      setIsLoading(false);
+    };
+
+    loadDailyTasks();
+  }, []);
+
+  // Save tasks to localStorage whenever they change
+  useEffect(() => {
+    if (!isLoading && dailyTasks.length > 0) {
+      const today = new Date().toDateString();
+      localStorage.setItem(`dailyTasks_${today}`, JSON.stringify(dailyTasks));
     }
-  ]);
+  }, [dailyTasks, isLoading]);
+
+  const getTaskIcon = (taskId: string) => {
+    switch (taskId) {
+      case 'quran': return <BookOpen className="w-4 h-4" />;
+      case 'prayers': return <Clock className="w-4 h-4" />;
+      case 'dhikr': return <Heart className="w-4 h-4" />;
+      case 'reflection': return <Star className="w-4 h-4" />;
+      default: return <Circle className="w-4 h-4" />;
+    }
+  };
 
   const toggleTask = (taskId: string) => {
     setDailyTasks(prev => 
       prev.map(task => {
         if (task.id === taskId) {
           const newCompleted = !task.completed;
+          const updatedTask = { 
+            ...task, 
+            completed: newCompleted,
+            completedAt: newCompleted ? new Date() : undefined
+          };
+          
           if (newCompleted) {
             toast({
               title: "Task Completed! 🎉",
               description: `+${task.points} spiritual points earned`,
             });
           }
-          return { ...task, completed: newCompleted };
+          return updatedTask;
         }
         return task;
       })
     );
   };
 
+  const resetDailyTasks = () => {
+    setDailyTasks(prev => prev.map(task => ({
+      ...task,
+      completed: false,
+      completedAt: undefined
+    })));
+    toast({
+      title: "Tasks Reset",
+      description: "Daily tasks have been reset for a fresh start",
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <Card className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 border-teal-200 dark:border-teal-800">
+        <CardContent className="p-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+            <div className="h-8 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const completedTasks = dailyTasks.filter(task => task.completed).length;
   const totalTasks = dailyTasks.length;
-  const completionPercentage = (completedTasks / totalTasks) * 100;
+  const completionPercentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
   const totalPoints = dailyTasks.filter(task => task.completed).reduce((sum, task) => sum + task.points, 0);
 
   const getCurrentTimeGreeting = () => {
@@ -90,8 +166,18 @@ const DailyProgress: React.FC = () => {
             <CheckCircle className="w-5 h-5 text-teal-600" />
             Daily Progress
           </div>
-          <div className="text-sm bg-teal-100 dark:bg-teal-800 text-teal-800 dark:text-teal-200 px-3 py-1 rounded-full">
-            {totalPoints} points today
+          <div className="flex items-center gap-2">
+            <div className="text-sm bg-teal-100 dark:bg-teal-800 text-teal-800 dark:text-teal-200 px-3 py-1 rounded-full">
+              {totalPoints} points today
+            </div>
+            <Button 
+              onClick={resetDailyTasks}
+              variant="outline" 
+              size="sm"
+              className="text-xs"
+            >
+              Reset
+            </Button>
           </div>
         </CardTitle>
       </CardHeader>
@@ -145,6 +231,11 @@ const DailyProgress: React.FC = () => {
                   <div className={`text-sm ${task.completed ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
                     {task.description}
                   </div>
+                  {task.completedAt && (
+                    <div className="text-xs text-green-500 mt-1">
+                      Completed at {task.completedAt.toLocaleTimeString()}
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex items-center gap-2">
@@ -161,7 +252,7 @@ const DailyProgress: React.FC = () => {
         </div>
 
         {/* Completion Message */}
-        {completedTasks === totalTasks && (
+        {completedTasks === totalTasks && totalTasks > 0 && (
           <div className="text-center p-4 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-lg">
             <div className="text-2xl mb-2">🎉</div>
             <div className="font-semibold text-green-800 dark:text-green-200">

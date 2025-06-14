@@ -1,154 +1,79 @@
 
-import React, { useState } from "react";
-import BottomTabBar from "@/components/BottomTabBar";
-import LoadingSpinner from "@/components/ui/loading-spinner";
-import { useToast } from "@/hooks/use-toast";
-import DailyProgress from "@/components/DailyProgress";
-import ReadingMode from "@/components/ReadingMode";
-import QuickAccessWidget from "@/components/QuickAccessWidget";
-import UniversalSearch from "@/components/UniversalSearch";
-import MainHeader from "@/components/MainHeader";
-import TabNavigation from "@/components/TabNavigation";
-import TabContent from "@/components/TabContent";
-import { useLanguage } from "@/contexts/LanguageContext";
+import React, { useState } from 'react';
+import BottomTabBar from '@/components/BottomTabBar';
+import TabNavigation from '@/components/TabNavigation';
+import TabContent from '@/components/TabContent';
+import { Card } from '@/components/ui/card';
+import { BookOpen, Heart, Search, Star } from 'lucide-react';
 
 const Books = () => {
-  const { t } = useLanguage();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'quran' | 'hadith' | 'duas' | 'adhkar' | 'dhikr' | 'bookmarks' | 'analytics' | 'reminders' | 'habits' | 'discover'>('dashboard');
-  const [isLoading, setIsLoading] = useState(false);
-  const [readingSurahs, setReadingSurahs] = useState<Set<number>>(new Set());
-  const [readingModeContent, setReadingModeContent] = useState<any>(null);
-  const [showUniversalSearch, setShowUniversalSearch] = useState(false);
-  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('quran');
 
-  const addToBookmarks = (item: any, type: 'surah' | 'dua' | 'hadith') => {
-    const bookmark = {
-      id: `${type}-${item.number || item.id || Date.now()}`,
-      type,
-      title: item.name || item.title,
-      subtitle: item.meaning || item.transliteration,
-      data: item,
-      timestamp: Date.now()
-    };
-
-    const saved = localStorage.getItem('islamic-app-bookmarks');
-    const bookmarks = saved ? JSON.parse(saved) : [];
-    
-    if (!bookmarks.find((b: any) => b.id === bookmark.id)) {
-      bookmarks.push(bookmark);
-      localStorage.setItem('islamic-app-bookmarks', JSON.stringify(bookmarks));
-      toast({
-        title: t('added-to-bookmarks'),
-        description: t('item-saved-bookmarks', { title: bookmark.title }),
-      });
-    } else {
-      toast({
-        title: t('already-bookmarked'),
-        description: t('item-already-bookmarked'),
-      });
-    }
-  };
-
-  const handleSurahRead = async (surah: any) => {
-    setIsLoading(true);
-    setReadingSurahs(prev => new Set([...prev, surah.number]));
-    
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      setReadingModeContent({
-        title: `${t('surah')} ${surah.name}`,
-        arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-        transliteration: "Bismillahir-Rahmanir-Raheem",
-        translation: t('bismillah-translation'),
-        audioUrl: undefined
-      });
-      
-      toast({
-        title: t('surah-loaded'),
-        description: t('surah-ready-reading', { name: surah.name }),
-      });
-    } catch (error) {
-      toast({
-        title: t('error'),
-        description: t('failed-load-surah'),
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleQuickAccess = (section: string) => {
-    setActiveTab(section as any);
-  };
-
-  const handleSearchResult = (result: any) => {
-    setShowUniversalSearch(false);
-    
-    switch (result.type) {
-      case 'surah':
-        setActiveTab('quran');
-        break;
-      case 'dua':
-        setActiveTab('duas');
-        break;
-      case 'hadith':
-        setActiveTab('hadith');
-        break;
-      case 'dhikr':
-        setActiveTab('dhikr');
-        break;
-    }
-    
-    toast({
-      title: t('found-result'),
-      description: t('navigated-to', { title: result.title }),
-    });
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background pb-20">
-      <div className="flex-1 px-4 py-6">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <MainHeader onSearchClick={() => setShowUniversalSearch(true)} />
-          
-          {activeTab === 'dashboard' && <DailyProgress />}
-          
-          <TabNavigation 
-            activeTab={activeTab} 
-            onTabChange={(tab) => setActiveTab(tab as any)} 
-          />
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pb-20 relative overflow-hidden">
+      {/* Islamic Pattern Background */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
+          <defs>
+            <pattern id="islamic-pattern-books" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M20,0 L40,20 L20,40 L0,20 Z" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.3"/>
+              <circle cx="20" cy="20" r="8" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.2"/>
+              <path d="M20,12 L28,20 L20,28 L12,20 Z" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.4"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#islamic-pattern-books)"/>
+        </svg>
+      </div>
 
-          <TabContent
-            activeTab={activeTab}
-            onAddToBookmarks={addToBookmarks}
-            onSurahRead={handleSurahRead}
-            readingSurahs={readingSurahs}
-            isLoading={isLoading}
-          />
+      <div className="flex-1 px-4 py-6 relative">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Enhanced Header */}
+          <div className="text-center space-y-4 mb-8">
+            <div className="relative inline-flex items-center gap-3">
+              <div className="relative">
+                <BookOpen className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+                <Star className="w-4 h-4 text-amber-500 absolute -top-1 -right-1 animate-pulse" />
+              </div>
+              <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-700 via-blue-700 to-purple-700 dark:from-emerald-400 dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                Islamic Library
+              </h1>
+              <div className="relative">
+                <Heart className="w-10 h-10 text-rose-500 dark:text-rose-400" />
+                <div className="absolute -top-1 -left-1 w-4 h-4 bg-green-500 rounded-full animate-ping"></div>
+              </div>
+            </div>
+            <p className="text-xl text-emerald-700 dark:text-emerald-300 font-medium">
+              Explore the Quran, Hadith, Duas, and Islamic knowledge
+            </p>
+            <div className="flex justify-center items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-1">
+                <BookOpen className="w-4 h-4" />
+                <span>Holy Quran</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Search className="w-4 h-4" />
+                <span>Advanced Search</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Heart className="w-4 h-4" />
+                <span>Duas & Dhikr</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Tab Navigation */}
+          <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700">
+            <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+          </Card>
+
+          {/* Tab Content */}
+          <TabContent activeTab={activeTab} />
         </div>
       </div>
-      
-      {readingModeContent && (
-        <ReadingMode
-          content={readingModeContent}
-          onClose={() => setReadingModeContent(null)}
-        />
-      )}
-      
-      <UniversalSearch
-        isOpen={showUniversalSearch}
-        onClose={() => setShowUniversalSearch(false)}
-        onResult={handleSearchResult}
-      />
-      
-      <QuickAccessWidget
-        onDhikr={() => handleQuickAccess('dhikr')}
-        onBookmarks={() => handleQuickAccess('bookmarks')}
-        onQuran={() => handleQuickAccess('quran')}
-        onDuas={() => handleQuickAccess('duas')}
-      />
       
       <BottomTabBar />
     </div>
