@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Language = 'ar' | 'en';
@@ -66,6 +65,71 @@ const translations = {
     travel: 'السفر',
     protection: 'الحماية',
     
+    // Prayer Time Tracker
+    'prayer-time-tracker': 'متتبع أوقات الصلاة',
+    'todays-prayers': 'صلوات اليوم',
+    'prayers-remaining': 'صلوات متبقية',
+    'mark-complete': 'تحديد كمكتمل',
+    
+    // Daily Islamic Goals
+    'daily-islamic-goals': 'الأهداف الإسلامية اليومية',
+    'progress-colon': 'التقدم:',
+    'complete-5-daily-prayers': 'أكمل الصلوات الخمس',
+    'perform-obligatory-prayers': 'أدي جميع الصلوات الواجبة في الوقت',
+    'read-1-page-of-quran': 'اقرأ صفحة واحدة من القرآن',
+    'daily-quran-recitation': 'تلاوة القرآن اليومية',
+    'morning-evening-adhkar': 'أذكار الصباح والمساء',
+    'recite-morning-evening': 'تلاوة أذكار الصباح والمساء',
+    'give-charity-sadaqah': 'تصدق (الصدقة)',
+    'any-form-charity': 'أي شكل من أشكال الصدقة، حتى الابتسامة',
+    'seek-forgiveness-istighfar': 'اطلب المغفرة (الاستغفار)',
+    'say-astaghfirullah-100-times': 'قل "أستغفر الله" ١٠٠ مرة',
+    'all-goals-completed': 'تم إنجاز جميع الأهداف!',
+    'may-allah-accept-efforts': 'تقبل الله منك',
+    'add-custom-goal': 'إضافة هدف مخصص',
+    
+    // Personal Dashboard
+    'good-morning': 'صباح الخير',
+    'good-afternoon': 'مساء الخير',
+    'good-evening': 'مساء الخير',
+    'continue-spiritual-journey': 'تابع رحلتك الروحية',
+    'day-streak': 'أيام متتالية',
+    'total-dhikr': 'إجمالي الذكر',
+    'sessions': 'جلسات',
+    'goals-met': 'أهداف محققة',
+    'todays-goals': 'أهداف اليوم',
+    'morning-prayers': 'صلاة الصباح',
+    '100-dhikr': '١٠٠ ذكر',
+    '15-min-reading': '١٥ دقيقة قراءة',
+    'evening-prayers': 'صلاة المساء',
+    'weekly-progress': 'التقدم الأسبوعي',
+    'great-progress-week': 'تقدم رائع هذا الأسبوع! أنت في المسار الصحيح لتحقيق أهدافك الروحية.',
+    'recent-activity': 'النشاط الأخير',
+    'last-activity': 'آخر نشاط:',
+    'hours-ago': 'منذ ساعتين',
+    'read-surah-al-fatihah': 'قراءة سورة الفاتحة',
+    
+    // Daily Progress
+    'daily-progress': 'التقدم اليومي',
+    'tasks-completed': 'المهام المكتملة',
+    'task-completed': 'تم إنجاز المهمة! ✅',
+    'marked-as-complete': 'تم تحديدها كمكتملة',
+    'all-tasks-completed': 'تم إنجاز جميع المهام! 🎉',
+    'mashallah-completed-tasks': 'ماشاء الله! لقد أكملت جميع المهام اليومية.',
+    'progress-reset': 'تم إعادة تعيين التقدم',
+    'daily-progress-reset': 'تم إعادة تعيين التقدم اليومي',
+    'reset-todays-progress': 'إعادة تعيين تقدم اليوم',
+    'morning-dua': 'دعاء الصباح',
+    'recite-morning-supplications': 'تلاوة أدعية الصباح',
+    'quran-reading': 'قراءة القرآن',
+    'read-one-page-quran': 'اقرأ صفحة واحدة على الأقل من القرآن',
+    'dhikr-100x': 'ذكر ١٠٠ مرة',
+    'complete-100-dhikr': 'أكمل ١٠٠ ذكر',
+    'evening-dua': 'دعاء المساء',
+    'recite-evening-supplications': 'تلاوة أدعية المساء',
+    'istighfar': 'الاستغفار',
+    'seek-forgiveness-33-times': 'اطلب المغفرة ٣٣ مرة',
+    
     // Settings
     'app-name': 'رفيق الدين',
     'customize-journey': 'خصص رحلتك الروحية',
@@ -93,9 +157,6 @@ const translations = {
     english: 'English',
     
     // Prayer times
-    'todays-prayers': 'صلوات اليوم',
-    'prayers-remaining': 'صلوات متبقية',
-    'mark-complete': 'تحديد كمكتمل',
     fajr: 'الفجر',
     dhuhr: 'الظهر',
     asr: 'العصر',
@@ -104,17 +165,11 @@ const translations = {
     
     // Islamic content
     'islamic-quote-day': 'اقتباس إسلامي لليوم',
-    'morning-evening-adhkar': 'أذكار الصباح والمساء',
-    'recite-morning-evening': 'تلاوة أذكار الصباح والمساء',
     points: 'نقاط',
     'complete-daily-prayers': 'أكمل الصلوات الخمس',
-    'perform-obligatory-prayers': 'أدي جميع الصلوات الواجبة في الوقت',
     'read-page-quran': 'اقرأ صفحة من القرآن',
-    'daily-quran-recitation': 'تلاوة القرآن اليومية',
-    'give-charity-sadaqah': 'تصدق (الصدقة)',
-    'any-form-charity': 'أي شكل من أشكال الصدقة، حتى الابتسامة',
-    'seek-forgiveness-istighfar': 'اطلب المغفرة (الاستغفار)',
-    'say-astaghfirullah-100-times': 'قل "أستغفر الله" ١٠٠ مرة',
+    
+    // ... keep existing code (rest of translations)
     
     // Dream Journal
     'islamic-dream-journal': 'يومية الأحلام الإسلامية',
@@ -369,6 +424,71 @@ const translations = {
     travel: 'Travel',
     protection: 'Protection',
     
+    // Prayer Time Tracker
+    'prayer-time-tracker': 'Prayer Time Tracker',
+    'todays-prayers': "Today's Prayers",
+    'prayers-remaining': 'prayers remaining',
+    'mark-complete': 'Mark Complete',
+    
+    // Daily Islamic Goals
+    'daily-islamic-goals': 'Daily Islamic Goals',
+    'progress-colon': 'Progress:',
+    'complete-5-daily-prayers': 'Complete 5 Daily Prayers',
+    'perform-obligatory-prayers': 'Perform all obligatory prayers on time',
+    'read-1-page-of-quran': 'Read 1 Page of Quran',
+    'daily-quran-recitation': 'Daily Quran recitation',
+    'morning-evening-adhkar': 'Morning & Evening Adhkar',
+    'recite-morning-evening': 'Recite morning and evening remembrance',
+    'give-charity-sadaqah': 'Give Charity (Sadaqah)',
+    'any-form-charity': 'Any form of charity, even a smile',
+    'seek-forgiveness-istighfar': 'Seek Forgiveness (Istighfar)',
+    'say-astaghfirullah-100-times': 'Say "Astaghfirullah" 100 times',
+    'all-goals-completed': 'All goals completed!',
+    'may-allah-accept-efforts': 'May Allah accept your efforts',
+    'add-custom-goal': 'Add Custom Goal',
+    
+    // Personal Dashboard
+    'good-morning': 'Good Morning',
+    'good-afternoon': 'Good Afternoon',
+    'good-evening': 'Good Evening',
+    'continue-spiritual-journey': 'Continue your spiritual journey',
+    'day-streak': 'Day Streak',
+    'total-dhikr': 'Total Dhikr',
+    'sessions': 'Sessions',
+    'goals-met': 'Goals Met',
+    'todays-goals': "Today's Goals",
+    'morning-prayers': 'Morning Prayers',
+    '100-dhikr': '100 Dhikr',
+    '15-min-reading': '15 min Reading',
+    'evening-prayers': 'Evening Prayers',
+    'weekly-progress': 'Weekly Progress',
+    'great-progress-week': 'Great progress this week! You\'re on track to meet your spiritual goals.',
+    'recent-activity': 'Recent Activity',
+    'last-activity': 'Last activity:',
+    'hours-ago': '2 hours ago',
+    'read-surah-al-fatihah': 'Read Surah Al-Fatihah',
+    
+    // Daily Progress
+    'daily-progress': 'Daily Progress',
+    'tasks-completed': 'tasks completed',
+    'task-completed': 'Task Completed! ✅',
+    'marked-as-complete': 'marked as complete',
+    'all-tasks-completed': 'All Tasks Completed! 🎉',
+    'mashallah-completed-tasks': 'Mashallah! You\'ve completed all daily tasks.',
+    'progress-reset': 'Progress Reset',
+    'daily-progress-reset': 'Daily progress has been reset',
+    'reset-todays-progress': 'Reset Today\'s Progress',
+    'morning-dua': 'Morning Dua',
+    'recite-morning-supplications': 'Recite morning supplications',
+    'quran-reading': 'Quran Reading',
+    'read-one-page-quran': 'Read at least one page of Quran',
+    'dhikr-100x': 'Dhikr 100x',
+    'complete-100-dhikr': 'Complete 100 dhikr counts',
+    'evening-dua': 'Evening Dua',
+    'recite-evening-supplications': 'Recite evening supplications',
+    'istighfar': 'Istighfar',
+    'seek-forgiveness-33-times': 'Seek forgiveness 33 times',
+    
     // Settings
     'app-name': 'Deen Companion',
     'customize-journey': 'Customize your spiritual journey',
@@ -396,9 +516,6 @@ const translations = {
     english: 'English',
     
     // Prayer times
-    'todays-prayers': "Today's Prayers",
-    'prayers-remaining': 'prayers remaining',
-    'mark-complete': 'Mark Complete',
     fajr: 'Fajr',
     dhuhr: 'Dhuhr',
     asr: 'Asr',
@@ -407,17 +524,11 @@ const translations = {
     
     // Islamic content
     'islamic-quote-day': 'Islamic Quote of the Day',
-    'morning-evening-adhkar': 'Morning & Evening Adhkar',
-    'recite-morning-evening': 'Recite morning and evening remembrance',
     points: 'points',
     'complete-daily-prayers': 'Complete 5 Daily Prayers',
-    'perform-obligatory-prayers': 'Perform all obligatory prayers on time',
     'read-page-quran': 'Read 1 Page of Quran',
-    'daily-quran-recitation': 'Daily Quran recitation',
-    'give-charity-sadaqah': 'Give Charity (Sadaqah)',
-    'any-form-charity': 'Any form of charity, even a smile',
-    'seek-forgiveness-istighfar': 'Seek Forgiveness (Istighfar)',
-    'say-astaghfirullah-100-times': 'Say "Astaghfirullah" 100 times',
+    
+    // ... keep existing code (rest of English translations)
     
     // Dream Journal
     'islamic-dream-journal': 'Islamic Dream Journal',
@@ -555,8 +666,6 @@ const translations = {
     'daily-duas': 'Daily Duas',
     'daily-duas-supplications': 'Daily Duas (Supplications)',
     'search-duas-placeholder': 'Search duas, transliteration, or translation...',
-    'morning-dua': 'Morning Dua',
-    'evening-dua': 'Evening Dua',
     'morning-dua-translation': 'We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah.',
     'evening-dua-translation': 'We have reached the evening and at this very time unto Allah belongs all sovereignty, and all praise is for Allah.',
     'food-drink': 'Food & Drink',

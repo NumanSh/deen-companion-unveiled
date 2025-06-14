@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Calendar, Target, Flame, Award, TrendingUp, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface DashboardStats {
   currentStreak: number;
@@ -16,15 +17,16 @@ interface DashboardStats {
 }
 
 const PersonalDashboard: React.FC = () => {
+  const { t } = useLanguage();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [greeting, setGreeting] = useState('');
 
   useEffect(() => {
     // Generate greeting based on time
     const hour = new Date().getHours();
-    if (hour < 12) setGreeting('Good Morning');
-    else if (hour < 17) setGreeting('Good Afternoon');
-    else setGreeting('Good Evening');
+    if (hour < 12) setGreeting(t('good-morning'));
+    else if (hour < 17) setGreeting(t('good-afternoon'));
+    else setGreeting(t('good-evening'));
 
     // Load user stats from localStorage or generate mock data
     const savedStats = localStorage.getItem('deen-companion-stats');
@@ -38,18 +40,18 @@ const PersonalDashboard: React.FC = () => {
         readingSessions: 23,
         completedGoals: 8,
         weeklyProgress: 68,
-        lastActivity: 'Read Surah Al-Fatihah'
+        lastActivity: t('read-surah-al-fatihah')
       };
       setStats(initialStats);
       localStorage.setItem('deen-companion-stats', JSON.stringify(initialStats));
     }
-  }, []);
+  }, [t]);
 
   const dailyGoals = [
-    { name: 'Morning Prayers', completed: true, icon: Calendar },
-    { name: '100 Dhikr', completed: true, icon: Target },
-    { name: '15 min Reading', completed: false, icon: Clock },
-    { name: 'Evening Prayers', completed: false, icon: Calendar },
+    { name: t('morning-prayers'), completed: true, icon: Calendar },
+    { name: t('100-dhikr'), completed: true, icon: Target },
+    { name: t('15-min-reading'), completed: false, icon: Clock },
+    { name: t('evening-prayers'), completed: false, icon: Calendar },
   ];
 
   if (!stats) return null;
@@ -62,7 +64,7 @@ const PersonalDashboard: React.FC = () => {
           {greeting}! 🌟
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mt-1">
-          Continue your spiritual journey
+          {t('continue-spiritual-journey')}
         </p>
       </div>
 
@@ -74,7 +76,7 @@ const PersonalDashboard: React.FC = () => {
               <Flame className="w-6 h-6 text-orange-500" />
             </div>
             <div className="text-2xl font-bold text-orange-600">{stats.currentStreak}</div>
-            <div className="text-xs text-gray-600">Day Streak</div>
+            <div className="text-xs text-gray-600">{t('day-streak')}</div>
           </CardContent>
         </Card>
 
@@ -84,7 +86,7 @@ const PersonalDashboard: React.FC = () => {
               <Target className="w-6 h-6 text-blue-500" />
             </div>
             <div className="text-2xl font-bold text-blue-600">{stats.totalDhikr}</div>
-            <div className="text-xs text-gray-600">Total Dhikr</div>
+            <div className="text-xs text-gray-600">{t('total-dhikr')}</div>
           </CardContent>
         </Card>
 
@@ -94,7 +96,7 @@ const PersonalDashboard: React.FC = () => {
               <Clock className="w-6 h-6 text-purple-500" />
             </div>
             <div className="text-2xl font-bold text-purple-600">{stats.readingSessions}</div>
-            <div className="text-xs text-gray-600">Sessions</div>
+            <div className="text-xs text-gray-600">{t('sessions')}</div>
           </CardContent>
         </Card>
 
@@ -104,7 +106,7 @@ const PersonalDashboard: React.FC = () => {
               <Award className="w-6 h-6 text-yellow-500" />
             </div>
             <div className="text-2xl font-bold text-yellow-600">{stats.completedGoals}</div>
-            <div className="text-xs text-gray-600">Goals Met</div>
+            <div className="text-xs text-gray-600">{t('goals-met')}</div>
           </CardContent>
         </Card>
       </div>
@@ -114,7 +116,7 @@ const PersonalDashboard: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Target className="w-5 h-5 text-green-600" />
-            Today's Goals
+            {t('todays-goals')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -150,7 +152,7 @@ const PersonalDashboard: React.FC = () => {
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-blue-600" />
-              Weekly Progress
+              {t('weekly-progress')}
             </div>
             <span className="text-lg font-bold text-blue-600">{stats.weeklyProgress}%</span>
           </CardTitle>
@@ -158,7 +160,7 @@ const PersonalDashboard: React.FC = () => {
         <CardContent>
           <Progress value={stats.weeklyProgress} className="h-3" />
           <p className="text-sm text-gray-600 mt-2">
-            Great progress this week! You're on track to meet your spiritual goals.
+            {t('great-progress-week')}
           </p>
         </CardContent>
       </Card>
@@ -166,13 +168,13 @@ const PersonalDashboard: React.FC = () => {
       {/* Recent Activity */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
+          <CardTitle>{t('recent-activity')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-gray-600 dark:text-gray-400">
-            Last activity: <span className="font-medium text-green-600">{stats.lastActivity}</span>
+            {t('last-activity')} <span className="font-medium text-green-600">{stats.lastActivity}</span>
           </p>
-          <p className="text-xs text-gray-500 mt-1">2 hours ago</p>
+          <p className="text-xs text-gray-500 mt-1">{t('hours-ago')}</p>
         </CardContent>
       </Card>
     </div>

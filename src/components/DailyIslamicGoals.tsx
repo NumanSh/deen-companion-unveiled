@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { Target, Plus, Award } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface IslamicGoal {
   id: string;
@@ -16,46 +17,48 @@ interface IslamicGoal {
 }
 
 const DailyIslamicGoals: React.FC = () => {
+  const { t } = useLanguage();
+  
   const [goals, setGoals] = useState<IslamicGoal[]>([
     {
       id: '1',
-      title: 'Complete 5 Daily Prayers',
-      description: 'Perform all obligatory prayers on time',
+      title: t('complete-5-daily-prayers'),
+      description: t('perform-obligatory-prayers'),
       completed: true,
       category: 'prayer',
-      reward: '+50 points'
+      reward: '+50 ' + t('points')
     },
     {
       id: '2',
-      title: 'Read 1 Page of Quran',
-      description: 'Daily Quran recitation',
+      title: t('read-1-page-of-quran'),
+      description: t('daily-quran-recitation'),
       completed: true,
       category: 'quran',
-      reward: '+30 points'
+      reward: '+30 ' + t('points')
     },
     {
       id: '3',
-      title: 'Morning & Evening Adhkar',
-      description: 'Recite morning and evening remembrance',
+      title: t('morning-evening-adhkar'),
+      description: t('recite-morning-evening'),
       completed: false,
       category: 'dhikr',
-      reward: '+25 points'
+      reward: '+25 ' + t('points')
     },
     {
       id: '4',
-      title: 'Give Charity (Sadaqah)',
-      description: 'Any form of charity, even a smile',
+      title: t('give-charity-sadaqah'),
+      description: t('any-form-charity'),
       completed: false,
       category: 'charity',
-      reward: '+40 points'
+      reward: '+40 ' + t('points')
     },
     {
       id: '5',
-      title: 'Seek Forgiveness (Istighfar)',
-      description: 'Say "Astaghfirullah" 100 times',
+      title: t('seek-forgiveness-istighfar'),
+      description: t('say-astaghfirullah-100-times'),
       completed: false,
       category: 'dhikr',
-      reward: '+20 points'
+      reward: '+20 ' + t('points')
     }
   ]);
 
@@ -87,14 +90,14 @@ const DailyIslamicGoals: React.FC = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Target className="w-5 h-5 text-blue-600" />
-          Daily Islamic Goals
+          {t('daily-islamic-goals')}
         </CardTitle>
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span>Progress: {completedGoals}/{goals.length}</span>
+            <span>{t('progress-colon')} {completedGoals}/{goals.length}</span>
             <div className="flex items-center gap-1">
               <Award className="w-4 h-4 text-yellow-500" />
-              <span className="font-semibold text-yellow-600">{totalPoints} points</span>
+              <span className="font-semibold text-yellow-600">{totalPoints} {t('points')}</span>
             </div>
           </div>
           <Progress value={progressPercentage} className="h-2" />
@@ -142,14 +145,14 @@ const DailyIslamicGoals: React.FC = () => {
         {progressPercentage === 100 && (
           <div className="bg-gradient-to-r from-yellow-400 to-orange-400 p-4 rounded-lg text-center animate-pulse">
             <div className="text-2xl mb-2">🎉</div>
-            <div className="font-bold text-white">All goals completed!</div>
-            <div className="text-yellow-100 text-sm">May Allah accept your efforts</div>
+            <div className="font-bold text-white">{t('all-goals-completed')}</div>
+            <div className="text-yellow-100 text-sm">{t('may-allah-accept-efforts')}</div>
           </div>
         )}
 
         <Button variant="outline" className="w-full mt-4">
           <Plus className="w-4 h-4 mr-2" />
-          Add Custom Goal
+          {t('add-custom-goal')}
         </Button>
       </CardContent>
     </Card>

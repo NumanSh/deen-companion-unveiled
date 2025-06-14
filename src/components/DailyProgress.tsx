@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Circle, Book, RotateCcw, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface DailyTask {
   id: string;
@@ -14,43 +15,44 @@ interface DailyTask {
 }
 
 const DailyProgress: React.FC = () => {
+  const { t } = useLanguage();
   const [tasks, setTasks] = useState<DailyTask[]>([]);
   const [streak, setStreak] = useState(0);
   const { toast } = useToast();
 
-  const defaultTasks: DailyTask[] = [
+  const getDefaultTasks = (): DailyTask[] => [
     {
       id: 'fajr-dua',
-      title: 'Morning Dua',
-      description: 'Recite morning supplications',
+      title: t('morning-dua'),
+      description: t('recite-morning-supplications'),
       completed: false,
       type: 'dua'
     },
     {
       id: 'quran-reading',
-      title: 'Quran Reading',
-      description: 'Read at least one page of Quran',
+      title: t('quran-reading'),
+      description: t('read-one-page-quran'),
       completed: false,
       type: 'reading'
     },
     {
       id: 'dhikr-100',
-      title: 'Dhikr 100x',
-      description: 'Complete 100 dhikr counts',
+      title: t('dhikr-100x'),
+      description: t('complete-100-dhikr'),
       completed: false,
       type: 'dhikr'
     },
     {
       id: 'evening-dua',
-      title: 'Evening Dua',
-      description: 'Recite evening supplications',
+      title: t('evening-dua'),
+      description: t('recite-evening-supplications'),
       completed: false,
       type: 'dua'
     },
     {
       id: 'istighfar',
-      title: 'Istighfar',
-      description: 'Seek forgiveness 33 times',
+      title: t('istighfar'),
+      description: t('seek-forgiveness-33-times'),
       completed: false,
       type: 'dhikr'
     }
@@ -58,7 +60,7 @@ const DailyProgress: React.FC = () => {
 
   useEffect(() => {
     loadDailyProgress();
-  }, []);
+  }, [t]);
 
   const loadDailyProgress = () => {
     const today = new Date().toDateString();
@@ -74,7 +76,7 @@ const DailyProgress: React.FC = () => {
     }
     
     // New day - reset tasks
-    setTasks(defaultTasks);
+    setTasks(getDefaultTasks());
     checkStreak();
   };
 
@@ -106,8 +108,8 @@ const DailyProgress: React.FC = () => {
     const task = tasks.find(t => t.id === taskId);
     if (task && !task.completed) {
       toast({
-        title: "Task Completed! ✅",
-        description: `${task.title} marked as complete`,
+        title: t('task-completed'),
+        description: `${task.title} ${t('marked-as-complete')}`,
       });
     }
   };
@@ -127,26 +129,26 @@ const DailyProgress: React.FC = () => {
     
     if (allCompleted && !tasks.every(task => task.completed)) {
       toast({
-        title: "All Tasks Completed! 🎉",
-        description: `Mashallah! You've completed all daily tasks. Streak: ${streak + 1} days`,
+        title: t('all-tasks-completed'),
+        description: `${t('mashallah-completed-tasks')} ${t('streak-days')}: ${streak + 1}`,
       });
     }
   };
 
   const resetProgress = () => {
-    setTasks(defaultTasks);
+    setTasks(getDefaultTasks());
     const today = new Date().toDateString();
     const data = {
       date: today,
-      tasks: defaultTasks,
+      tasks: getDefaultTasks(),
       streak: 0,
       allCompleted: false
     };
     localStorage.setItem('daily-progress', JSON.stringify(data));
     setStreak(0);
     toast({
-      title: "Progress Reset",
-      description: "Daily progress has been reset",
+      title: t('progress-reset'),
+      description: t('daily-progress-reset'),
     });
   };
 
@@ -168,15 +170,15 @@ const DailyProgress: React.FC = () => {
         <div>
           <CardTitle className="flex items-center gap-2">
             <CheckCircle className="w-5 h-5 text-green-500" />
-            Daily Progress
+            {t('daily-progress')}
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            {completedCount}/{tasks.length} tasks completed
+            {completedCount}/{tasks.length} {t('tasks-completed')}
           </p>
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold text-green-600">{streak}</div>
-          <div className="text-xs text-muted-foreground">day streak</div>
+          <div className="text-xs text-muted-foreground">{t('day-streak')}</div>
         </div>
       </CardHeader>
       
@@ -184,7 +186,7 @@ const DailyProgress: React.FC = () => {
         {/* Progress Bar */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span>Progress</span>
+            <span>{t('progress-colon')}</span>
             <span>{Math.round(progress)}%</span>
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -235,7 +237,7 @@ const DailyProgress: React.FC = () => {
           onClick={resetProgress}
           className="w-full"
         >
-          Reset Today's Progress
+          {t('reset-todays-progress')}
         </Button>
       </CardContent>
     </Card>
