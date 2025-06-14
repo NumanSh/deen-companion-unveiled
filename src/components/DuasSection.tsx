@@ -21,6 +21,15 @@ type DuaCategory = {
   duas: Dua[];
 };
 
+type Bookmark = {
+  id: string;
+  type: 'surah' | 'dua' | 'hadith';
+  title: string;
+  subtitle?: string;
+  data: any;
+  timestamp: number;
+};
+
 const duaCategories: DuaCategory[] = [
   {
     id: "daily",
@@ -106,9 +115,11 @@ const DuasSection: React.FC = () => {
   useEffect(() => {
     const saved = localStorage.getItem('islamic-app-bookmarks');
     if (saved) {
-      const bookmarks = JSON.parse(saved);
-      const duaFavorites = new Set(
-        bookmarks.filter((b: any) => b.type === 'dua').map((b: any) => b.id.replace('dua-', ''))
+      const bookmarks: Bookmark[] = JSON.parse(saved);
+      const duaFavorites = new Set<string>(
+        bookmarks
+          .filter((b: Bookmark) => b.type === 'dua')
+          .map((b: Bookmark) => b.id.replace('dua-', ''))
       );
       setFavorites(duaFavorites);
     }
