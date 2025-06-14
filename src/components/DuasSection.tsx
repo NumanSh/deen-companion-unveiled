@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Heart, Search, BookOpen } from "lucide-react";
+import { Heart, Search, BookOpen, Copy, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 type Dua = {
   id: string;
@@ -111,6 +112,7 @@ const DuasSection: React.FC = () => {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [expandedDua, setExpandedDua] = useState<string | null>(null);
   const { toast } = useToast();
+  const { copyToClipboard, copied } = useCopyToClipboard();
 
   useEffect(() => {
     const saved = localStorage.getItem('islamic-app-bookmarks');
@@ -173,8 +175,13 @@ const DuasSection: React.FC = () => {
     .find(cat => cat.id === selectedCategory)
     ?.duas.filter(dua => 
       dua.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      dua.transliteration.toLowerCase().includes(searchTerm.toLowerCase())
+      dua.transliteration.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      dua.translation.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
+
+  const handleCopyArabic = (dua: Dua) => {
+    copyToClipboard(dua.arabic, `${dua.title} Arabic text copied`);
+  };
 
   return (
     <Card>
@@ -189,7 +196,7 @@ const DuasSection: React.FC = () => {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
-            placeholder="Search duas..."
+            placeholder="Search duas, transliteration, or translation..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
@@ -220,26 +227,44 @@ const DuasSection: React.FC = () => {
             >
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-lg">{dua.title}</h3>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => toggleFavorite(dua.id)}
-                  className="h-8 w-8"
-                >
-                  <Heart
-                    className={cn(
-                      "w-4 h-4",
-                      favorites.has(dua.id)
-                        ? "fill-red-500 text-red-500"
-                        : "text-gray-400"
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleCopyArabic(dua)}
+                    className="h-8 w-8"
+                    title="Copy Arabic text"
+                  >
+                    {copied ? (
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
                     )}
-                  />
-                </Button>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => toggleFavorite(dua.id)}
+                    className="h-8 w-8"
+                  >
+                    <Heart
+                      className={cn(
+                        "w-4 h-4",
+                        favorites.has(dua.id)
+                          ? "fill-red-500 text-red-500"
+                          : "text-gray-400"
+                      )}
+                    />
+                  </Button>
+                </div>
               </div>
 
               {/* Arabic Text */}
               <div className="text-right">
-                <p className="text-2xl leading-loose font-arabic" dir="rtl">
+                <p className="text-2xl leading-loose font-arabic cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded transition-colors" 
+                   dir="rtl"
+                   onClick={() => handleCopyArabic(dua)}
+                   title="Click to copy">
                   {dua.arabic}
                 </p>
               </div>

@@ -8,6 +8,7 @@ import HadithSection from "@/components/HadithSection";
 import MorningEveningAdhkar from "@/components/MorningEveningAdhkar";
 import BookmarkManager from "@/components/BookmarkManager";
 import DhikrCounter from "@/components/DhikrCounter";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useToast } from "@/hooks/use-toast";
 
 const Books = () => {
@@ -15,6 +16,7 @@ const Books = () => {
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'quran' | 'hadith' | 'duas' | 'adhkar' | 'dhikr' | 'bookmarks'>('quran');
   const [isLoading, setIsLoading] = useState(false);
+  const [readingSurahs, setReadingSurahs] = useState<Set<number>>(new Set());
   const { toast } = useToast();
 
   // Popular Surahs for quick access
@@ -73,13 +75,15 @@ const Books = () => {
 
   const handleSurahRead = async (surah: any) => {
     setIsLoading(true);
+    setReadingSurahs(prev => new Set([...prev, surah.number]));
+    
     try {
       // Simulate loading/opening surah
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       console.log(`Opening Surah ${surah.name}`);
       toast({
-        title: "Opening Surah",
-        description: `Loading Surah ${surah.name}...`,
+        title: "Surah Loaded",
+        description: `Surah ${surah.name} is ready for reading.`,
       });
     } catch (error) {
       toast({
@@ -89,6 +93,7 @@ const Books = () => {
       });
     } finally {
       setIsLoading(false);
+      // Keep the surah marked as read for this session
     }
   };
 
@@ -142,7 +147,12 @@ const Books = () => {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-semibold text-lg">{surah.name}</h3>
+                          <h3 className="font-semibold text-lg flex items-center gap-2">
+                            {surah.name}
+                            {readingSurahs.has(surah.number) && (
+                              <span className="w-2 h-2 bg-green-500 rounded-full" title="Recently read" />
+                            )}
+                          </h3>
                           <p className="text-sm text-muted-foreground">{surah.meaning}</p>
                         </div>
                         <div className="flex items-center gap-2">
@@ -177,7 +187,14 @@ const Books = () => {
                             }}
                             disabled={isLoading}
                           >
-                            {isLoading ? "Loading..." : "Read Surah"}
+                            {isLoading ? (
+                              <>
+                                <LoadingSpinner size="sm" className="mr-2" />
+                                Loading...
+                              </>
+                            ) : (
+                              "Read Surah"
+                            )}
                           </Button>
                         </div>
                       )}
