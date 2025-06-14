@@ -20,7 +20,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({ onSearchClick }) => {
         className="flex items-center gap-2"
       >
         <Search className="w-4 h-4" />
-        {t('search')} All
+        {t('search')} {t('all')}
       </Button>
     </div>
   );

@@ -29,6 +29,9 @@ const translations = {
     settings: 'الإعدادات',
     calendar: 'التقويم',
     books: 'الكتب',
+    home: 'الرئيسية',
+    explore: 'استكشف',
+    notes: 'الملاحظات',
     
     // Common
     save: 'حفظ',
@@ -38,6 +41,19 @@ const translations = {
     delete: 'حذف',
     search: 'بحث',
     loading: 'جارٍ التحميل...',
+    complete: 'مكتمل',
+    incomplete: 'غير مكتمل',
+    yes: 'نعم',
+    no: 'لا',
+    ok: 'موافق',
+    done: 'تم',
+    continue: 'متابعة',
+    back: 'رجوع',
+    next: 'التالي',
+    previous: 'السابق',
+    close: 'إغلاق',
+    view: 'عرض',
+    all: 'الكل',
     
     // Settings
     'app-name': 'رفيق الدين',
@@ -64,6 +80,30 @@ const translations = {
     // Languages
     arabic: 'العربية',
     english: 'English',
+    
+    // Prayer times
+    'todays-prayers': 'صلوات اليوم',
+    'prayers-remaining': 'صلوات متبقية',
+    'mark-complete': 'تحديد كمكتمل',
+    fajr: 'الفجر',
+    dhuhr: 'الظهر',
+    asr: 'العصر',
+    maghrib: 'المغرب',
+    isha: 'العشاء',
+    
+    // Islamic content
+    'islamic-quote-day': 'اقتباس إسلامي لليوم',
+    'morning-evening-adhkar': 'أذكار الصباح والمساء',
+    'recite-morning-evening': 'تلاوة أذكار الصباح والمساء',
+    points: 'نقاط',
+    'complete-daily-prayers': 'أكمل الصلوات الخمس',
+    'perform-obligatory-prayers': 'أدي جميع الصلوات الواجبة في الوقت',
+    'read-page-quran': 'اقرأ صفحة من القرآن',
+    'daily-quran-recitation': 'تلاوة القرآن اليومية',
+    'give-charity-sadaqah': 'تصدق (الصدقة)',
+    'any-form-charity': 'أي شكل من أشكال الصدقة، حتى الابتسامة',
+    'seek-forgiveness-istighfar': 'اطلب المغفرة (الاستغفار)',
+    'say-astaghfirullah-100-times': 'قل "أستغفر الله" ١٠٠ مرة',
     
     // Dream Journal
     'islamic-dream-journal': 'يومية الأحلام الإسلامية',
@@ -102,10 +142,7 @@ const translations = {
     'reveal-meaning': 'كشف المعنى',
     'mark-learned': 'اعتبر كمتعلم',
     learned: '✅ متعلم',
-    previous: 'السابق',
-    next: 'التالي',
     remaining: 'المتبقي',
-    complete: 'مكتمل',
     'word-learned': 'تم تعلم الكلمة! 🎉',
     example: 'مثال:',
     
@@ -132,6 +169,36 @@ const translations = {
     'reflective': 'متأمل',
     'seeking': 'طالب للهداية',
     'current-prompt': 'المحث الحالي:',
+    
+    // Habit Builder
+    'islamic-habit-builder': 'بناء العادات الإسلامية',
+    'overall-level': 'المستوى العام',
+    'habits-completed-today': 'عادات مكتملة اليوم',
+    'habit-completed': 'تم إنجاز العادة!',
+    'streak-days': 'أيام متتالية',
+    'level-up': 'ارتقاء في المستوى!',
+    'reached-level': 'وصل إلى المستوى',
+    'add-new-islamic-habit': 'إضافة عادة إسلامية جديدة',
+    'most-beloved-deeds': '"أحب الأعمال إلى الله أدومها وإن قل." - النبي محمد (ص)',
+    'recent-achievement': 'إنجاز حديث',
+    'consistent-reader': 'قارئ مثابر - قرأ القرآن لمدة ١٠ أيام متتالية!',
+    'morning-adhkar': 'أذكار الصباح',
+    'recite-morning-remembrance': 'تلاوة أذكار الصباح',
+    'read-quran': 'قراءة القرآن',
+    'read-one-page-daily': 'اقرأ صفحة واحدة على الأقل من القرآن يومياً',
+    'make-dua-parents': 'ادع للوالدين',
+    'remember-parents-prayers': 'تذكر الوالدين في الصلوات اليومية',
+    worship: 'العبادة',
+    knowledge: 'المعرفة',
+    character: 'الأخلاق',
+    health: 'الصحة',
+    
+    // Bottom navigation
+    'quran-tab': 'القرآن',
+    'explore-tab': 'استكشف',
+    'home-tab': 'الرئيسية',
+    'duas-tab': 'الأدعية',
+    'notes-tab': 'الملاحظات',
   },
   en: {
     // Navigation
@@ -149,6 +216,9 @@ const translations = {
     settings: 'Settings',
     calendar: 'Calendar',
     books: 'Books',
+    home: 'Home',
+    explore: 'Explore',
+    notes: 'Notes',
     
     // Common
     save: 'Save',
@@ -158,6 +228,19 @@ const translations = {
     delete: 'Delete',
     search: 'Search',
     loading: 'Loading...',
+    complete: 'Complete',
+    incomplete: 'Incomplete',
+    yes: 'Yes',
+    no: 'No',
+    ok: 'OK',
+    done: 'Done',
+    continue: 'Continue',
+    back: 'Back',
+    next: 'Next',
+    previous: 'Previous',
+    close: 'Close',
+    view: 'View',
+    all: 'All',
     
     // Settings
     'app-name': 'Deen Companion',
@@ -184,6 +267,30 @@ const translations = {
     // Languages
     arabic: 'العربية',
     english: 'English',
+    
+    // Prayer times
+    'todays-prayers': "Today's Prayers",
+    'prayers-remaining': 'prayers remaining',
+    'mark-complete': 'Mark Complete',
+    fajr: 'Fajr',
+    dhuhr: 'Dhuhr',
+    asr: 'Asr',
+    maghrib: 'Maghrib',
+    isha: 'Isha',
+    
+    // Islamic content
+    'islamic-quote-day': 'Islamic Quote of the Day',
+    'morning-evening-adhkar': 'Morning & Evening Adhkar',
+    'recite-morning-evening': 'Recite morning and evening remembrance',
+    points: 'points',
+    'complete-daily-prayers': 'Complete 5 Daily Prayers',
+    'perform-obligatory-prayers': 'Perform all obligatory prayers on time',
+    'read-page-quran': 'Read 1 Page of Quran',
+    'daily-quran-recitation': 'Daily Quran recitation',
+    'give-charity-sadaqah': 'Give Charity (Sadaqah)',
+    'any-form-charity': 'Any form of charity, even a smile',
+    'seek-forgiveness-istighfar': 'Seek Forgiveness (Istighfar)',
+    'say-astaghfirullah-100-times': 'Say "Astaghfirullah" 100 times',
     
     // Dream Journal
     'islamic-dream-journal': 'Islamic Dream Journal',
@@ -222,10 +329,7 @@ const translations = {
     'reveal-meaning': 'Reveal Meaning',
     'mark-learned': 'Mark as Learned',
     learned: '✅ Learned',
-    previous: 'Previous',
-    next: 'Next',
     remaining: 'Remaining',
-    complete: 'Complete',
     'word-learned': 'Word Learned! 🎉',
     example: 'Example:',
     
@@ -252,6 +356,36 @@ const translations = {
     'reflective': 'Reflective',
     'seeking': 'Seeking Guidance',
     'current-prompt': 'Current Prompt:',
+    
+    // Habit Builder
+    'islamic-habit-builder': 'Islamic Habit Builder',
+    'overall-level': 'Overall Level',
+    'habits-completed-today': 'habits completed today',
+    'habit-completed': 'Habit Completed!',
+    'streak-days': 'days',
+    'level-up': 'Level Up!',
+    'reached-level': 'reached level',
+    'add-new-islamic-habit': 'Add New Islamic Habit',
+    'most-beloved-deeds': '"The most beloved of deeds to Allah are those that are most consistent, even if they are small." - Prophet Muhammad (PBUH)',
+    'recent-achievement': 'Recent Achievement',
+    'consistent-reader': 'Consistent Reader - Read Quran for 10 days straight!',
+    'morning-adhkar': 'Morning Adhkar',
+    'recite-morning-remembrance': 'Recite morning remembrance of Allah',
+    'read-quran': 'Read Quran',
+    'read-one-page-daily': 'Read at least one page of Quran daily',
+    'make-dua-parents': 'Make Dua for Parents',
+    'remember-parents-prayers': 'Remember parents in daily prayers',
+    worship: 'worship',
+    knowledge: 'knowledge',
+    character: 'character',
+    health: 'health',
+    
+    // Bottom navigation
+    'quran-tab': 'Quran',
+    'explore-tab': 'Explore',
+    'home-tab': 'Home',
+    'duas-tab': 'Duas',
+    'notes-tab': 'Notes',
   }
 };
 
