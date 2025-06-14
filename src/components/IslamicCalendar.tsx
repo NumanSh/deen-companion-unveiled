@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 type IslamicEvent = {
   id: string;
   name: string;
-  type: 'major' | 'minor' | 'prayer';
+  type: 'major' | 'minor' | 'prayer' | 'white_days';
   description?: string;
   hijriMonth: number;
   hijriDay: number;
@@ -25,6 +25,26 @@ const islamicEvents: IslamicEvent[] = [
   { id: '8', name: 'Hajj Season', type: 'major', hijriMonth: 12, hijriDay: 8 },
   { id: '9', name: 'Eid al-Adha', type: 'major', hijriMonth: 12, hijriDay: 10 },
 ];
+
+// Generate white days for all months
+const generateWhiteDays = (): IslamicEvent[] => {
+  const whiteDays: IslamicEvent[] = [];
+  for (let month = 1; month <= 12; month++) {
+    for (let day = 13; day <= 15; day++) {
+      whiteDays.push({
+        id: `white_${month}_${day}`,
+        name: 'الأيام البيض',
+        type: 'white_days',
+        description: 'يوم مستحب للصيام من الأيام البيض',
+        hijriMonth: month,
+        hijriDay: day
+      });
+    }
+  }
+  return whiteDays;
+};
+
+const allIslamicEvents = [...islamicEvents, ...generateWhiteDays()];
 
 const hijriMonths = [
   'Muharram', 'Safar', 'Rabi al-Awwal', 'Rabi al-Thani',
@@ -60,7 +80,7 @@ const IslamicCalendar: React.FC = () => {
 
   const getCurrentMonthEvents = () => {
     const hijri = gregorianToHijri(currentDate);
-    return islamicEvents.filter(event => event.hijriMonth === hijri.month);
+    return allIslamicEvents.filter(event => event.hijriMonth === hijri.month);
   };
 
   const getDaysInMonth = (date: Date) => {
@@ -101,8 +121,13 @@ const IslamicCalendar: React.FC = () => {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
       const hijriDate = gregorianToHijri(date);
       const isToday = isCurrentMonth && day === today.getDate();
-      const hasEvent = islamicEvents.some(event => 
+      const hasEvent = allIslamicEvents.some(event => 
         event.hijriMonth === hijriDate.month && event.hijriDay === hijriDate.day
+      );
+      const isWhiteDay = allIslamicEvents.some(event => 
+        event.hijriMonth === hijriDate.month && 
+        event.hijriDay === hijriDate.day && 
+        event.type === 'white_days'
       );
 
       days.push(
@@ -111,7 +136,8 @@ const IslamicCalendar: React.FC = () => {
           className={cn(
             "p-2 text-center cursor-pointer rounded-lg transition-colors relative",
             isToday && "bg-blue-500 text-white font-bold",
-            !isToday && hasEvent && "bg-green-100 dark:bg-green-900/30",
+            !isToday && isWhiteDay && "bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300",
+            !isToday && hasEvent && !isWhiteDay && "bg-green-100 dark:bg-green-900/30",
             !isToday && !hasEvent && "hover:bg-gray-100 dark:hover:bg-gray-800"
           )}
           onClick={() => setSelectedDate(date)}
@@ -120,7 +146,12 @@ const IslamicCalendar: React.FC = () => {
           <div className="text-xs text-gray-500 dark:text-gray-400">
             {hijriDate.day}
           </div>
-          {hasEvent && (
+          {isWhiteDay && (
+            <div className="absolute top-1 right-1">
+              <Moon className="w-3 h-3 text-yellow-600 fill-current" />
+            </div>
+          )}
+          {hasEvent && !isWhiteDay && (
             <div className="absolute top-1 right-1">
               <Star className="w-3 h-3 text-green-600 fill-current" />
             </div>
@@ -133,6 +164,8 @@ const IslamicCalendar: React.FC = () => {
   };
 
   const currentMonthEvents = getCurrentMonthEvents();
+  const whiteDaysThisMonth = currentMonthEvents.filter(event => event.type === 'white_days');
+  const otherEventsThisMonth = currentMonthEvents.filter(event => event.type !== 'white_days');
 
   return (
     <div className="space-y-6">
@@ -209,11 +242,58 @@ const IslamicCalendar: React.FC = () => {
           <div className="grid grid-cols-7 gap-1">
             {renderCalendarDays()}
           </div>
+
+          {/* Legend */}
+          <div className="mt-4 flex flex-wrap gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-yellow-100 border border-yellow-300 rounded"></div>
+              <span className="text-gray-600 dark:text-gray-400">الأيام البيض (White Days)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-green-100 rounded"></div>
+              <span className="text-gray-600 dark:text-gray-400">Islamic Events</span>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
+      {/* White Days This Month */}
+      {whiteDaysThisMonth.length > 0 && (
+        <Card className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Moon className="w-5 h-5 text-yellow-600" />
+              الأيام البيض لهذا الشهر (White Days)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="p-4 rounded-lg border-l-4 border-l-yellow-500 bg-white dark:bg-gray-800">
+                <h4 className="font-semibold text-lg mb-2">ثلاثة الأيام البيض</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                  الأيام المستحب صيامها في كل شهر هجري وهي الأيام: 13، 14، 15
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[13, 14, 15].map((day) => (
+                    <div key={day} className="text-center p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded">
+                      <div className="font-semibold">{day}</div>
+                      <div className="text-xs text-gray-600 dark:text-gray-400">
+                        {hijriMonths[gregorianToHijri(currentDate).month - 1]}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 text-xs text-yellow-700 dark:text-yellow-300">
+                  💡 يُستحب صيام هذه الأيام الثلاثة من كل شهر هجري
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Islamic Events This Month */}
-      {currentMonthEvents.length > 0 && (
+      {otherEventsThisMonth.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -223,7 +303,7 @@ const IslamicCalendar: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {currentMonthEvents.map((event) => (
+              {otherEventsThisMonth.map((event) => (
                 <div
                   key={event.id}
                   className={cn(
