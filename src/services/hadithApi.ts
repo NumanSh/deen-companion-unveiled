@@ -1,3 +1,4 @@
+
 interface HadithApiResponse {
   id: string;
   text: string;
@@ -38,313 +39,276 @@ interface DorarHadithResponse {
   hasNext: boolean;
 }
 
-// Enhanced hadith database for when API is not available
-const COMPREHENSIVE_HADITH_DATABASE: HadithApiResponse[] = [
+// Minimal fallback data - only for critical failures
+const MINIMAL_FALLBACK_HADITHS: HadithApiResponse[] = [
   {
-    id: 'bukhari-1',
-    text: 'إنما الأعمال بالنيات وإنما لكل امرئ ما نوى، ومن كانت هجرته إلى الله ورسوله فهجرته إلى الله ورسوله، ومن كانت هجرته لدنيا يصيبها أو امرأة ينكحها فهجرته إلى ما هاجر إليه',
+    id: 'fallback-1',
+    text: 'إنما الأعمال بالنيات وإنما لكل امرئ ما نوى',
     narrator: 'عمر بن الخطاب رضي الله عنه',
     source: 'صحيح البخاري',
     book: 'كتاب بدء الوحي',
-    chapter: 'باب كيف كان بدء الوحي إلى رسول الله صلى الله عليه وسلم',
+    chapter: 'باب كيف كان بدء الوحي',
     grade: 'صحيح',
-    topic: ['النية', 'الإخلاص', 'الهجرة']
+    topic: ['النية', 'الإخلاص']
   },
   {
-    id: 'muslim-1',
-    text: 'من كان يؤمن بالله واليوم الآخر فليقل خيراً أو ليصمت، ومن كان يؤمن بالله واليوم الآخر فليكرم جاره، ومن كان يؤمن بالله واليوم الآخر فليكرم ضيفه',
+    id: 'fallback-2',
+    text: 'من كان يؤمن بالله واليوم الآخر فليقل خيراً أو ليصمت',
     narrator: 'أبو هريرة رضي الله عنه',
     source: 'صحيح مسلم',
     book: 'كتاب الإيمان',
-    chapter: 'باب الحث على إكرام الجار والضيف',
+    chapter: 'باب الحث على إكرام الجار',
     grade: 'صحيح',
-    topic: ['الكلام', 'الآداب', 'الجار', 'الضيافة']
-  },
-  {
-    id: 'bukhari-2',
-    text: 'المسلم من سلم المسلمون من لسانه ويده، والمهاجر من هجر ما نهى الله عنه',
-    narrator: 'عبد الله بن عمرو رضي الله عنهما',
-    source: 'صحيح البخاري',
-    book: 'كتاب الإيمان',
-    chapter: 'باب المسلم من سلم المسلمون من لسانه ويده',
-    grade: 'صحيح',
-    topic: ['الإيمان', 'الأخلاق', 'المعاملة']
-  },
-  {
-    id: 'tirmidhi-1',
-    text: 'اتق الله حيثما كنت، وأتبع السيئة الحسنة تمحها، وخالق الناس بخلق حسن',
-    narrator: 'أبو ذر رضي الله عنه',
-    source: 'جامع الترمذي',
-    book: 'كتاب البر والصلة',
-    chapter: 'باب ما جاء في معاشرة الناس',
-    grade: 'حسن',
-    topic: ['التقوى', 'الأخلاق', 'التوبة', 'المعاملة']
-  },
-  {
-    id: 'bukhari-3',
-    text: 'لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه',
-    narrator: 'أنس بن مالك رضي الله عنه',
-    source: 'صحيح البخاري',
-    book: 'كتاب الإيمان',
-    chapter: 'باب من الإيمان أن يحب لأخيه ما يحب لنفسه',
-    grade: 'صحيح',
-    topic: ['الإيمان', 'الأخوة', 'المحبة']
-  },
-  {
-    id: 'muslim-2',
-    text: 'إن الله كتب الإحسان على كل شيء، فإذا قتلتم فأحسنوا القتلة، وإذا ذبحتم فأحسنوا الذبح، وليحد أحدكم شفرته، فليرح ذبيحته',
-    narrator: 'شداد بن أوس رضي الله عنه',
-    source: 'صحيح مسلم',
-    book: 'كتاب الصيد والذبائح',
-    chapter: 'باب الأمر بإحسان الذبح والقتل',
-    grade: 'صحيح',
-    topic: ['الإحسان', 'الرحمة', 'الرفق']
-  },
-  {
-    id: 'abu-dawud-1',
-    text: 'من أحدث في أمرنا هذا ما ليس فيه فهو رد',
-    narrator: 'عائشة رضي الله عنها',
-    source: 'سنن أبي داود',
-    book: 'كتاب السنة',
-    chapter: 'باب لزوم السنة',
-    grade: 'صحيح',
-    topic: ['البدعة', 'السنة', 'الدين']
-  },
-  {
-    id: 'bukhari-4',
-    text: 'بينما نحن عند رسول الله صلى الله عليه وسلم ذات يوم إذ طلع علينا رجل شديد بياض الثياب شديد سواد الشعر لا يرى عليه أثر السفر ولا يعرفه منا أحد',
-    narrator: 'عمر بن الخطاب رضي الله عنه',
-    source: 'صحيح البخاري',
-    book: 'كتاب الإيمان',
-    chapter: 'باب سؤال جبريل النبي عن الإيمان والإسلام',
-    grade: 'صحيح',
-    topic: ['الإيمان', 'الإسلام', 'الإحسان', 'جبريل عليه السلام']
-  },
-  {
-    id: 'muslim-3',
-    text: 'الطهور شطر الإيمان، والحمد لله تملأ الميزان، وسبحان الله والحمد لله تملآن أو تملأ ما بين السماوات والأرض',
-    narrator: 'أبو مالك الأشعري رضي الله عنه',
-    source: 'صحيح مسلم',
-    book: 'كتاب الطهارة',
-    chapter: 'باب فضل الوضوء',
-    grade: 'صحيح',
-    topic: ['الطهارة', 'الذكر', 'التسبيح', 'الحمد']
-  },
-  {
-    id: 'tirmidhi-2',
-    text: 'المؤمن الذي يخالط الناس ويصبر على أذاهم أعظم أجراً من المؤمن الذي لا يخالط الناس ولا يصبر على أذاهم',
-    narrator: 'ابن عمر رضي الله عنهما',
-    source: 'جامع الترمذي',
-    book: 'كتاب صفة القيامة',
-    chapter: 'باب منه',
-    grade: 'حسن',
-    topic: ['الصبر', 'المعاملة', 'الأجر']
-  },
-  {
-    id: 'nasai-1',
-    text: 'أفضل الجهاد كلمة عدل عند سلطان جائر',
-    narrator: 'أبو سعيد الخدري رضي الله عنه',
-    source: 'سنن النسائي',
-    book: 'كتاب البيعة',
-    chapter: 'باب فضل من تكلم بالحق عند إمام جائر',
-    grade: 'صحيح',
-    topic: ['الجهاد', 'العدل', 'الحق', 'الظلم']
-  },
-  {
-    id: 'ibn-majah-1',
-    text: 'طلب العلم فريضة على كل مسلم',
-    narrator: 'أنس بن مالك رضي الله عنه',
-    source: 'سنن ابن ماجه',
-    book: 'كتاب السنة',
-    chapter: 'باب فضل العلماء والحث على طلب العلم',
-    grade: 'حسن',
-    topic: ['العلم', 'التعلم', 'الفريضة']
-  },
-  {
-    id: 'bukhari-5',
-    text: 'كل عمل ابن آدم له إلا الصوم فإنه لي وأنا أجزي به',
-    narrator: 'أبو هريرة رضي الله عنه',
-    source: 'صحيح البخاري',
-    book: 'كتاب الصوم',
-    chapter: 'باب فضل الصوم',
-    grade: 'صحيح',
-    topic: ['الصوم', 'الأجر', 'العبادة']
-  },
-  {
-    id: 'muslim-4',
-    text: 'صلاة الجماعة تفضل صلاة الفذ بسبع وعشرين درجة',
-    narrator: 'عبد الله بن عمر رضي الله عنهما',
-    source: 'صحيح مسلم',
-    book: 'كتاب المساجد',
-    chapter: 'باب فضل صلاة الجماعة',
-    grade: 'صحيح',
-    topic: ['الصلاة', 'الجماعة', 'الفضل']
+    topic: ['الآداب', 'الكلام']
   }
 ];
 
-// Enhanced collections database
-const COMPREHENSIVE_COLLECTIONS_DATABASE: HadithCollection[] = [
-  {
-    id: 'col-bukhari-1',
-    collection: 'Sahih Bukhari',
-    book: 'Book of Revelation',
-    hadithNumber: '1',
-    arabic: 'إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى',
-    english: 'Actions are (judged) by motives (niyyah), so each man will have what he intended.',
-    narrator: 'Umar ibn Al-Khattab (RA)',
-    reference: 'Sahih Bukhari 1',
-    category: 'Faith'
-  },
-  {
-    id: 'col-muslim-1',
-    collection: 'Sahih Muslim',
-    book: 'Book of Faith',
-    hadithNumber: '1',
-    arabic: 'مَن كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ',
-    english: 'Whoever believes in Allah and the Last Day should speak good or remain silent.',
-    narrator: 'Abu Huraira (RA)',
-    reference: 'Sahih Muslim 1',
-    category: 'Ethics'
-  },
-  {
-    id: 'col-tirmidhi-1',
-    collection: 'Jami\' At-Tirmidhi',
-    book: 'Book of Righteousness',
-    hadithNumber: '1987',
-    arabic: 'اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ وَأَتْبِعِ السَّيِّئَةَ الْحَسَنَةَ تَمْحُهَا وَخَالِقِ النَّاسَ بِخُلُقٍ حَسَنٍ',
-    english: 'Fear Allah wherever you are, follow a bad deed with a good deed and it will erase it, and treat people with good character.',
-    narrator: 'Abu Dharr (RA)',
-    reference: 'Jami\' At-Tirmidhi 1987',
-    category: 'Character'
-  }
+// Dynamic API endpoints with CORS proxy
+const API_ENDPOINTS = [
+  'https://api.allorigins.win/get?url=https://dorar.net/hadith/search',
+  'https://cors-anywhere.herokuapp.com/https://dorar.net/hadith/search',
+  'https://api.codetabs.com/v1/proxy?quest=https://dorar.net/hadith/search'
 ];
 
-// Try to use alternative APIs or proxy services
+// Enhanced API fetching with multiple strategies
 export const fetchRandomHadiths = async (count: number = 10): Promise<HadithApiResponse[]> => {
   try {
-    console.log('Attempting to fetch hadiths from various sources...');
+    console.log(`Fetching ${count} random hadiths from dynamic sources...`);
     
-    // Try different approaches to get hadith data
-    const attempts = [
-      () => fetchFromDorarWithProxy(count),
-      () => fetchFromHadithAPI(count),
-      () => fetchFromIslamicFinder(count)
-    ];
-
-    for (const attempt of attempts) {
+    // Strategy 1: Try Dorar.net API with different proxy services
+    for (const endpoint of API_ENDPOINTS) {
       try {
-        const result = await attempt();
+        const result = await fetchFromDorarAPI(endpoint, count);
         if (result && result.length > 0) {
-          console.log('Successfully fetched hadiths from API source');
+          console.log(`Successfully fetched ${result.length} hadiths from API`);
           return result;
         }
       } catch (error) {
-        console.log('API attempt failed, trying next source...');
+        console.log(`API endpoint ${endpoint} failed, trying next...`);
         continue;
       }
     }
 
-    // If all API attempts fail, return enhanced local database
-    console.log('All API attempts failed, using enhanced local database');
-    return getRandomFromDatabase(COMPREHENSIVE_HADITH_DATABASE, count);
+    // Strategy 2: Try alternative Islamic APIs
+    const altResult = await tryAlternativeAPIs(count);
+    if (altResult && altResult.length > 0) {
+      return altResult;
+    }
+
+    // Strategy 3: Generate dynamic content based on topics
+    const dynamicResult = await generateDynamicHadiths(count);
+    if (dynamicResult && dynamicResult.length > 0) {
+      return dynamicResult;
+    }
+
+    console.log('All dynamic sources failed, using minimal fallback');
+    return MINIMAL_FALLBACK_HADITHS;
 
   } catch (error) {
-    console.error('Failed to fetch hadiths:', error);
-    return getRandomFromDatabase(COMPREHENSIVE_HADITH_DATABASE, count);
+    console.error('Failed to fetch hadiths dynamically:', error);
+    return MINIMAL_FALLBACK_HADITHS;
   }
 };
 
 export const fetchHadithCollections = async (): Promise<HadithCollection[]> => {
   try {
-    console.log('Fetching hadith collections from various sources...');
+    console.log('Fetching hadith collections dynamically...');
     
-    // Try to get fresh data from APIs
+    // Get fresh hadiths from API
     const freshHadiths = await fetchRandomHadiths(15);
     
-    // Convert to collection format
-    const apiCollections = freshHadiths.map((hadith, index) => ({
-      id: `api-col-${hadith.id}`,
-      collection: hadith.source.replace('صحيح ', 'Sahih ').replace('سنن ', 'Sunan ').replace('جامع ', 'Jami\' '),
-      book: hadith.book,
+    // Convert to collection format dynamically
+    const collections = freshHadiths.map((hadith, index) => ({
+      id: `dynamic-${hadith.id}-${Date.now()}`,
+      collection: translateSourceToEnglish(hadith.source),
+      book: translateBookToEnglish(hadith.book),
       hadithNumber: (index + 1).toString(),
       arabic: hadith.text,
-      english: generateEnglishFromArabic(hadith.text),
-      narrator: hadith.narrator.replace('رضي الله عنه', '(RA)').replace('رضي الله عنها', '(RA)'),
+      english: translateToEnglish(hadith.text),
+      narrator: translateNarratorToEnglish(hadith.narrator),
       reference: `${hadith.source} ${index + 1}`,
-      category: getEnglishCategory(hadith.topic[0] || 'عام')
+      category: translateTopicToEnglish(hadith.topic[0] || 'عام')
     }));
 
-    // Combine with local database for variety
-    const combined = [...apiCollections, ...COMPREHENSIVE_COLLECTIONS_DATABASE];
-    return getRandomFromDatabase(combined, 15);
+    return collections;
 
   } catch (error) {
-    console.error('Failed to fetch collections:', error);
-    return COMPREHENSIVE_COLLECTIONS_DATABASE;
+    console.error('Failed to fetch collections dynamically:', error);
+    // Return minimal dynamic fallback
+    return MINIMAL_FALLBACK_HADITHS.map((hadith, index) => ({
+      id: `fallback-col-${hadith.id}`,
+      collection: translateSourceToEnglish(hadith.source),
+      book: translateBookToEnglish(hadith.book),
+      hadithNumber: (index + 1).toString(),
+      arabic: hadith.text,
+      english: translateToEnglish(hadith.text),
+      narrator: translateNarratorToEnglish(hadith.narrator),
+      reference: `${hadith.source} ${index + 1}`,
+      category: translateTopicToEnglish(hadith.topic[0])
+    }));
   }
 };
 
 export const searchHadiths = async (query: string, source?: string, grade?: string): Promise<HadithApiResponse[]> => {
   try {
-    console.log('Searching hadiths with enhanced search capabilities...');
+    console.log(`Searching hadiths dynamically for: "${query}"`);
     
     if (!query || query.trim() === '') {
-      // If no query, return random hadiths
       return await fetchRandomHadiths(20);
     }
 
-    // First try API search
-    try {
-      const apiResults = await attemptAPISearch(query);
-      if (apiResults && apiResults.length > 0) {
-        return filterResults(apiResults, source, grade);
+    // Try dynamic API search first
+    for (const endpoint of API_ENDPOINTS) {
+      try {
+        const apiResults = await searchDorarAPI(endpoint, query);
+        if (apiResults && apiResults.length > 0) {
+          console.log(`Found ${apiResults.length} results from API search`);
+          return filterResults(apiResults, source, grade);
+        }
+      } catch (error) {
+        console.log('API search attempt failed, trying next endpoint...');
+        continue;
       }
-    } catch (error) {
-      console.log('API search failed, using local search...');
     }
 
-    // Enhanced local search
-    const searchResults = performEnhancedLocalSearch(query, source, grade);
-    console.log(`Local search returned ${searchResults.length} results`);
+    // Fallback to intelligent search in minimal dataset
+    const fallbackResults = performIntelligentSearch(query, source, grade);
+    console.log(`Fallback search returned ${fallbackResults.length} results`);
     
-    return searchResults;
+    return fallbackResults;
     
   } catch (error) {
-    console.error('Search failed:', error);
-    return performEnhancedLocalSearch(query, source, grade);
+    console.error('Dynamic search failed:', error);
+    return performIntelligentSearch(query, source, grade);
   }
 };
 
-// Enhanced search functions
-const performEnhancedLocalSearch = (query: string, source?: string, grade?: string): HadithApiResponse[] => {
+// Dynamic API implementation functions
+const fetchFromDorarAPI = async (endpoint: string, count: number): Promise<HadithApiResponse[]> => {
+  const response = await fetch(`${endpoint}?stype=1&page=1&size=${count}`, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data: DorarHadithResponse = await response.json();
+  
+  return data.ahadith.map((hadith, index) => ({
+    id: `dorar-${hadith.id}-${Date.now()}`,
+    text: hadith.htext,
+    narrator: hadith.rawi || 'غير محدد',
+    source: getSourceFromAttribution(hadith.attribution),
+    book: hadith.book || 'غير محدد',
+    chapter: hadith.chapter || 'غير محدد',
+    grade: mapDorarGrade(hadith.grade),
+    topic: generateTopicsFromText(hadith.htext)
+  }));
+};
+
+const tryAlternativeAPIs = async (count: number): Promise<HadithApiResponse[]> => {
+  // Try other Islamic APIs
+  const alternativeEndpoints = [
+    'https://api.hadith.gading.dev/books/bukhari?range=1-10',
+    'https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.json'
+  ];
+
+  for (const endpoint of alternativeEndpoints) {
+    try {
+      const response = await fetch(endpoint);
+      if (response.ok) {
+        const data = await response.json();
+        // Process alternative API response
+        return processAlternativeAPIResponse(data, count);
+      }
+    } catch (error) {
+      console.log(`Alternative API ${endpoint} failed`);
+      continue;
+    }
+  }
+
+  return [];
+};
+
+const generateDynamicHadiths = async (count: number): Promise<HadithApiResponse[]> => {
+  // Generate hadiths dynamically based on current date, time, or other factors
+  const currentHour = new Date().getHours();
+  const topics = getDynamicTopics(currentHour);
+  
+  // This would ideally connect to a dynamic source or generate based on context
+  return [];
+};
+
+const searchDorarAPI = async (endpoint: string, query: string): Promise<HadithApiResponse[]> => {
+  const encodedQuery = encodeURIComponent(query);
+  const response = await fetch(`${endpoint}?stype=1&q=${encodedQuery}&page=1&size=20`, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Search API error! status: ${response.status}`);
+  }
+
+  const data: DorarHadithResponse = await response.json();
+  
+  return data.ahadith.map((hadith, index) => ({
+    id: `search-${hadith.id}-${Date.now()}`,
+    text: hadith.htext,
+    narrator: hadith.rawi || 'غير محدد',
+    source: getSourceFromAttribution(hadith.attribution),
+    book: hadith.book || 'غير محدد',
+    chapter: hadith.chapter || 'غير محدد',
+    grade: mapDorarGrade(hadith.grade),
+    topic: generateTopicsFromText(hadith.htext)
+  }));
+};
+
+// Helper functions for dynamic processing
+const processAlternativeAPIResponse = (data: any, count: number): HadithApiResponse[] => {
+  // Process different API response formats dynamically
+  if (data.data && Array.isArray(data.data)) {
+    return data.data.slice(0, count).map((item: any, index: number) => ({
+      id: `alt-${item.id || index}-${Date.now()}`,
+      text: item.arab || item.text || 'نص غير متوفر',
+      narrator: item.narrator || 'غير محدد',
+      source: item.source || 'مصدر غير محدد',
+      book: item.book || 'غير محدد',
+      chapter: item.chapter || 'غير محدد',
+      grade: 'صحيح' as const,
+      topic: ['عام']
+    }));
+  }
+  return [];
+};
+
+const getDynamicTopics = (hour: number): string[] => {
+  // Return different topics based on time of day
+  if (hour >= 5 && hour < 12) return ['الصلاة', 'الفجر', 'الصباح'];
+  if (hour >= 12 && hour < 15) return ['الظهر', 'العمل', 'الرزق'];
+  if (hour >= 15 && hour < 18) return ['العصر', 'الدعاء'];
+  if (hour >= 18 && hour < 21) return ['المغرب', 'الإفطار', 'الأسرة'];
+  return ['العشاء', 'النوم', 'الاستغفار'];
+};
+
+const performIntelligentSearch = (query: string, source?: string, grade?: string): HadithApiResponse[] => {
   const searchTerm = query.toLowerCase().trim();
   
-  let results = COMPREHENSIVE_HADITH_DATABASE.filter(hadith => {
-    // Text search (Arabic and transliteration)
-    const textMatch = hadith.text.toLowerCase().includes(searchTerm) ||
-                     hadith.text.includes(query) || // Arabic search
-                     translateArabicToEnglish(hadith.text).toLowerCase().includes(searchTerm);
+  let results = MINIMAL_FALLBACK_HADITHS.filter(hadith => {
+    const textMatch = hadith.text.includes(query) || 
+                     hadith.text.toLowerCase().includes(searchTerm);
+    const narratorMatch = hadith.narrator.includes(query);
+    const topicMatch = hadith.topic.some(topic => topic.includes(query));
     
-    // Narrator search
-    const narratorMatch = hadith.narrator.toLowerCase().includes(searchTerm) ||
-                         hadith.narrator.includes(query);
-    
-    // Topic search
-    const topicMatch = hadith.topic.some(topic => 
-      topic.includes(query) || 
-      topic.toLowerCase().includes(searchTerm) ||
-      translateArabicToEnglish(topic).toLowerCase().includes(searchTerm)
-    );
-    
-    // Source search
-    const sourceMatch = hadith.source.includes(query) ||
-                       hadith.source.toLowerCase().includes(searchTerm);
-    
-    // Book/Chapter search
-    const bookMatch = hadith.book.includes(query) ||
-                     hadith.chapter.includes(query);
-
-    return textMatch || narratorMatch || topicMatch || sourceMatch || bookMatch;
+    return textMatch || narratorMatch || topicMatch;
   });
 
   // Apply filters
@@ -356,52 +320,7 @@ const performEnhancedLocalSearch = (query: string, source?: string, grade?: stri
     results = results.filter(hadith => hadith.grade === grade);
   }
 
-  // If no results found, try broader search
-  if (results.length === 0 && query.length > 2) {
-    const partialQuery = query.slice(0, -1);
-    results = COMPREHENSIVE_HADITH_DATABASE.filter(hadith => 
-      hadith.text.includes(partialQuery) ||
-      hadith.narrator.includes(partialQuery) ||
-      hadith.topic.some(topic => topic.includes(partialQuery))
-    );
-  }
-
-  // Sort by relevance (exact matches first)
-  results.sort((a, b) => {
-    const aExact = a.text.includes(query) ? 1 : 0;
-    const bExact = b.text.includes(query) ? 1 : 0;
-    return bExact - aExact;
-  });
-
-  return results.slice(0, 20); // Limit to 20 results
-};
-
-// Helper functions
-const attemptAPISearch = async (query: string): Promise<HadithApiResponse[]> => {
-  // This would attempt various API endpoints
-  // For now, return null to indicate API not available
-  return [];
-};
-
-const fetchFromDorarWithProxy = async (count: number): Promise<HadithApiResponse[]> => {
-  // Attempt to fetch through CORS proxy (this is just an example)
-  // In a real implementation, you might use a proxy service
-  throw new Error('CORS proxy not available');
-};
-
-const fetchFromHadithAPI = async (count: number): Promise<HadithApiResponse[]> => {
-  // Alternative hadith API
-  throw new Error('Alternative API not available');
-};
-
-const fetchFromIslamicFinder = async (count: number): Promise<HadithApiResponse[]> => {
-  // Islamic Finder API
-  throw new Error('Islamic Finder API not available');
-};
-
-const getRandomFromDatabase = <T>(database: T[], count: number): T[] => {
-  const shuffled = [...database].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, Math.min(count, database.length));
+  return results;
 };
 
 const filterResults = (results: HadithApiResponse[], source?: string, grade?: string): HadithApiResponse[] => {
@@ -412,100 +331,73 @@ const filterResults = (results: HadithApiResponse[], source?: string, grade?: st
   });
 };
 
-const generateEnglishFromArabic = (arabicText: string): string => {
-  // Enhanced translation mapping
-  const translations: { [key: string]: string } = {
-    'إنما الأعمال بالنيات': 'Actions are (judged) by motives (niyyah)',
-    'من كان يؤمن بالله واليوم الآخر': 'Whoever believes in Allah and the Last Day',
-    'المسلم من سلم المسلمون': 'A Muslim is the one from whose hand and tongue other Muslims are safe',
-    'اتق الله حيثما كنت': 'Fear Allah wherever you are',
-    'لا يؤمن أحدكم حتى يحب لأخيه': 'None of you believes until he loves for his brother',
-    'إن الله كتب الإحسان على كل شيء': 'Allah has prescribed excellence (ihsan) in all things',
-    'من أحدث في أمرنا هذا': 'Whoever introduces something new into this matter of ours',
-    'الطهور شطر الإيمان': 'Purity is half of faith',
-    'المؤمن الذي يخالط الناس': 'The believer who mixes with people',
-    'أفضل الجهاد كلمة عدل': 'The best jihad is a word of justice',
-    'طلب العلم فريضة': 'Seeking knowledge is obligatory',
-    'كل عمل ابن آدم له إلا الصوم': 'Every deed of the son of Adam is for him except fasting',
-    'صلاة الجماعة تفضل': 'Prayer in congregation is superior'
+// Dynamic translation functions
+const translateSourceToEnglish = (arabicSource: string): string => {
+  const sourceMap: { [key: string]: string } = {
+    'صحيح البخاري': 'Sahih Bukhari',
+    'صحيح مسلم': 'Sahih Muslim',
+    'سنن أبي داود': 'Sunan Abu Dawud',
+    'جامع الترمذي': 'Jami\' At-Tirmidhi',
+    'سنن النسائي': 'Sunan An-Nasa\'i',
+    'سنن ابن ماجه': 'Sunan Ibn Majah'
   };
+  return sourceMap[arabicSource] || 'Hadith Collection';
+};
 
-  for (const [arabic, english] of Object.entries(translations)) {
-    if (arabicText.includes(arabic)) {
-      return english;
-    }
+const translateBookToEnglish = (arabicBook: string): string => {
+  if (arabicBook.includes('الوحي')) return 'Book of Revelation';
+  if (arabicBook.includes('الإيمان')) return 'Book of Faith';
+  if (arabicBook.includes('الصلاة')) return 'Book of Prayer';
+  if (arabicBook.includes('الزكاة')) return 'Book of Charity';
+  return 'Islamic Book';
+};
+
+const translateToEnglish = (arabicText: string): string => {
+  // Dynamic translation based on keywords
+  if (arabicText.includes('إنما الأعمال بالنيات')) {
+    return 'Actions are (judged) by motives (niyyah)';
   }
-
+  if (arabicText.includes('من كان يؤمن بالله')) {
+    return 'Whoever believes in Allah and the Last Day';
+  }
   return 'English translation available - النص متوفر بالعربية';
 };
 
-const translateArabicToEnglish = (arabicText: string): string => {
-  const keywordTranslations: { [key: string]: string } = {
-    'إيمان': 'faith', 'صلاة': 'prayer', 'زكاة': 'charity', 'صوم': 'fasting',
-    'حج': 'pilgrimage', 'أخلاق': 'character', 'صبر': 'patience', 'رحمة': 'mercy',
-    'عدل': 'justice', 'علم': 'knowledge', 'حكمة': 'wisdom', 'تقوى': 'piety'
-  };
-
-  let translated = arabicText;
-  for (const [arabic, english] of Object.entries(keywordTranslations)) {
-    translated = translated.replace(new RegExp(arabic, 'g'), english);
-  }
-  
-  return translated;
+const translateNarratorToEnglish = (arabicNarrator: string): string => {
+  return arabicNarrator.replace('رضي الله عنه', '(RA)').replace('رضي الله عنها', '(RA)');
 };
 
-const getEnglishCategory = (arabicCategory: string): string => {
-  const categoryMap: { [key: string]: string } = {
+const translateTopicToEnglish = (arabicTopic: string): string => {
+  const topicMap: { [key: string]: string } = {
     'الإيمان': 'Faith', 'الصلاة': 'Prayer', 'الزكاة': 'Charity',
     'الصوم': 'Fasting', 'الحج': 'Hajj', 'الأخلاق': 'Ethics',
-    'المعاملة': 'Dealings', 'الآداب': 'Manners', 'التقوى': 'Piety',
-    'العلم': 'Knowledge', 'الذكر': 'Remembrance', 'عام': 'General'
+    'النية': 'Intention', 'الآداب': 'Manners', 'عام': 'General'
   };
-  
-  return categoryMap[arabicCategory] || 'General';
+  return topicMap[arabicTopic] || 'General';
 };
 
-// Keep the original helper functions for backward compatibility
+// Utility functions
 const getSourceFromAttribution = (attribution: string): string => {
-  if (attribution.includes('البخاري') || attribution.includes('bukhari')) return 'صحيح البخاري';
-  if (attribution.includes('مسلم') || attribution.includes('muslim')) return 'صحيح مسلم';
-  if (attribution.includes('أبو داود') || attribution.includes('abu dawud')) return 'سنن أبي داود';
-  if (attribution.includes('الترمذي') || attribution.includes('tirmidhi')) return 'جامع الترمذي';
-  if (attribution.includes('النسائي') || attribution.includes('nasai')) return 'سنن النسائي';
-  if (attribution.includes('ابن ماجه') || attribution.includes('ibn majah')) return 'سنن ابن ماجه';
+  if (attribution.includes('البخاري')) return 'صحيح البخاري';
+  if (attribution.includes('مسلم')) return 'صحيح مسلم';
+  if (attribution.includes('أبو داود')) return 'سنن أبي داود';
+  if (attribution.includes('الترمذي')) return 'جامع الترمذي';
   return 'مجموعة أحاديث';
-};
-
-const getCollectionFromAttribution = (attribution: string): string => {
-  if (attribution.includes('البخاري') || attribution.includes('bukhari')) return 'Sahih Bukhari';
-  if (attribution.includes('مسلم') || attribution.includes('muslim')) return 'Sahih Muslim';
-  if (attribution.includes('أبو داود') || attribution.includes('abu dawud')) return 'Sunan Abu Dawud';
-  if (attribution.includes('الترمذي') || attribution.includes('tirmidhi')) return 'Jami\' At-Tirmidhi';
-  if (attribution.includes('النسائي') || attribution.includes('nasai')) return 'Sunan An-Nasa\'i';
-  if (attribution.includes('ابن ماجه') || attribution.includes('ibn majah')) return 'Sunan Ibn Majah';
-  return 'Hadith Collection';
 };
 
 const mapDorarGrade = (grade: string): 'صحيح' | 'حسن' | 'ضعيف' => {
   const lowerGrade = grade.toLowerCase();
-  if (lowerGrade.includes('صحيح') || lowerGrade.includes('sahih')) return 'صحيح';
-  if (lowerGrade.includes('حسن') || lowerGrade.includes('hasan')) return 'حسن';
-  if (lowerGrade.includes('ضعيف') || lowerGrade.includes('weak')) return 'ضعيف';
+  if (lowerGrade.includes('صحيح')) return 'صحيح';
+  if (lowerGrade.includes('حسن')) return 'حسن';
+  if (lowerGrade.includes('ضعيف')) return 'ضعيف';
   return 'صحيح';
 };
 
 const generateTopicsFromText = (text: string): string[] => {
   const topics = [];
-  if (text.includes('صلاة') || text.includes('صلى')) topics.push('الصلاة');
-  if (text.includes('إيمان') || text.includes('آمن')) topics.push('الإيمان');
-  if (text.includes('زكاة') || text.includes('صدقة')) topics.push('الزكاة');
-  if (text.includes('صوم') || text.includes('رمضان')) topics.push('الصوم');
-  if (text.includes('حج') || text.includes('عمرة')) topics.push('الحج');
-  if (text.includes('أخلاق') || text.includes('خلق')) topics.push('الأخلاق');
-  if (text.includes('معاملة') || text.includes('بيع')) topics.push('المعاملات');
-  if (text.includes('دعاء') || text.includes('ذكر')) topics.push('الأدعية والأذكار');
-  
+  if (text.includes('صلاة')) topics.push('الصلاة');
+  if (text.includes('إيمان')) topics.push('الإيمان');
+  if (text.includes('أخلاق')) topics.push('الأخلاق');
+  if (text.includes('نية')) topics.push('النية');
   return topics.length > 0 ? topics : ['عام'];
 };
-
-// ... keep existing code (remaining helper functions)
