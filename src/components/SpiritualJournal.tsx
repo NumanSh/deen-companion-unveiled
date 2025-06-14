@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, Plus, Search, Calendar, Lightbulb } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface JournalEntry {
   id: string;
@@ -19,6 +20,7 @@ interface JournalEntry {
 }
 
 const SpiritualJournal: React.FC = () => {
+  const { t } = useLanguage();
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [isWriting, setIsWriting] = useState(false);
   const [newEntry, setNewEntry] = useState({
@@ -45,11 +47,11 @@ const SpiritualJournal: React.FC = () => {
   ];
 
   const moods = [
-    { id: 'grateful', label: 'Grateful', emoji: '🤲', color: 'bg-green-100 text-green-800' },
-    { id: 'peaceful', label: 'Peaceful', emoji: '☮️', color: 'bg-blue-100 text-blue-800' },
-    { id: 'hopeful', label: 'Hopeful', emoji: '🌟', color: 'bg-yellow-100 text-yellow-800' },
-    { id: 'reflective', label: 'Reflective', emoji: '🤔', color: 'bg-purple-100 text-purple-800' },
-    { id: 'seeking', label: 'Seeking Guidance', emoji: '🧭', color: 'bg-orange-100 text-orange-800' }
+    { id: 'grateful', label: t('grateful'), emoji: '🤲', color: 'bg-green-100 text-green-800' },
+    { id: 'peaceful', label: t('peaceful'), emoji: '☮️', color: 'bg-blue-100 text-blue-800' },
+    { id: 'hopeful', label: t('hopeful'), emoji: '🌟', color: 'bg-yellow-100 text-yellow-800' },
+    { id: 'reflective', label: t('reflective'), emoji: '🤔', color: 'bg-purple-100 text-purple-800' },
+    { id: 'seeking', label: t('seeking'), emoji: '🧭', color: 'bg-orange-100 text-orange-800' }
   ];
 
   useEffect(() => {
@@ -66,8 +68,8 @@ const SpiritualJournal: React.FC = () => {
   const saveEntry = () => {
     if (!newEntry.title || !newEntry.content) {
       toast({
-        title: "Incomplete Entry",
-        description: "Please add both a title and content to your journal entry.",
+        title: t('incomplete-entry'),
+        description: t('add-title-content'),
         variant: "destructive",
       });
       return;
@@ -91,8 +93,8 @@ const SpiritualJournal: React.FC = () => {
     setIsWriting(false);
     
     toast({
-      title: "Entry Saved",
-      description: "Your spiritual reflection has been saved to your journal.",
+      title: t('entry-saved'),
+      description: t('reflection-saved'),
     });
   };
 
@@ -131,7 +133,7 @@ const SpiritualJournal: React.FC = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <BookOpen className="w-5 h-5 text-indigo-600" />
-          Spiritual Journal
+          {t('spiritual-journal')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -144,12 +146,12 @@ const SpiritualJournal: React.FC = () => {
                 className="bg-indigo-600 hover:bg-indigo-700"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                New Entry
+                {t('new-entry')}
               </Button>
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
-                  placeholder="Search your journal..."
+                  placeholder={t('search-journal')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -163,7 +165,7 @@ const SpiritualJournal: React.FC = () => {
                 <Lightbulb className="w-5 h-5 text-indigo-600 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-indigo-800 dark:text-indigo-200">
-                    Today's Reflection Prompt
+                    {t('todays-reflection-prompt')}
                   </h4>
                   <p className="text-indigo-700 dark:text-indigo-300 mt-1">
                     {currentPrompt}
@@ -216,8 +218,8 @@ const SpiritualJournal: React.FC = () => {
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>No journal entries yet</p>
-                  <p className="text-sm">Start your spiritual journaling journey!</p>
+                  <p>{t('no-journal-entries')}</p>
+                  <p className="text-sm">{t('start-spiritual-journaling')}</p>
                 </div>
               )}
             </div>
@@ -226,30 +228,30 @@ const SpiritualJournal: React.FC = () => {
           /* Writing Mode */
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">New Journal Entry</h3>
+              <h3 className="text-lg font-semibold">{t('new-entry')}</h3>
               <Button
                 variant="outline"
                 onClick={() => setIsWriting(false)}
               >
-                Cancel
+                {t('cancel')}
               </Button>
             </div>
 
             <Input
-              placeholder="Entry title..."
+              placeholder={t('entry-title')}
               value={newEntry.title}
               onChange={(e) => setNewEntry(prev => ({ ...prev, title: e.target.value }))}
             />
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Current Prompt:</label>
+              <label className="text-sm font-medium">{t('current-prompt')}</label>
               <div className="text-sm text-indigo-600 dark:text-indigo-400 italic bg-indigo-50 dark:bg-indigo-900/20 p-3 rounded">
                 {currentPrompt}
               </div>
             </div>
 
             <Textarea
-              placeholder="Write your spiritual reflections here..."
+              placeholder={t('write-reflections')}
               value={newEntry.content}
               onChange={(e) => setNewEntry(prev => ({ ...prev, content: e.target.value }))}
               className="min-h-32 resize-none"
@@ -257,7 +259,7 @@ const SpiritualJournal: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium">Mood:</label>
+                <label className="text-sm font-medium">{t('mood')}:</label>
                 <div className="grid grid-cols-2 gap-2 mt-2">
                   {moods.map(mood => (
                     <button
@@ -276,7 +278,7 @@ const SpiritualJournal: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-sm font-medium">Tags:</label>
+                <label className="text-sm font-medium">{t('tags')}:</label>
                 <div className="flex flex-wrap gap-1 mt-2">
                   {newEntry.tags.map(tag => (
                     <Badge
@@ -289,7 +291,7 @@ const SpiritualJournal: React.FC = () => {
                     </Badge>
                   ))}
                   <Input
-                    placeholder="Add tag..."
+                    placeholder={t('add-tag')}
                     className="h-6 text-xs"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
@@ -306,7 +308,7 @@ const SpiritualJournal: React.FC = () => {
               onClick={saveEntry}
               className="w-full bg-indigo-600 hover:bg-indigo-700"
             >
-              Save Entry
+              {t('save-entry')}
             </Button>
           </div>
         )}
