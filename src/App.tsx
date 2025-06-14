@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import Home from "./pages/Home";
 import Books from "./pages/Books";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
@@ -20,7 +21,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Books />} />
+            <Route path="/" element={<Home />} />
             <Route path="/books" element={<Books />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/settings" element={<Settings />} />
