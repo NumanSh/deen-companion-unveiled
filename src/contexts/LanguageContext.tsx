@@ -32,6 +32,8 @@ const translations = {
     home: 'الرئيسية',
     explore: 'استكشف',
     notes: 'الملاحظات',
+    bookmarks: 'المفضلة',
+    analytics: 'التحليلات',
     
     // Challenge/Community related
     'join-challenge': 'انضم للتحدي',
@@ -74,6 +76,15 @@ const translations = {
     'daily-goal-met': 'تم تحقيق الهدف اليومي',
     '100-dhikr-today': '+١٠٠ ذكر اليوم',
     '7-day-streak': 'سلسلة ٧ أيام!',
+    
+    // Main Header
+    'app-name': 'رفيق الدين',
+    'search-all': 'البحث في الكل',
+    
+    // Tab Navigation - Additional missing keys
+    'saved': 'المحفوظات',
+    'progress': 'التقدم',
+    'reminders': 'التذكيرات',
     
     // Common
     save: 'حفظ',
@@ -174,7 +185,6 @@ const translations = {
     'seek-forgiveness-33-times': 'اطلب المغفرة ٣٣ مرة',
     
     // Settings
-    'app-name': 'رفيق الدين',
     'customize-journey': 'خصص رحلتك الروحية',
     location: 'الموقع',
     'current-location': 'الموقع الحالي',
@@ -429,6 +439,8 @@ const translations = {
     home: 'Home',
     explore: 'Explore',
     notes: 'Notes',
+    bookmarks: 'Bookmarks',
+    analytics: 'Analytics',
     
     // Challenge/Community related
     'join-challenge': 'Join Challenge',
@@ -471,6 +483,10 @@ const translations = {
     'daily-goal-met': 'Daily Goal Met',
     '100-dhikr-today': '100+ dhikr today',
     '7-day-streak': '7-Day Streak!',
+    
+    // Main Header
+    'app-name': 'Deen Companion',
+    'search-all': 'Search All',
     
     // Common
     save: 'Save',
@@ -571,7 +587,6 @@ const translations = {
     'seek-forgiveness-33-times': 'Seek forgiveness 33 times',
     
     // Settings
-    'app-name': 'Deen Companion',
     'customize-journey': 'Customize your spiritual journey',
     location: 'Location',
     'current-location': 'Current Location',
