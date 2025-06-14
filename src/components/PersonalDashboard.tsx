@@ -20,6 +20,7 @@ const PersonalDashboard: React.FC = () => {
   const { t } = useLanguage();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [greeting, setGreeting] = useState('');
+  const [dailyGoals, setDailyGoals] = useState<any[]>([]);
 
   useEffect(() => {
     // Generate greeting based on time
@@ -28,31 +29,89 @@ const PersonalDashboard: React.FC = () => {
     else if (hour < 17) setGreeting(t('good-afternoon'));
     else setGreeting(t('good-evening'));
 
-    // Load user stats from localStorage or generate mock data
-    const savedStats = localStorage.getItem('deen-companion-stats');
-    if (savedStats) {
-      setStats(JSON.parse(savedStats));
-    } else {
-      // Generate initial stats
-      const initialStats = {
-        currentStreak: 5,
-        totalDhikr: 1250,
-        readingSessions: 23,
-        completedGoals: 8,
-        weeklyProgress: 68,
-        lastActivity: t('read-surah-al-fatihah')
-      };
-      setStats(initialStats);
-      localStorage.setItem('deen-companion-stats', JSON.stringify(initialStats));
-    }
-  }, [t]);
+    const loadRealData = () => {
+      // Load reading streak data
+      const streakData = localStorage.getItem('readingStreakData');
+      let currentStreak = 0;
+      let totalVersesRead = 0;
+      if (streakData) {
+        const parsed = JSON.parse(streakData);
+        currentStreak = parsed.currentStreak || 0;
+        totalVersesRead = parsed.totalVersesRead || 0;
+      }
 
-  const dailyGoals = [
-    { name: t('morning-prayers'), completed: true, icon: Calendar },
-    { name: t('100-dhikr'), completed: true, icon: Target },
-    { name: t('15-min-reading'), completed: false, icon: Clock },
-    { name: t('evening-prayers'), completed: false, icon: Calendar },
-  ];
+      // Load daily tasks to calculate completed goals
+      const today = new Date().toDateString();
+      const dailyTasksData = localStorage.getItem(`dailyTasks_${today}`);
+      let completedTasksCount = 0;
+      let tasksForGoals: any[] = [];
+      if (dailyTasksData) {
+        const tasks = JSON.parse(dailyTasksData);
+        completedTasksCount = tasks.filter((task: any) => task.completed).length;
+        
+        // Map daily tasks to goals format
+        tasksForGoals = [
+          { name: t('morning-prayers'), completed: tasks.find((t: any) => t.id === 'prayers')?.completed || false, icon: Calendar },
+          { name: t('100-dhikr'), completed: tasks.find((t: any) => t.id === 'dhikr')?.completed || false, icon: Target },
+          { name: t('15-min-reading'), completed: tasks.find((t: any) => t.id === 'quran')?.completed || false, icon: Clock },
+          { name: t('evening-prayers'), completed: tasks.find((t: any) => t.id === 'reflection')?.completed || false, icon: Calendar },
+        ];
+      } else {
+        // Default goals when no data exists
+        tasksForGoals = [
+          { name: t('morning-prayers'), completed: false, icon: Calendar },
+          { name: t('100-dhikr'), completed: false, icon: Target },
+          { name: t('15-min-reading'), completed: false, icon: Clock },
+          { name: t('evening-prayers'), completed: false, icon: Calendar },
+        ];
+      }
+
+      // Load dhikr counter data
+      const dhikrData = localStorage.getItem('dhikr-count');
+      let totalDhikr = 0;
+      if (dhikrData) {
+        const parsed = JSON.parse(dhikrData);
+        totalDhikr = parsed.total || 0;
+      }
+
+      // Calculate reading sessions from streak data
+      const readingSessions = currentStreak; // Each streak day represents a reading session
+
+      // Calculate weekly progress
+      const weeklyProgress = Math.min((completedTasksCount / 4) * 100, 100);
+
+      // Determine last activity
+      let lastActivity = t('read-surah-al-fatihah');
+      if (dailyTasksData) {
+        const tasks = JSON.parse(dailyTasksData);
+        const lastCompleted = tasks.find((task: any) => task.completed);
+        if (lastCompleted) {
+          lastActivity = `Completed ${lastCompleted.title}`;
+        }
+      }
+
+      const realStats = {
+        currentStreak,
+        totalDhikr,
+        readingSessions,
+        completedGoals: completedTasksCount,
+        weeklyProgress,
+        lastActivity
+      };
+
+      setStats(realStats);
+      setDailyGoals(tasksForGoals);
+
+      // Save updated stats
+      localStorage.setItem('personal-dashboard-stats', JSON.stringify(realStats));
+    };
+
+    loadRealData();
+
+    // Refresh data every 30 seconds
+    const interval = setInterval(loadRealData, 30000);
+    return () => clearInterval(interval);
+  }, [t]);
 
   if (!stats) return null;
 
@@ -154,13 +213,13 @@ const PersonalDashboard: React.FC = () => {
               <TrendingUp className="w-5 h-5 text-blue-600" />
               {t('weekly-progress')}
             </div>
-            <span className="text-lg font-bold text-blue-600">{stats.weeklyProgress}%</span>
+            <span className="text-lg font-bold text-blue-600">{Math.round(stats.weeklyProgress)}%</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Progress value={stats.weeklyProgress} className="h-3" />
           <p className="text-sm text-gray-600 mt-2">
-            {t('great-progress-week')}
+            {stats.weeklyProgress >= 75 ? t('great-progress-week') : 'Keep working towards your weekly goals!'}
           </p>
         </CardContent>
       </Card>
@@ -174,7 +233,7 @@ const PersonalDashboard: React.FC = () => {
           <p className="text-gray-600 dark:text-gray-400">
             {t('last-activity')} <span className="font-medium text-green-600">{stats.lastActivity}</span>
           </p>
-          <p className="text-xs text-gray-500 mt-1">{t('hours-ago')}</p>
+          <p className="text-xs text-gray-500 mt-1">{stats.completedGoals > 0 ? 'Today' : t('hours-ago')}</p>
         </CardContent>
       </Card>
     </div>
