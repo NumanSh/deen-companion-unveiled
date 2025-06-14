@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Calendar, Trophy, Target, Clock, Book, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ProgressData {
   dailyDhikr: { date: string; count: number }[];
@@ -15,6 +16,7 @@ interface ProgressData {
 }
 
 const ProgressAnalytics: React.FC = () => {
+  const { t } = useLanguage();
   const [timeframe, setTimeframe] = useState<'week' | 'month' | 'year'>('week');
   const [progressData, setProgressData] = useState<ProgressData | null>(null);
 
@@ -64,9 +66,9 @@ const ProgressAnalytics: React.FC = () => {
   })) || [];
 
   const categoryData = [
-    { name: 'Dhikr', value: progressData?.dailyDhikr.reduce((sum, d) => sum + d.count, 0) || 0, color: '#10b981' },
-    { name: 'Reading', value: progressData?.readingSessions.reduce((sum, r) => sum + r.minutes, 0) || 0, color: '#3b82f6' },
-    { name: 'Duas', value: (progressData?.favoritesDuas || 0) * 5, color: '#8b5cf6' },
+    { name: t('dhikr'), value: progressData?.dailyDhikr.reduce((sum, d) => sum + d.count, 0) || 0, color: '#10b981' },
+    { name: t('quran-reading'), value: progressData?.readingSessions.reduce((sum, r) => sum + r.minutes, 0) || 0, color: '#3b82f6' },
+    { name: t('duas'), value: (progressData?.favoritesDuas || 0) * 5, color: '#8b5cf6' },
   ];
 
   if (!progressData) {
@@ -75,7 +77,7 @@ const ProgressAnalytics: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Trophy className="w-5 h-5 text-yellow-600" />
-            Progress Analytics
+            {t('progress-analytics')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -97,7 +99,7 @@ const ProgressAnalytics: React.FC = () => {
             <div className="text-2xl font-bold text-green-600">{progressData.streak}</div>
             <div className="text-sm text-gray-600 flex items-center justify-center gap-1">
               <Calendar className="w-3 h-3" />
-              Day Streak
+              {t('day-streak')}
             </div>
           </CardContent>
         </Card>
@@ -109,7 +111,7 @@ const ProgressAnalytics: React.FC = () => {
             </div>
             <div className="text-sm text-gray-600 flex items-center justify-center gap-1">
               <Clock className="w-3 h-3" />
-              Minutes Read
+              {t('minutes-read')}
             </div>
           </CardContent>
         </Card>
@@ -119,7 +121,7 @@ const ProgressAnalytics: React.FC = () => {
             <div className="text-2xl font-bold text-purple-600">{progressData.completedSurahs.length}</div>
             <div className="text-sm text-gray-600 flex items-center justify-center gap-1">
               <Book className="w-3 h-3" />
-              Surahs Read
+              {t('surahs-read')}
             </div>
           </CardContent>
         </Card>
@@ -131,7 +133,7 @@ const ProgressAnalytics: React.FC = () => {
             </div>
             <div className="text-sm text-gray-600 flex items-center justify-center gap-1">
               <RotateCcw className="w-3 h-3" />
-              Total Dhikr
+              {t('total-dhikr')}
             </div>
           </CardContent>
         </Card>
@@ -143,7 +145,7 @@ const ProgressAnalytics: React.FC = () => {
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <BarChart className="w-5 h-5 text-blue-600" />
-              Weekly Activity
+              {t('weekly-activity')}
             </CardTitle>
             <div className="flex gap-1">
               {['week', 'month', 'year'].map((period) => (
@@ -154,7 +156,7 @@ const ProgressAnalytics: React.FC = () => {
                   onClick={() => setTimeframe(period as any)}
                   className="text-xs capitalize"
                 >
-                  {period}
+                  {t(period)}
                 </Button>
               ))}
             </div>
@@ -167,8 +169,8 @@ const ProgressAnalytics: React.FC = () => {
               <XAxis dataKey="date" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="dhikr" fill="#10b981" name="Dhikr Count" />
-              <Bar dataKey="reading" fill="#3b82f6" name="Reading (min)" />
+              <Bar dataKey="dhikr" fill="#10b981" name={t('dhikr-count')} />
+              <Bar dataKey="reading" fill="#3b82f6" name={t('reading-min')} />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
@@ -178,7 +180,7 @@ const ProgressAnalytics: React.FC = () => {
       <div className="grid md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Activity Distribution</CardTitle>
+            <CardTitle className="text-lg">{t('activity-distribution')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
@@ -203,30 +205,30 @@ const ProgressAnalytics: React.FC = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Recent Achievements</CardTitle>
+            <CardTitle className="text-lg">{t('recent-achievements')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center gap-3 p-2 bg-green-50 rounded-lg">
               <Trophy className="w-5 h-5 text-yellow-500" />
               <div>
-                <p className="font-medium text-sm">7-Day Streak!</p>
-                <p className="text-xs text-gray-600">Keep up the consistency</p>
+                <p className="font-medium text-sm">{t('7-day-streak')}</p>
+                <p className="text-xs text-gray-600">{t('keep-up-consistency')}</p>
               </div>
             </div>
             
             <div className="flex items-center gap-3 p-2 bg-blue-50 rounded-lg">
               <Book className="w-5 h-5 text-blue-500" />
               <div>
-                <p className="font-medium text-sm">Chapter Complete</p>
-                <p className="text-xs text-gray-600">Finished Al-Fatihah</p>
+                <p className="font-medium text-sm">{t('chapter-complete')}</p>
+                <p className="text-xs text-gray-600">{t('finished-al-fatihah')}</p>
               </div>
             </div>
             
             <div className="flex items-center gap-3 p-2 bg-purple-50 rounded-lg">
               <Target className="w-5 h-5 text-purple-500" />
               <div>
-                <p className="font-medium text-sm">Daily Goal Met</p>
-                <p className="text-xs text-gray-600">100+ dhikr today</p>
+                <p className="font-medium text-sm">{t('daily-goal-met')}</p>
+                <p className="text-xs text-gray-600">{t('100-dhikr-today')}</p>
               </div>
             </div>
           </CardContent>

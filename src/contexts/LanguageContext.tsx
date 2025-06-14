@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Language = 'ar' | 'en';
@@ -54,6 +55,25 @@ const translations = {
     'spiritual-wellness-tracker': 'متتبع الصحة الروحية',
     'how-spiritual-state-today': 'كيف حالتك الروحية اليوم؟',
     'good': 'جيد',
+    
+    // Progress Analytics
+    'progress-analytics': 'تحليل التقدم',
+    'weekly-activity': 'النشاط الأسبوعي',
+    'activity-distribution': 'توزيع النشاط',
+    'recent-achievements': 'الإنجازات الأخيرة',
+    'week': 'أسبوع',
+    'month': 'شهر',
+    'year': 'سنة',
+    'minutes-read': 'دقائق القراءة',
+    'surahs-read': 'السور المقروءة',
+    'dhikr-count': 'عدد الذكر',
+    'reading-min': 'القراءة (دقيقة)',
+    'keep-up-consistency': 'حافظ على الاستمرارية',
+    'chapter-complete': 'فصل مكتمل',
+    'finished-al-fatihah': 'انتهيت من الفاتحة',
+    'daily-goal-met': 'تم تحقيق الهدف اليومي',
+    '100-dhikr-today': '+١٠٠ ذكر اليوم',
+    '7-day-streak': 'سلسلة ٧ أيام!',
     
     // Common
     save: 'حفظ',
@@ -432,6 +452,25 @@ const translations = {
     'spiritual-wellness-tracker': 'Spiritual Wellness Tracker',
     'how-spiritual-state-today': 'How is your spiritual state today?',
     'good': 'Good',
+    
+    // Progress Analytics
+    'progress-analytics': 'Progress Analytics',
+    'weekly-activity': 'Weekly Activity',
+    'activity-distribution': 'Activity Distribution',
+    'recent-achievements': 'Recent Achievements',
+    'week': 'week',
+    'month': 'month',
+    'year': 'year',
+    'minutes-read': 'Minutes Read',
+    'surahs-read': 'Surahs Read',
+    'dhikr-count': 'Dhikr Count',
+    'reading-min': 'Reading (min)',
+    'keep-up-consistency': 'Keep up the consistency',
+    'chapter-complete': 'Chapter Complete',
+    'finished-al-fatihah': 'Finished Al-Fatihah',
+    'daily-goal-met': 'Daily Goal Met',
+    '100-dhikr-today': '100+ dhikr today',
+    '7-day-streak': '7-Day Streak!',
     
     // Common
     save: 'Save',
