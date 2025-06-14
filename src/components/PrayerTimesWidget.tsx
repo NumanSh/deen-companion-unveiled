@@ -1,7 +1,7 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock, Calendar } from "lucide-react";
+import { useHijriDate } from "@/hooks/useHijriDate";
 
 // Helper: Get user's coordinates
 function useUserLocation() {
@@ -116,6 +116,7 @@ const PrayerTimesWidget: React.FC = () => {
   const { location, error } = useUserLocation();
   const prayerData = usePrayerTimes(location?.lat ?? null, location?.lon ?? null);
   const currentDate = useCurrentDate();
+  const hijriDate = useHijriDate();
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
@@ -126,9 +127,13 @@ const PrayerTimesWidget: React.FC = () => {
     });
   };
 
+  const formatHijriDate = (hijri: { year: number; month: string; day: number }) => {
+    return `${hijri.day} ${hijri.month} ${hijri.year} AH`;
+  };
+
   return (
     <div className="space-y-4 w-full max-w-2xl mx-auto">
-      {/* Current Date */}
+      {/* Current Date with Hijri */}
       <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-700">
         <CardContent className="p-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
@@ -137,8 +142,11 @@ const PrayerTimesWidget: React.FC = () => {
               Today
             </span>
           </div>
-          <p className="text-blue-800 dark:text-blue-200 font-medium">
+          <p className="text-blue-800 dark:text-blue-200 font-medium mb-1">
             {formatDate(currentDate)}
+          </p>
+          <p className="text-blue-700 dark:text-blue-300 text-sm font-medium">
+            {formatHijriDate(hijriDate)}
           </p>
         </CardContent>
       </Card>
