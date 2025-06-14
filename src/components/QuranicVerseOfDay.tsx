@@ -3,8 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Heart, Share2, Volume2, Bookmark } from 'lucide-react';
+import { BookOpen, Heart, Share2, Volume2, Bookmark, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { fetchRandomVerse } from '@/services/quranApi';
 
 interface Verse {
   arabic: string;
@@ -20,58 +21,59 @@ const QuranicVerseOfDay = () => {
   const { toast } = useToast();
   
   const [dailyVerse, setDailyVerse] = useState<Verse>({
-    arabic: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ",
-    translation: "ومن يتق الله يجعل له مخرجا ويرزقه من حيث لا يحتسب",
-    transliteration: "Wa man yattaqi Allaha yaj'al lahu makhrajan wa yarzuqhu min haythu la yahtasib",
-    surahName: "سورة الطلاق",
-    verseNumber: 3,
-    reflection: "هذه الآية الكريمة تذكرنا بأن التقوى سبب للرزق والفرج من الله تعالى",
-    theme: "التقوى والرزق"
+    arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+    translation: "All praise is due to Allah, Lord of the worlds.",
+    transliteration: "Alhamdu lillahi rabbi al-alameen",
+    surahName: "Al-Fatihah",
+    verseNumber: 2,
+    reflection: "This verse reminds us to always be grateful to Allah, the Lord of all creation.",
+    theme: "Gratitude"
   });
 
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(false);
 
-  const verses: Verse[] = [
-    {
-      arabic: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ",
-      translation: "ومن يتق الله يجعل له مخرجا ويرزقه من حيث لا يحتسب",
-      transliteration: "Wa man yattaqi Allaha yaj'al lahu makhrajan wa yarzuqhu min haythu la yahtasib",
-      surahName: "سورة الطلاق",
-      verseNumber: 3,
-      reflection: "هذه الآية الكريمة تذكرنا بأن التقوى سبب للرزق والفرج من الله تعالى",
-      theme: "التقوى والرزق"
-    },
-    {
-      arabic: "وَبَشِّرِ الصَّابِرِينَ الَّذِينَ إِذَا أَصَابَتْهُم مُّصِيبَةٌ قَالُوا إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
-      translation: "وبشر الصابرين الذين إذا أصابتهم مصيبة قالوا إنا لله وإنا إليه راجعون",
-      transliteration: "Wa bashshiri as-sabirina alladhina idha asabat-hum museebatun qalu inna lillahi wa inna ilayhi raji'un",
-      surahName: "سورة البقرة",
-      verseNumber: 156,
-      reflection: "الآية تعلمنا الصبر عند المصائب والرضا بقضاء الله وقدره",
-      theme: "الصبر والتسليم"
-    },
-    {
-      arabic: "وَمَا أَرْسَلْنَاكَ إِلَّا رَحْمَةً لِّلْعَالَمِينَ",
-      translation: "وما أرسلناك إلا رحمة للعالمين",
-      transliteration: "Wa ma arsalnaka illa rahmatan lil-'alameen",
-      surahName: "سورة الأنبياء",
-      verseNumber: 107,
-      reflection: "تذكرنا الآية برحمة النبي صلى الله عليه وسلم وأنه رحمة للعالم أجمع",
-      theme: "الرحمة النبوية"
+  // Fetch verse of the day
+  const fetchVerseOfDay = async () => {
+    setIsLoading(true);
+    try {
+      console.log('Fetching verse of the day from API...');
+      const verseData = await fetchRandomVerse();
+      
+      setDailyVerse({
+        arabic: verseData.arabicText,
+        translation: verseData.translation,
+        transliteration: "Loading transliteration...", // Could be enhanced with transliteration API
+        surahName: verseData.surahName,
+        verseNumber: verseData.verse,
+        reflection: "Reflect on this beautiful verse from the Quran and contemplate its meaning in your daily life.",
+        theme: "Daily Reflection"
+      });
+
+      toast({
+        title: '📖 Verse Updated',
+        description: 'New verse of the day loaded from Quran API',
+      });
+    } catch (error) {
+      console.error('Failed to fetch verse of the day:', error);
+      toast({
+        title: 'Connection Error',
+        description: 'Using offline verse. Check your internet connection.',
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDate(new Date());
     }, 1000);
 
-    // Change verse daily based on date
-    const today = new Date();
-    const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
-    const verseIndex = dayOfYear % verses.length;
-    setDailyVerse(verses[verseIndex]);
+    // Fetch verse of the day on component mount
+    fetchVerseOfDay();
 
     return () => clearInterval(timer);
   }, []);
@@ -120,9 +122,21 @@ const QuranicVerseOfDay = () => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <BookOpen className="w-6 h-6 text-green-500" />
-          آية اليوم
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <BookOpen className="w-6 h-6 text-green-500" />
+            آية اليوم
+          </div>
+          <Button
+            onClick={fetchVerseOfDay}
+            size="sm"
+            variant="outline"
+            disabled={isLoading}
+            className="flex items-center gap-1"
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            تحديث
+          </Button>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -206,12 +220,13 @@ const QuranicVerseOfDay = () => {
           <p className="text-yellow-700 leading-relaxed">{dailyVerse.reflection}</p>
         </div>
 
-        {/* Daily Progress */}
+        {/* API Status */}
         <div className="text-center p-3 bg-gray-50 rounded-lg">
-          <div className="text-sm text-gray-600 mb-1">تقدم القراءة اليومية</div>
+          <div className="text-sm text-gray-600 mb-1">مصدر البيانات</div>
           <div className="flex items-center justify-center gap-2">
-            <span className="text-lg font-bold text-green-600">1</span>
-            <span className="text-gray-600">آية مقروءة اليوم</span>
+            <span className="text-lg">🌐</span>
+            <span className="text-gray-600">القرآن الكريم API</span>
+            {isLoading && <span className="text-blue-600">جاري التحديث...</span>}
           </div>
         </div>
       </CardContent>

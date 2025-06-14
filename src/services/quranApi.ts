@@ -50,8 +50,8 @@ interface AlQuranApiResponse {
   data: AlQuranApiSurah;
 }
 
-// Expanded fallback Quran data with complete surahs
-const fallbackQuranData: { [key: number]: { arabic: SurahResponse; translation: SurahResponse } } = {
+// Minimal fallback data for critical surahs only
+const criticalSurahs: { [key: number]: { arabic: SurahResponse; translation: SurahResponse } } = {
   1: {
     arabic: {
       number: 1,
@@ -87,119 +87,19 @@ const fallbackQuranData: { [key: number]: { arabic: SurahResponse; translation: 
         { number: 7, text: "The path of those upon whom You have bestowed favor, not of those who have evoked Your anger or of those who are astray.", numberInSurah: 7, juz: 1, manzil: 1, page: 1, ruku: 1, hizbQuarter: 1, sajda: false }
       ]
     }
-  },
-  112: {
-    arabic: {
-      number: 112,
-      name: "الإخلاص",
-      englishName: "Al-Ikhlas",
-      englishNameTranslation: "The Sincerity",
-      numberOfAyahs: 4,
-      revelationType: "Meccan",
-      ayahs: [
-        { number: 1, text: "قُلْ هُوَ اللَّهُ أَحَدٌ", numberInSurah: 1, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 2, text: "اللَّهُ الصَّمَدُ", numberInSurah: 2, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 3, text: "لَمْ يَلِدْ وَلَمْ يُولَدْ", numberInSurah: 3, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 4, text: "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ", numberInSurah: 4, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false }
-      ]
-    },
-    translation: {
-      number: 112,
-      name: "Al-Ikhlas",
-      englishName: "Al-Ikhlas",
-      englishNameTranslation: "The Sincerity",
-      numberOfAyahs: 4,
-      revelationType: "Meccan",
-      ayahs: [
-        { number: 1, text: "Say, \"He is Allah, [who is] One,", numberInSurah: 1, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 2, text: "Allah, the Eternal Refuge.", numberInSurah: 2, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 3, text: "He neither begets nor is born,", numberInSurah: 3, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 4, text: "Nor is there to Him any equivalent.\"", numberInSurah: 4, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false }
-      ]
-    }
-  },
-  113: {
-    arabic: {
-      number: 113,
-      name: "الفلق",
-      englishName: "Al-Falaq",
-      englishNameTranslation: "The Daybreak",
-      numberOfAyahs: 5,
-      revelationType: "Meccan",
-      ayahs: [
-        { number: 1, text: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ", numberInSurah: 1, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 2, text: "مِن شَرِّ مَا خَلَقَ", numberInSurah: 2, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 3, text: "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ", numberInSurah: 3, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 4, text: "وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ", numberInSurah: 4, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 5, text: "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ", numberInSurah: 5, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false }
-      ]
-    },
-    translation: {
-      number: 113,
-      name: "Al-Falaq",
-      englishName: "Al-Falaq",
-      englishNameTranslation: "The Daybreak",
-      numberOfAyahs: 5,
-      revelationType: "Meccan",
-      ayahs: [
-        { number: 1, text: "Say, \"I seek refuge in the Lord of daybreak", numberInSurah: 1, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 2, text: "From the evil of that which He created", numberInSurah: 2, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 3, text: "And from the evil of darkness when it settles", numberInSurah: 3, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 4, text: "And from the evil of the blowers in knots", numberInSurah: 4, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false },
-        { number: 5, text: "And from the evil of an envier when he envies.\"", numberInSurah: 5, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 239, sajda: false }
-      ]
-    }
-  },
-  114: {
-    arabic: {
-      number: 114,
-      name: "الناس",
-      englishName: "An-Nas",
-      englishNameTranslation: "Mankind",
-      numberOfAyahs: 6,
-      revelationType: "Meccan",
-      ayahs: [
-        { number: 1, text: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ", numberInSurah: 1, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false },
-        { number: 2, text: "مَلِكِ النَّاسِ", numberInSurah: 2, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false },
-        { number: 3, text: "إِلَٰهِ النَّاسِ", numberInSurah: 3, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false },
-        { number: 4, text: "مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ", numberInSurah: 4, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false },
-        { number: 5, text: "الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ", numberInSurah: 5, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false },
-        { number: 6, text: "مِنَ الْجِنَّةِ وَالنَّاسِ", numberInSurah: 6, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false }
-      ]
-    },
-    translation: {
-      number: 114,
-      name: "An-Nas",
-      englishName: "An-Nas",
-      englishNameTranslation: "Mankind",
-      numberOfAyahs: 6,
-      revelationType: "Meccan",
-      ayahs: [
-        { number: 1, text: "Say, \"I seek refuge in the Lord of mankind,", numberInSurah: 1, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false },
-        { number: 2, text: "The Sovereign of mankind.", numberInSurah: 2, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false },
-        { number: 3, text: "The God of mankind,", numberInSurah: 3, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false },
-        { number: 4, text: "From the evil of the retreating whisperer -", numberInSurah: 4, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false },
-        { number: 5, text: "Who whispers [evil] into the breasts of mankind -", numberInSurah: 5, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false },
-        { number: 6, text: "From among the jinn and mankind.\"", numberInSurah: 6, juz: 30, manzil: 7, page: 604, ruku: 1, hizbQuarter: 240, sajda: false }
-      ]
-    }
   }
 };
 
-// Multiple API endpoints to try
+// Updated API endpoints - more reliable sources
 const API_ENDPOINTS = [
   'https://api.alquran.cloud/v1/surah',
-  'https://quranapi.pages.dev/api'
+  'https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/quran'
 ];
 
 export const fetchSurahWithAyahs = async (surahNumber: number): Promise<SurahResponse> => {
-  // Always return fallback data for now to ensure app functionality
-  if (fallbackQuranData[surahNumber]) {
-    console.log(`Using reliable fallback data for surah ${surahNumber}`);
-    return fallbackQuranData[surahNumber].arabic;
-  }
+  console.log(`Fetching surah ${surahNumber} from API...`);
 
-  // For surahs not in fallback, try API with graceful fallback
+  // Try API endpoints first
   for (const baseUrl of API_ENDPOINTS) {
     try {
       console.log(`Trying API: ${baseUrl}/${surahNumber}`);
@@ -207,8 +107,9 @@ export const fetchSurahWithAyahs = async (surahNumber: number): Promise<SurahRes
         method: 'GET',
         headers: {
           'Accept': 'application/json',
+          'User-Agent': 'Islamic-App/1.0'
         },
-        signal: AbortSignal.timeout(5000) // 5 second timeout
+        signal: AbortSignal.timeout(8000) // 8 second timeout
       });
       
       if (!response.ok) {
@@ -227,37 +128,26 @@ export const fetchSurahWithAyahs = async (surahNumber: number): Promise<SurahRes
     }
   }
 
-  // Enhanced fallback with actual content structure
-  console.log(`All APIs failed, using enhanced fallback for surah ${surahNumber}`);
-  const mockSurah: SurahResponse = {
-    number: surahNumber,
-    name: `سورة ${surahNumber}`,
-    englishName: `Surah ${surahNumber}`,
-    englishNameTranslation: `Surah ${surahNumber}`,
-    numberOfAyahs: 5,
-    revelationType: "Meccan",
-    ayahs: [
-      { number: 1, text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", numberInSurah: 1, juz: 1, manzil: 1, page: 1, ruku: 1, hizbQuarter: 1, sajda: false },
-      { number: 2, text: "هذا النص الفعلي للسورة سيتم تحميله عند توفر الاتصال بالإنترنت", numberInSurah: 2, juz: 1, manzil: 1, page: 1, ruku: 1, hizbQuarter: 1, sajda: false },
-      { number: 3, text: "يرجى التحقق من اتصالك بالإنترنت للحصول على النص الكامل", numberInSurah: 3, juz: 1, manzil: 1, page: 1, ruku: 1, hizbQuarter: 1, sajda: false },
-      { number: 4, text: "هذا عرض تجريبي لواجهة قراءة القرآن الكريم", numberInSurah: 4, juz: 1, manzil: 1, page: 1, ruku: 1, hizbQuarter: 1, sajda: false },
-      { number: 5, text: "صدق الله العظيم", numberInSurah: 5, juz: 1, manzil: 1, page: 1, ruku: 1, hizbQuarter: 1, sajda: false }
-    ]
-  };
-  
-  return mockSurah;
+  // Use critical fallback only for Al-Fatihah
+  if (criticalSurahs[surahNumber]) {
+    console.log(`Using critical fallback data for surah ${surahNumber}`);
+    return criticalSurahs[surahNumber].arabic;
+  }
+
+  // For other surahs, throw error to be handled by components
+  throw new Error(`Failed to fetch surah ${surahNumber} from all available sources`);
 };
 
 export const fetchSurahWithTranslation = async (surahNumber: number): Promise<{ arabic: SurahResponse; translation: SurahResponse }> => {
-  console.log(`Attempting to fetch surah ${surahNumber} with translation...`);
+  console.log(`Fetching surah ${surahNumber} with translation...`);
   
-  // Check fallback data first for better reliability
-  if (fallbackQuranData[surahNumber]) {
-    console.log(`Using reliable fallback data for surah ${surahNumber}`);
-    return fallbackQuranData[surahNumber];
+  // Check critical fallback first for Al-Fatihah
+  if (criticalSurahs[surahNumber]) {
+    console.log(`Using critical fallback data for surah ${surahNumber}`);
+    return criticalSurahs[surahNumber];
   }
 
-  // Try multiple APIs with timeout
+  // Try API endpoints
   for (const baseUrl of API_ENDPOINTS) {
     try {
       console.log(`Trying to fetch from: ${baseUrl}`);
@@ -265,8 +155,11 @@ export const fetchSurahWithTranslation = async (surahNumber: number): Promise<{ 
       // Fetch Arabic text
       const arabicResponse = await fetch(`${baseUrl}/${surahNumber}`, {
         method: 'GET',
-        headers: { 'Accept': 'application/json' },
-        signal: AbortSignal.timeout(5000)
+        headers: { 
+          'Accept': 'application/json',
+          'User-Agent': 'Islamic-App/1.0'
+        },
+        signal: AbortSignal.timeout(8000)
       });
       
       if (!arabicResponse.ok) continue;
@@ -276,8 +169,11 @@ export const fetchSurahWithTranslation = async (surahNumber: number): Promise<{ 
       // Fetch English translation  
       const translationResponse = await fetch(`${baseUrl}/${surahNumber}/en.asad`, {
         method: 'GET',
-        headers: { 'Accept': 'application/json' },
-        signal: AbortSignal.timeout(5000)
+        headers: { 
+          'Accept': 'application/json',
+          'User-Agent': 'Islamic-App/1.0'
+        },
+        signal: AbortSignal.timeout(8000)
       });
       
       if (!translationResponse.ok) continue;
@@ -297,34 +193,41 @@ export const fetchSurahWithTranslation = async (surahNumber: number): Promise<{ 
     }
   }
 
-  // Enhanced fallback with better content
-  console.log(`All APIs failed, returning enhanced fallback for surah ${surahNumber}`);
-  const mockSurah: SurahResponse = {
-    number: surahNumber,
-    name: `سورة ${surahNumber}`,
-    englishName: `Surah ${surahNumber}`,
-    englishNameTranslation: `Surah ${surahNumber}`,
-    numberOfAyahs: 5,
-    revelationType: "Meccan",
-    ayahs: [
-      { number: 1, text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", numberInSurah: 1, juz: 1, manzil: 1, page: 1, ruku: 1, hizbQuarter: 1, sajda: false },
-      { number: 2, text: "النص الكامل للسورة متاح عند الاتصال بالإنترنت", numberInSurah: 2, juz: 1, manzil: 1, page: 1, ruku: 1, hizbQuarter: 1, sajda: false },
-      { number: 3, text: "هذا عرض تجريبي لقارئ القرآن الكريم", numberInSurah: 3, juz: 1, manzil: 1, page: 1, ruku: 1, hizbQuarter: 1, sajda: false },
-      { number: 4, text: "يمكنك الاستمتاع بالتطبيق دون اتصال", numberInSurah: 4, juz: 1, manzil: 1, page: 1, ruku: 1, hizbQuarter: 1, sajda: false },
-      { number: 5, text: "صدق الله العظيم", numberInSurah: 5, juz: 1, manzil: 1, page: 1, ruku: 1, hizbQuarter: 1, sajda: false }
-    ]
-  };
+  // If all APIs fail, throw error
+  throw new Error(`Failed to fetch surah ${surahNumber} with translation from all available sources`);
+};
+
+// New function to fetch a random verse for verse of the day
+export const fetchRandomVerse = async (): Promise<{ surah: number; verse: number; arabicText: string; translation: string; surahName: string }> => {
+  console.log('Fetching random verse for verse of the day...');
   
-  return {
-    arabic: mockSurah,
-    translation: {
-      ...mockSurah,
-      ayahs: mockSurah.ayahs.map(ayah => ({
-        ...ayah,
-        text: ayah.numberInSurah === 1 
-          ? "In the name of Allah, the Entirely Merciful, the Especially Merciful." 
-          : `English translation for verse ${ayah.numberInSurah} - Complete content available when online`
-      }))
-    }
-  };
+  // List of popular surahs to randomly select from
+  const popularSurahs = [2, 3, 4, 18, 36, 55, 67, 112, 113, 114];
+  const randomSurahNumber = popularSurahs[Math.floor(Math.random() * popularSurahs.length)];
+  
+  try {
+    const { arabic, translation } = await fetchSurahWithTranslation(randomSurahNumber);
+    const randomVerseIndex = Math.floor(Math.random() * arabic.ayahs.length);
+    const selectedVerse = arabic.ayahs[randomVerseIndex];
+    const translatedVerse = translation.ayahs[randomVerseIndex];
+    
+    return {
+      surah: randomSurahNumber,
+      verse: selectedVerse.numberInSurah,
+      arabicText: selectedVerse.text,
+      translation: translatedVerse.text,
+      surahName: arabic.englishName
+    };
+  } catch (error) {
+    console.error('Failed to fetch random verse:', error);
+    
+    // Fallback to Al-Fatihah verse 2
+    return {
+      surah: 1,
+      verse: 2,
+      arabicText: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+      translation: "All praise is due to Allah, Lord of the worlds.",
+      surahName: "Al-Fatihah"
+    };
+  }
 };

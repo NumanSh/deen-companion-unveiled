@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { fetchSurahWithTranslation } from '@/services/quranApi';
@@ -177,13 +178,13 @@ const SurahGrid: React.FC<SurahGridProps> = ({
       setViewMode('reading');
       toast({
         title: 'Surah Loaded',
-        description: `${data.arabic.englishName} has been loaded successfully`,
+        description: `${data.arabic.englishName} loaded from Quran API`,
       });
     } catch (error) {
       console.error('Failed to load surah:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to load surah. Please try again.',
+        title: 'Connection Error',
+        description: `Failed to load ${surah.name}. Please check your internet connection and try again.`,
         variant: 'destructive',
       });
     } finally {
