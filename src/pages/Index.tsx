@@ -14,6 +14,10 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomTabBar from "@/components/BottomTabBar";
+import PersonalDashboard from "@/components/PersonalDashboard";
+import QuranicVerseOfDay from "@/components/QuranicVerseOfDay";
+import IslamicQuoteWidget from "@/components/IslamicQuoteWidget";
+import PrayerTimesWidget from "@/components/PrayerTimesWidget";
 import { cn } from "@/lib/utils";
 
 const Index = () => {
@@ -24,52 +28,33 @@ const Index = () => {
       title: "The Quran",
       icon: Book,
       action: () => navigate("/books"),
-      size: "large"
-    },
-    {
-      title: "Promises of Allah",
-      icon: Star,
-      action: () => navigate("/books"),
-      size: "small"
+      color: "bg-emerald-500"
     },
     {
       title: "Prayer Times",
       icon: Clock,
       action: () => navigate("/calendar"),
-      size: "small"
-    },
-    {
-      title: "Duas",
-      icon: Heart,
-      action: () => navigate("/books"),
-      size: "small"
-    },
-    {
-      title: "Explore By Topic",
-      icon: Search,
-      action: () => navigate("/books"),
-      size: "small"
+      color: "bg-blue-500"
     },
     {
       title: "Qibla",
       icon: Compass,
       action: () => navigate("/calendar"),
-      size: "small"
+      color: "bg-purple-500"
     },
     {
-      title: "Favourites",
+      title: "Duas",
       icon: Heart,
       action: () => navigate("/books"),
-      size: "small"
-    },
+      color: "bg-rose-500"
+    }
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 pb-20 relative overflow-hidden">
-      {/* Header with teal gradient and Arabic text */}
-      <div className="relative bg-gradient-to-br from-teal-600 to-teal-700 pt-12 pb-8 px-4">
-        {/* Top navigation */}
-        <div className="flex justify-between items-center mb-8">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 pb-20">
+      {/* Header */}
+      <div className="bg-gradient-to-br from-teal-600 to-teal-700 pt-12 pb-6 px-4">
+        <div className="flex justify-between items-center mb-6">
           <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
             <Menu className="w-6 h-6" />
           </Button>
@@ -83,76 +68,51 @@ const Index = () => {
           </Button>
         </div>
 
-        {/* Arabic text and verse */}
-        <div className="text-center text-white space-y-4">
-          <div className="text-4xl font-bold mb-2" style={{ fontFamily: 'serif' }}>
-            الرَّحْمَٰنُ
-          </div>
-          <div className="text-3xl font-bold mb-4" style={{ fontFamily: 'serif' }}>
-            عَلَّمَ الْقُرْآنَ
-          </div>
-          <div className="text-lg font-medium mb-2 leading-relaxed">
-            (Allah) Most Gracious! It is He<br />
-            Who has taught the Qur'an.
-          </div>
-          <div className="text-sm opacity-90 mb-6">
-            Surah Ar Rahman 1 - 2
-          </div>
-          
-          {/* Start Reading Button */}
-          <Button 
-            onClick={() => navigate("/books")}
-            className="bg-teal-500 hover:bg-teal-400 text-white px-8 py-3 rounded-xl font-medium text-lg border border-teal-400/50"
-          >
-            Start Reading the Quran
-          </Button>
+        <div className="text-center text-white">
+          <h1 className="text-2xl font-bold mb-2">Deen Companion</h1>
+          <p className="text-teal-100 text-sm">Your spiritual journey dashboard</p>
         </div>
       </div>
 
-      {/* Content area with cards */}
-      <div className="flex-1 px-4 py-6 relative -mt-4">
-        <div className="max-w-md mx-auto space-y-4">
-          {/* Large Quran card */}
-          <Card 
-            className="bg-white shadow-lg rounded-2xl cursor-pointer hover:shadow-xl transition-all duration-200 hover:scale-[1.02]"
-            onClick={quickActions[0].action}
-          >
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
-                  <Book className="w-6 h-6 text-teal-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-800">
-                  {quickActions[0].title}
-                </h3>
+      {/* Main Content */}
+      <div className="flex-1 px-4 py-6 space-y-6 -mt-4">
+        <div className="max-w-md mx-auto space-y-6">
+          {/* Personal Dashboard */}
+          <PersonalDashboard />
+          
+          {/* Quick Actions */}
+          <Card className="bg-white dark:bg-gray-800 shadow-lg">
+            <CardContent className="p-4">
+              <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-4">Quick Actions</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {quickActions.map((action, index) => {
+                  const Icon = action.icon;
+                  return (
+                    <Button
+                      key={index}
+                      onClick={action.action}
+                      variant="outline"
+                      className="h-auto p-4 flex flex-col items-center gap-2 hover:shadow-md transition-all"
+                    >
+                      <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center text-white", action.color)}>
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <span className="text-xs font-medium text-center">{action.title}</span>
+                    </Button>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
 
-          {/* Grid of smaller cards */}
-          <div className="grid grid-cols-2 gap-4">
-            {quickActions.slice(1).map((action, index) => {
-              const Icon = action.icon;
-              return (
-                <Card
-                  key={index}
-                  className="bg-white shadow-lg rounded-2xl cursor-pointer hover:shadow-xl transition-all duration-200 hover:scale-[1.02]"
-                  onClick={action.action}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex flex-col items-start gap-3">
-                      <div className="w-10 h-10 bg-teal-100 rounded-xl flex items-center justify-center">
-                        <Icon className="w-5 h-5 text-teal-600" />
-                      </div>
-                      <h3 className="text-base font-semibold text-gray-800 leading-tight">
-                        {action.title}
-                      </h3>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+          {/* Daily Content */}
+          <div className="space-y-4">
+            <QuranicVerseOfDay />
+            <IslamicQuoteWidget />
           </div>
+
+          {/* Prayer Times */}
+          <PrayerTimesWidget />
         </div>
       </div>
       
