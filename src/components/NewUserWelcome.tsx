@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Star, Heart, Target, BookOpen, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { isNewUser, initializeNewUserData, resetUserDataForNewUser } from '@/utils/userDataUtils';
 
 interface NewUserWelcomeProps {
@@ -15,31 +16,32 @@ const NewUserWelcome: React.FC<NewUserWelcomeProps> = ({ onComplete }) => {
   const [showWelcome, setShowWelcome] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const steps = [
     {
-      title: 'Welcome to Your Islamic Journey! 🌙',
-      description: 'Assalamu Alaikum! Let\'s start your spiritual journey with us.',
+      title: t('welcome-islamic-journey'),
+      description: t('assalamu-alaikum-start-journey'),
       icon: <Heart className="w-8 h-8 text-emerald-600" />,
-      content: 'This app will help you track your prayers, read Quran, and build good Islamic habits.'
+      content: t('app-help-track-prayers')
     },
     {
-      title: 'Daily Islamic Challenges 🎯',
-      description: 'Complete daily challenges to strengthen your faith.',
+      title: t('daily-islamic-challenges-title'),
+      description: t('complete-daily-challenges-strengthen'),
       icon: <Target className="w-8 h-8 text-blue-600" />,
-      content: 'Start with simple challenges like reading Surah Al-Fatihah or saying Dhikr 10 times.'
+      content: t('start-simple-challenges')
     },
     {
-      title: 'Achievement System 🏆',
-      description: 'Earn achievements as you progress in your Islamic journey.',
+      title: t('achievement-system-title'),
+      description: t('earn-achievements-progress'),
       icon: <Star className="w-8 h-8 text-yellow-600" />,
-      content: 'Unlock badges for prayer consistency, Quran reading, and more Islamic activities.'
+      content: t('unlock-badges-consistency')
     },
     {
-      title: 'Islamic Milestones 📖',
-      description: 'Track your progress through different phases of Islamic learning.',
+      title: t('islamic-milestones-title'),
+      description: t('track-progress-phases'),
       icon: <BookOpen className="w-8 h-8 text-purple-600" />,
-      content: 'Progress from Foundation to Advanced levels in your Islamic knowledge and practice.'
+      content: t('progress-foundation-advanced')
     }
   ];
 
@@ -63,8 +65,8 @@ const NewUserWelcome: React.FC<NewUserWelcomeProps> = ({ onComplete }) => {
     setCurrentStep(0);
     
     toast({
-      title: 'Welcome! 🎉',
-      description: 'Your Islamic journey starts now. May Allah bless your efforts!',
+      title: t('welcome-celebration'),
+      description: t('islamic-journey-starts-now'),
     });
     
     onComplete?.();
@@ -75,8 +77,8 @@ const NewUserWelcome: React.FC<NewUserWelcomeProps> = ({ onComplete }) => {
     initializeNewUserData();
     
     toast({
-      title: 'Data Reset! 🔄',
-      description: 'Your progress has been reset. Starting fresh!',
+      title: t('data-reset-title'),
+      description: t('progress-reset-fresh'),
     });
     
     setShowWelcome(false);
@@ -93,10 +95,10 @@ const NewUserWelcome: React.FC<NewUserWelcomeProps> = ({ onComplete }) => {
               <Heart className="w-6 h-6 text-emerald-600" />
               <div>
                 <h3 className="font-semibold text-emerald-800 dark:text-emerald-200">
-                  New User Experience
+                  {t('new-user-experience')}
                 </h3>
                 <p className="text-sm text-emerald-600 dark:text-emerald-400">
-                  Want to start fresh? Reset your progress and begin again.
+                  {t('want-start-fresh')}
                 </p>
               </div>
             </div>
@@ -105,7 +107,7 @@ const NewUserWelcome: React.FC<NewUserWelcomeProps> = ({ onComplete }) => {
               variant="outline"
               className="border-emerald-300 text-emerald-700 hover:bg-emerald-100"
             >
-              Start Fresh
+              {t('start-fresh')}
             </Button>
           </div>
         </CardContent>
@@ -155,7 +157,7 @@ const NewUserWelcome: React.FC<NewUserWelcomeProps> = ({ onComplete }) => {
                 onClick={() => setCurrentStep(currentStep - 1)}
                 className="flex-1"
               >
-                Previous
+                {t('previous')}
               </Button>
             )}
             
@@ -166,10 +168,10 @@ const NewUserWelcome: React.FC<NewUserWelcomeProps> = ({ onComplete }) => {
               {currentStep === steps.length - 1 ? (
                 <>
                   <CheckCircle className="w-4 h-4 mr-2" />
-                  Start Journey
+                  {t('start-journey')}
                 </>
               ) : (
-                'Next'
+                t('next')
               )}
             </Button>
           </div>
@@ -181,7 +183,7 @@ const NewUserWelcome: React.FC<NewUserWelcomeProps> = ({ onComplete }) => {
                 onClick={handleResetData}
                 className="text-xs text-gray-500"
               >
-                I'm returning - just reset my data
+                {t('returning-reset-data')}
               </Button>
             </div>
           )}
