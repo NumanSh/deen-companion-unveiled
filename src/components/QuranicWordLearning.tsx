@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Book, Volume2, Star, Target } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface WordCard {
   arabic: string;
@@ -15,6 +16,7 @@ interface WordCard {
 }
 
 const QuranicWordLearning: React.FC = () => {
+  const { t } = useLanguage();
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [showMeaning, setShowMeaning] = useState(false);
   const [learnedWords, setLearnedWords] = useState<Set<number>>(new Set());
@@ -64,7 +66,7 @@ const QuranicWordLearning: React.FC = () => {
   const markAsLearned = () => {
     setLearnedWords(prev => new Set([...prev, currentWordIndex]));
     toast({
-      title: "Word Learned! 🎉",
+      title: t('word-learned'),
       description: `You've learned "${currentWord.transliteration}" - ${currentWord.meaning}`,
     });
   };
@@ -88,11 +90,11 @@ const QuranicWordLearning: React.FC = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Book className="w-5 h-5 text-purple-600" />
-          Quranic Word Learning
+          {t('quranic-word-learning')}
         </CardTitle>
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span>Progress: {learnedWords.size}/{words.length} words</span>
+            <span>{t('progress')}: {learnedWords.size}/{words.length} {t('words')}</span>
             <span className="flex items-center gap-1">
               <Star className="w-4 h-4 text-yellow-500" />
               {Math.round(progress)}%
@@ -118,7 +120,7 @@ const QuranicWordLearning: React.FC = () => {
                   {currentWord.meaning}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 p-3 rounded">
-                  <strong>Example:</strong> {currentWord.example}
+                  <strong>{t('example')}:</strong> {currentWord.example}
                 </div>
               </div>
             )}
@@ -132,7 +134,7 @@ const QuranicWordLearning: React.FC = () => {
               onClick={() => setShowMeaning(true)}
               className="w-full bg-purple-600 hover:bg-purple-700"
             >
-              Reveal Meaning
+              {t('reveal-meaning')}
             </Button>
           ) : (
             <div className="flex gap-2">
@@ -141,7 +143,7 @@ const QuranicWordLearning: React.FC = () => {
                 disabled={learnedWords.has(currentWordIndex)}
                 className="flex-1 bg-green-600 hover:bg-green-700"
               >
-                {learnedWords.has(currentWordIndex) ? '✅ Learned' : 'Mark as Learned'}
+                {learnedWords.has(currentWordIndex) ? t('learned') : t('mark-learned')}
               </Button>
               <Button variant="outline" size="icon">
                 <Volume2 className="w-4 h-4" />
@@ -155,7 +157,7 @@ const QuranicWordLearning: React.FC = () => {
               onClick={previousWord}
               disabled={currentWordIndex === 0}
             >
-              Previous
+              {t('previous')}
             </Button>
             <span className="text-sm text-gray-500 self-center">
               {currentWordIndex + 1} of {words.length}
@@ -165,7 +167,7 @@ const QuranicWordLearning: React.FC = () => {
               onClick={nextWord}
               disabled={currentWordIndex === words.length - 1}
             >
-              Next
+              {t('next')}
             </Button>
           </div>
         </div>
@@ -174,15 +176,15 @@ const QuranicWordLearning: React.FC = () => {
         <div className="grid grid-cols-3 gap-2 text-center text-sm">
           <div className="bg-purple-100 dark:bg-purple-800 p-2 rounded">
             <div className="font-semibold">{learnedWords.size}</div>
-            <div className="text-xs">Learned</div>
+            <div className="text-xs">{t('learned')}</div>
           </div>
           <div className="bg-blue-100 dark:bg-blue-800 p-2 rounded">
             <div className="font-semibold">{words.length - learnedWords.size}</div>
-            <div className="text-xs">Remaining</div>
+            <div className="text-xs">{t('remaining')}</div>
           </div>
           <div className="bg-green-100 dark:bg-green-800 p-2 rounded">
             <div className="font-semibold">{Math.round(progress)}%</div>
-            <div className="text-xs">Complete</div>
+            <div className="text-xs">{t('complete')}</div>
           </div>
         </div>
       </CardContent>

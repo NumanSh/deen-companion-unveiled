@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Settings as SettingsIcon, 
   MapPin, 
@@ -15,12 +16,15 @@ import {
   Star,
   Palette,
   Globe,
-  Shield
+  Shield,
+  Languages
 } from "lucide-react";
 import BottomTabBar from "@/components/BottomTabBar";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Settings = () => {
+  const { language, setLanguage, t, isRTL } = useLanguage();
   const [location, setLocation] = useState("New York, NY");
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
@@ -29,7 +33,7 @@ const Settings = () => {
 
   const settingsSections = [
     {
-      title: "Location",
+      title: t('location'),
       icon: MapPin,
       gradient: "from-emerald-500 to-blue-500",
       iconBg: "bg-emerald-100 dark:bg-emerald-900/30",
@@ -37,7 +41,7 @@ const Settings = () => {
         <div className="space-y-4">
           <div>
             <Label htmlFor="location" className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">
-              Current Location
+              {t('current-location')}
             </Label>
             <Input
               id="location"
@@ -49,13 +53,13 @@ const Settings = () => {
           </div>
           <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
             <MapPin className="w-4 h-4 mr-2" />
-            Update Location
+            {t('update-location')}
           </Button>
         </div>
       )
     },
     {
-      title: "Notifications",
+      title: t('notifications'),
       icon: Bell,
       gradient: "from-blue-500 to-purple-500",
       iconBg: "bg-blue-100 dark:bg-blue-900/30",
@@ -64,10 +68,10 @@ const Settings = () => {
           <div className="flex items-center justify-between">
             <div>
               <Label className="text-sm font-semibold text-blue-800 dark:text-blue-200">
-                Prayer Notifications
+                {t('prayer-notifications')}
               </Label>
               <p className="text-xs text-blue-600 dark:text-blue-400">
-                Get notified for prayer times
+                {t('prayer-notifications-desc')}
               </p>
             </div>
             <Switch 
@@ -78,10 +82,10 @@ const Settings = () => {
           <div className="flex items-center justify-between">
             <div>
               <Label className="text-sm font-semibold text-blue-800 dark:text-blue-200">
-                Adhan Sound
+                {t('adhan-sound')}
               </Label>
               <p className="text-xs text-blue-600 dark:text-blue-400">
-                Play Adhan for prayer times
+                {t('adhan-sound-desc')}
               </p>
             </div>
             <Switch 
@@ -92,10 +96,10 @@ const Settings = () => {
           <div className="flex items-center justify-between">
             <div>
               <Label className="text-sm font-semibold text-blue-800 dark:text-blue-200">
-                General Notifications
+                {t('general-notifications')}
               </Label>
               <p className="text-xs text-blue-600 dark:text-blue-400">
-                App updates and reminders
+                {t('general-notifications-desc')}
               </p>
             </div>
             <Switch 
@@ -107,7 +111,7 @@ const Settings = () => {
       )
     },
     {
-      title: "Appearance",
+      title: t('appearance'),
       icon: Palette,
       gradient: "from-purple-500 to-pink-500",
       iconBg: "bg-purple-100 dark:bg-purple-900/30",
@@ -118,11 +122,11 @@ const Settings = () => {
               <div className="flex items-center gap-2">
                 {darkMode ? <Moon className="w-5 h-5 text-purple-600" /> : <Sun className="w-5 h-5 text-purple-600" />}
                 <Label className="text-sm font-semibold text-purple-800 dark:text-purple-200">
-                  Dark Mode
+                  {t('dark-mode')}
                 </Label>
               </div>
               <p className="text-xs text-purple-600 dark:text-purple-400">
-                Toggle dark theme
+                {t('dark-mode-desc')}
               </p>
             </div>
             <Switch 
@@ -132,11 +136,38 @@ const Settings = () => {
           </div>
         </div>
       )
+    },
+    {
+      title: t('language'),
+      icon: Languages,
+      gradient: "from-orange-500 to-red-500",
+      iconBg: "bg-orange-100 dark:bg-orange-900/30",
+      content: (
+        <div className="space-y-4">
+          <div>
+            <Label className="text-sm font-semibold text-orange-800 dark:text-orange-200">
+              {t('language')}
+            </Label>
+            <p className="text-xs text-orange-600 dark:text-orange-400 mb-2">
+              {t('language-desc')}
+            </p>
+            <Select value={language} onValueChange={setLanguage}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ar">{t('arabic')}</SelectItem>
+                <SelectItem value="en">{t('english')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      )
     }
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background pb-20 relative overflow-hidden">
+    <div className={cn("min-h-screen flex flex-col bg-background pb-20 relative overflow-hidden", isRTL && "rtl")}>
       {/* Islamic Pattern Background */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
         <div className="w-full h-full bg-gradient-to-br from-emerald-600 via-blue-600 to-purple-600"></div>
@@ -161,7 +192,7 @@ const Settings = () => {
                 <Star className="w-3 h-3 text-amber-500 absolute -top-1 -right-1" />
               </div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-700 to-blue-700 dark:from-emerald-400 dark:to-blue-400 bg-clip-text text-transparent">
-                Settings
+                {t('settings')}
               </h1>
               <div className="relative">
                 <Shield className="w-8 h-8 text-blue-600 dark:text-blue-400" />
@@ -169,7 +200,7 @@ const Settings = () => {
               </div>
             </div>
             <p className="text-emerald-700 dark:text-emerald-300 font-medium text-lg">
-              Customize your spiritual journey
+              {t('customize-journey')}
             </p>
           </div>
 
@@ -214,7 +245,7 @@ const Settings = () => {
                   <Star className="w-5 h-5 text-amber-700 dark:text-amber-300" />
                 </div>
                 <span className="bg-gradient-to-r from-emerald-700 to-blue-700 dark:from-emerald-400 dark:to-blue-400 bg-clip-text text-transparent font-bold">
-                  About Deen Companion
+                  {t('about-app')}
                 </span>
               </CardTitle>
             </CardHeader>
@@ -222,10 +253,10 @@ const Settings = () => {
               <div className="text-center space-y-4">
                 <div className="bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950/50 dark:to-blue-950/50 p-6 rounded-xl border border-emerald-200 dark:border-emerald-700">
                   <p className="text-emerald-800 dark:text-emerald-200 font-medium">
-                    Version 1.0.0
+                    {t('version')} 1.0.0
                   </p>
                   <p className="text-emerald-600 dark:text-emerald-400 text-sm mt-2">
-                    Your companion for Islamic practices and spiritual growth
+                    {t('app-description')}
                   </p>
                 </div>
               </div>

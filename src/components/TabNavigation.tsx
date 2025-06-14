@@ -1,10 +1,11 @@
 
 import React from 'react';
 import { Home, Book, ScrollText, RotateCcw, Target, Compass, Heart, BarChart3, Bell } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Tab {
   key: string;
-  label: string;
+  labelKey: string;
   icon: React.ComponentType<{ className?: string }>;
 }
 
@@ -14,18 +15,20 @@ interface TabNavigationProps {
 }
 
 const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange }) => {
+  const { t } = useLanguage();
+  
   const tabs: Tab[] = [
-    { key: 'dashboard', label: 'Dashboard', icon: Home },
-    { key: 'quran', label: 'Quran', icon: Book },
-    { key: 'hadith', label: 'Hadith', icon: ScrollText },
-    { key: 'duas', label: 'Duas', icon: Book },
-    { key: 'adhkar', label: 'Adhkar', icon: Book },
-    { key: 'dhikr', label: 'Dhikr', icon: RotateCcw },
-    { key: 'habits', label: 'Habits', icon: Target },
-    { key: 'discover', label: 'Discover', icon: Compass },
-    { key: 'bookmarks', label: 'Saved', icon: Heart },
-    { key: 'analytics', label: 'Progress', icon: BarChart3 },
-    { key: 'reminders', label: 'Reminders', icon: Bell },
+    { key: 'dashboard', labelKey: 'dashboard', icon: Home },
+    { key: 'quran', labelKey: 'quran', icon: Book },
+    { key: 'hadith', labelKey: 'hadith', icon: ScrollText },
+    { key: 'duas', labelKey: 'duas', icon: Book },
+    { key: 'adhkar', labelKey: 'adhkar', icon: Book },
+    { key: 'dhikr', labelKey: 'dhikr', icon: RotateCcw },
+    { key: 'habits', labelKey: 'habits', icon: Target },
+    { key: 'discover', labelKey: 'discover', icon: Compass },
+    { key: 'bookmarks', labelKey: 'saved', icon: Heart },
+    { key: 'analytics', labelKey: 'progress', icon: BarChart3 },
+    { key: 'reminders', labelKey: 'reminders', icon: Bell },
   ];
 
   return (
@@ -43,7 +46,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange })
             }`}
           >
             <Icon className="w-3 h-3" />
-            {tab.label}
+            {t(tab.labelKey)}
           </button>
         );
       })}

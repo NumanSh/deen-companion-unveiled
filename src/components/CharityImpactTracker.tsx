@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Heart, TrendingUp, Users, Gift } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface CharityEntry {
   id: string;
@@ -16,6 +17,7 @@ interface CharityEntry {
 }
 
 const CharityImpactTracker: React.FC = () => {
+  const { t } = useLanguage();
   const [donations, setDonations] = useState<CharityEntry[]>([
     {
       id: '1',
@@ -62,16 +64,16 @@ const CharityImpactTracker: React.FC = () => {
     setNewCause('');
     
     toast({
-      title: "Donation Recorded! 🌟",
+      title: t('donation-recorded'),
       description: `$${newAmount} for ${newCause} has been added to your charity tracker.`,
     });
   };
 
   const impactMetrics = [
-    { icon: Users, label: 'People Helped', value: Math.floor(totalDonated / 5), color: 'text-blue-600' },
-    { icon: Heart, label: 'Acts of Kindness', value: donations.length, color: 'text-red-600' },
-    { icon: TrendingUp, label: 'This Month', value: `$${monthlyTotal}`, color: 'text-green-600' },
-    { icon: Gift, label: 'Total Donated', value: `$${totalDonated}`, color: 'text-purple-600' }
+    { icon: Users, label: t('people-helped'), value: Math.floor(totalDonated / 5), color: 'text-blue-600' },
+    { icon: Heart, label: t('acts-kindness'), value: donations.length, color: 'text-red-600' },
+    { icon: TrendingUp, label: t('this-month'), value: `$${monthlyTotal}`, color: 'text-green-600' },
+    { icon: Gift, label: t('total-donated'), value: `$${totalDonated}`, color: 'text-purple-600' }
   ];
 
   return (
@@ -79,22 +81,22 @@ const CharityImpactTracker: React.FC = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Heart className="w-5 h-5 text-green-600" />
-          Charity Impact Tracker
+          {t('charity-impact-tracker')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Quick Add */}
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
-          <h4 className="font-medium mb-3">Record New Donation</h4>
+          <h4 className="font-medium mb-3">{t('record-donation')}</h4>
           <div className="grid grid-cols-2 gap-3">
             <Input
               type="number"
-              placeholder="Amount ($)"
+              placeholder={t('amount')}
               value={newAmount}
               onChange={(e) => setNewAmount(e.target.value)}
             />
             <Input
-              placeholder="Cause/Purpose"
+              placeholder={t('cause-purpose')}
               value={newCause}
               onChange={(e) => setNewCause(e.target.value)}
             />
@@ -104,22 +106,22 @@ const CharityImpactTracker: React.FC = () => {
             className="w-full mt-3 bg-green-600 hover:bg-green-700"
             disabled={!newAmount || !newCause}
           >
-            Record Donation
+            {t('record-donation-btn')}
           </Button>
         </div>
 
         {/* Monthly Goal Progress */}
         <div className="bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-800/20 dark:to-emerald-800/20 p-4 rounded-lg">
           <div className="flex justify-between items-center mb-2">
-            <h4 className="font-semibold text-green-800 dark:text-green-200">Monthly Goal</h4>
+            <h4 className="font-semibold text-green-800 dark:text-green-200">{t('monthly-goal')}</h4>
             <span className="text-sm text-green-600 dark:text-green-300">
               ${monthlyTotal} / ${monthlyGoal}
             </span>
           </div>
           <Progress value={goalProgress} className="h-3 mb-2" />
           <p className="text-xs text-green-700 dark:text-green-300">
-            {goalProgress >= 100 ? '🎉 Goal achieved! May Allah reward you.' : 
-             `${Math.round(100 - goalProgress)}% remaining to reach your goal`}
+            {goalProgress >= 100 ? t('goal-achieved') : 
+             `${Math.round(100 - goalProgress)}${t('remaining-goal')}`}
           </p>
         </div>
 
@@ -136,7 +138,7 @@ const CharityImpactTracker: React.FC = () => {
 
         {/* Recent Donations */}
         <div>
-          <h4 className="font-medium mb-3">Recent Donations</h4>
+          <h4 className="font-medium mb-3">{t('recent-donations')}</h4>
           <div className="space-y-2 max-h-48 overflow-y-auto">
             {donations.slice(0, 5).map((donation) => (
               <div key={donation.id} className="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded border">
@@ -158,7 +160,7 @@ const CharityImpactTracker: React.FC = () => {
         {/* Islamic Quote */}
         <div className="bg-green-100 dark:bg-green-800/20 p-3 rounded-lg text-center">
           <p className="text-sm italic text-green-800 dark:text-green-200">
-            "The believer's shade on the Day of Resurrection will be his charity." - Prophet Muhammad (PBUH)
+            {t('charity-quote')}
           </p>
         </div>
       </CardContent>

@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Moon, Plus, Calendar, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface DreamEntry {
   id: string;
@@ -17,6 +18,7 @@ interface DreamEntry {
 }
 
 const IslamicDreamJournal: React.FC = () => {
+  const { t } = useLanguage();
   const [dreams, setDreams] = useState<DreamEntry[]>([
     {
       id: '1',
@@ -48,8 +50,8 @@ const IslamicDreamJournal: React.FC = () => {
     setShowAddForm(false);
     
     toast({
-      title: "Dream Added",
-      description: "Your dream has been recorded in your journal.",
+      title: t('dream-added'),
+      description: t('dream-recorded'),
     });
   };
 
@@ -67,7 +69,7 @@ const IslamicDreamJournal: React.FC = () => {
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Moon className="w-5 h-5 text-indigo-600" />
-            Islamic Dream Journal
+            {t('islamic-dream-journal')}
           </div>
           <Button
             onClick={() => setShowAddForm(!showAddForm)}
@@ -75,7 +77,7 @@ const IslamicDreamJournal: React.FC = () => {
             className="bg-indigo-600 hover:bg-indigo-700"
           >
             <Plus className="w-4 h-4 mr-1" />
-            Add Dream
+            {t('add-dream')}
           </Button>
         </CardTitle>
       </CardHeader>
@@ -84,19 +86,19 @@ const IslamicDreamJournal: React.FC = () => {
         {showAddForm && (
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
             <div className="space-y-3">
-              <div className="text-sm font-medium">Describe your dream:</div>
+              <div className="text-sm font-medium">{t('describe-dream')}</div>
               <Textarea
                 value={newDream}
                 onChange={(e) => setNewDream(e.target.value)}
-                placeholder="I dreamed that..."
+                placeholder={t('dream-placeholder')}
                 className="min-h-[100px]"
               />
               <div className="flex gap-2">
                 <Button onClick={addDream} className="bg-indigo-600 hover:bg-indigo-700">
-                  Save Dream
+                  {t('save-dream')}
                 </Button>
                 <Button variant="outline" onClick={() => setShowAddForm(false)}>
-                  Cancel
+                  {t('cancel')}
                 </Button>
               </div>
             </div>
@@ -106,11 +108,10 @@ const IslamicDreamJournal: React.FC = () => {
         {/* Islamic Dream Guidance */}
         <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
           <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
-            🌙 Islamic Perspective on Dreams
+            🌙 {t('islamic-perspective')}
           </h4>
           <p className="text-sm text-blue-700 dark:text-blue-300">
-            The Prophet (PBUH) said: "Good dreams are from Allah, and bad dreams are from Satan." 
-            Record your dreams and seek their interpretation through Islamic knowledge.
+            {t('dream-guidance')}
           </p>
         </div>
 
@@ -132,12 +133,12 @@ const IslamicDreamJournal: React.FC = () => {
               
               <div className="space-y-3">
                 <div>
-                  <div className="font-medium text-gray-800 dark:text-gray-200 mb-1">Dream:</div>
+                  <div className="font-medium text-gray-800 dark:text-gray-200 mb-1">{t('dream')}</div>
                   <p className="text-sm text-gray-700 dark:text-gray-300">{dream.dream}</p>
                 </div>
                 
                 <div>
-                  <div className="font-medium text-gray-800 dark:text-gray-200 mb-1">Reflection:</div>
+                  <div className="font-medium text-gray-800 dark:text-gray-200 mb-1">{t('reflection')}</div>
                   <p className="text-sm text-indigo-700 dark:text-indigo-300">{dream.interpretation}</p>
                 </div>
                 
@@ -156,7 +157,7 @@ const IslamicDreamJournal: React.FC = () => {
         {dreams.length === 0 && (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             <Moon className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p>No dreams recorded yet. Start your spiritual dream journal!</p>
+            <p>{t('no-dreams')}</p>
           </div>
         )}
       </CardContent>
