@@ -1,3 +1,4 @@
+
 import React from 'react';
 import HadithSearchEngine from '@/components/HadithSearchEngine';
 import AIHadithCompanion from '@/components/AIHadithCompanion';
@@ -29,6 +30,7 @@ import IslamicCalendarEvents from '@/components/IslamicCalendarEvents';
 import IslamicDateEventsTracker from '@/components/IslamicDateEventsTracker';
 import IslamicFinanceCalculator from '@/components/IslamicFinanceCalculator';
 import GlobalCounterReset from '@/components/GlobalCounterReset';
+import InteractiveAchievementSystem from '@/components/InteractiveAchievementSystem';
 
 export const HadithTab = () => (
   <div className="space-y-6">
@@ -80,6 +82,8 @@ export const AnalyticsTab = () => (
     <GlobalCounterReset />
   </div>
 );
+
+export const AchievementsTab = () => <InteractiveAchievementSystem />;
 
 export const RemindersTab = () => (
   <div className="space-y-6">
