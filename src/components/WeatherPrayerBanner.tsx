@@ -1,3 +1,4 @@
+
 import React from "react";
 import WeatherGif from "./WeatherGif";
 import { Card, CardContent } from "@/components/ui/card";
@@ -78,7 +79,17 @@ function usePrayerTimes(lat: number | null, lon: number | null) {
     const fetchPrayerTimes = async () => {
       try {
         const response = await prayerTimesApi.getPrayerTimes(lat, lon);
-        const timings: Record<string, string> = response.data.timings;
+        const timings = response.data.timings;
+        
+        // Convert PrayerTimes to Record<string, string>
+        const timingsRecord: Record<string, string> = {
+          Fajr: timings.Fajr,
+          Sunrise: timings.Sunrise,
+          Dhuhr: timings.Dhuhr,
+          Asr: timings.Asr,
+          Maghrib: timings.Maghrib,
+          Isha: timings.Isha
+        };
         
         // Prayer order (filter out Sunrise/Sunset/Imsak/Midnight) 
         const prayerOrder = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
@@ -86,14 +97,14 @@ function usePrayerTimes(lat: number | null, lon: number | null) {
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
         
         let nextPrayer = "Fajr"; 
-        let time = timings["Fajr"];
+        let time = timings.Fajr;
         
         for (let i = 0; i < prayerOrder.length; i++) {
-          const t = timings[prayerOrder[i]].split(":");
+          const t = timingsRecord[prayerOrder[i]].split(":");
           const prayerMinutes = parseInt(t[0]) * 60 + parseInt(t[1]);
           if (prayerMinutes > currentMinutes) {
             nextPrayer = prayerOrder[i];
-            time = timings[prayerOrder[i]];
+            time = timingsRecord[prayerOrder[i]];
             break;
           }
         }
@@ -101,7 +112,7 @@ function usePrayerTimes(lat: number | null, lon: number | null) {
         setPrayer({
           nextPrayer,
           time,
-          all: timings,
+          all: timingsRecord,
         });
       } catch (error) {
         console.error('Error fetching prayer times:', error);

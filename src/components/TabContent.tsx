@@ -13,7 +13,8 @@ import {
   BookmarksTab,
   AnalyticsTab,
   RemindersTab,
-  AchievementsTab
+  AchievementsTab,
+  PersonalizedTab
 } from '@/components/tabs/OtherTabs';
 
 interface TabContentProps {
@@ -43,6 +44,8 @@ const TabContent: React.FC<TabContentProps> = ({
       return <SpiritualHabitStreaks />;
     case 'discover':
       return <DiscoverTab />;
+    case 'personalized':
+      return <PersonalizedTab />;
     case 'quran':
       return (
         <QuranTab

@@ -31,6 +31,9 @@ import IslamicDateEventsTracker from '@/components/IslamicDateEventsTracker';
 import IslamicFinanceCalculator from '@/components/IslamicFinanceCalculator';
 import GlobalCounterReset from '@/components/GlobalCounterReset';
 import InteractiveAchievementSystem from '@/components/InteractiveAchievementSystem';
+import SmartDailyRecommendations from '@/components/SmartDailyRecommendations';
+import PersonalizedContentEngine from '@/components/PersonalizedContentEngine';
+import SmartPersonalizationDashboard from '@/components/SmartPersonalizationDashboard';
 
 export const HadithTab = () => (
   <div className="space-y-6">
@@ -68,6 +71,8 @@ export const BookmarksTab = () => <BookmarkManager />;
 
 export const AnalyticsTab = () => (
   <div className="space-y-6">
+    <SmartPersonalizationDashboard />
+    <SmartDailyRecommendations />
     <ProgressAnalytics />
     <IslamicHabitVisualization />
     <IslamicAchievementSystem />
@@ -93,5 +98,13 @@ export const RemindersTab = () => (
     <IslamicPrayerTimeAlerts />
     <IslamicCalendarEvents />
     <IslamicDateEventsTracker />
+  </div>
+);
+
+// New tab for personalized content discovery
+export const PersonalizedTab = () => (
+  <div className="space-y-6">
+    <SmartDailyRecommendations />
+    <PersonalizedContentEngine />
   </div>
 );
