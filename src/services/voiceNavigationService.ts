@@ -9,7 +9,7 @@ interface VoiceCommand {
 }
 
 class VoiceNavigationService {
-  private recognition: SpeechRecognition | null = null;
+  private recognition: any = null; // Using any to avoid TypeScript issues
   private isListening = false;
   private commands: VoiceCommand[] = [];
   private onListeningChange?: (isListening: boolean) => void;
@@ -21,7 +21,6 @@ class VoiceNavigationService {
     this.setupDefaultCommands();
   }
 
-  
   private initializeSpeechRecognition() {
     if ('webkitSpeechRecognition' in window) {
       this.recognition = new (window as any).webkitSpeechRecognition();
@@ -44,12 +43,12 @@ class VoiceNavigationService {
         this.onListeningChange?.(false);
       };
 
-      this.recognition.onresult = (event) => {
+      this.recognition.onresult = (event: any) => {
         const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
         this.processCommand(transcript);
       };
 
-      this.recognition.onerror = (event) => {
+      this.recognition.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
         this.isListening = false;
         this.onListeningChange?.(false);
