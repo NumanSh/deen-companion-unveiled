@@ -93,9 +93,9 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange })
   ];
 
   return (
-    <div className="w-full p-4">
+    <div className="w-full p-4" dir="rtl">
       <ScrollArea className="w-full">
-        <div className="flex gap-2 pb-2" style={{ minWidth: 'max-content' }}>
+        <div className="flex gap-3 pb-2 justify-start" style={{ minWidth: 'max-content' }}>
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -111,12 +111,13 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange })
                     ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg transform scale-105' 
                     : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:scale-102'
                 }`}
+                dir="rtl"
               >
+                <span className="font-medium text-right">{tab.label}</span>
                 <Icon className={`w-4 h-4 ${isActive ? 'animate-gentle-bounce' : ''}`} />
-                <span className="font-medium">{tab.label}</span>
                 {tab.badge && (
                   <Badge 
-                    className={`text-xs px-1.5 py-0.5 ${
+                    className={`text-xs px-2 py-0.5 mr-1 ${
                       isActive 
                         ? 'bg-white/20 text-white' 
                         : tab.badge === 'جديد' 
@@ -132,7 +133,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange })
                   </Badge>
                 )}
                 {isActive && (
-                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  <div className={`absolute -bottom-1 right-1/2 transform translate-x-1/2 w-2 h-2 rounded-full ${isActive ? 'bg-white' : 'bg-emerald-500'} animate-pulse`} />
                 )}
               </Button>
             );
@@ -142,7 +143,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange })
       
       {/* Active Tab Description */}
       <div className="mt-3 text-center">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-gray-600 dark:text-gray-400" dir="rtl">
           {tabs.find(tab => tab.id === activeTab)?.description}
         </p>
       </div>
