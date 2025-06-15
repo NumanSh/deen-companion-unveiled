@@ -1,4 +1,3 @@
-
 import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -34,6 +33,8 @@ const LoadingFallback = () => (
   </div>
 );
 
+import KeyboardShortcutsManager from '@/components/KeyboardShortcutsManager';
+
 const App: React.FC = () => {
   useEffect(() => {
     // Initialize prayer times cache on app start
@@ -63,6 +64,7 @@ const App: React.FC = () => {
             </Suspense>
             <Toaster />
             <MicroInteractionFeedback />
+            <KeyboardShortcutsManager />
           </div>
         </Router>
       </LanguageProvider>
