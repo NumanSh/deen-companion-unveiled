@@ -21,7 +21,10 @@ import {
   BarChart3,
   Moon,
   Globe,
-  Cloud
+  Cloud,
+  Headphones,
+  DollarSign,
+  Navigation
 } from 'lucide-react';
 import IslamicBookLibrary from '@/components/IslamicBookLibrary';
 import VoiceReadingMode from '@/components/VoiceReadingMode';
@@ -40,11 +43,38 @@ import AIPersonalizedLearningPath from '@/components/AIPersonalizedLearningPath'
 import IslamicDreamJournal from '@/components/IslamicDreamJournal';
 import VirtualStudyCircle from '@/components/VirtualStudyCircle';
 import TafsirComparisonTool from '@/components/TafsirComparisonTool';
+import SmartQiblaCompassAR from '@/components/SmartQiblaCompassAR';
+import IslamicPodcastLibrary from '@/components/IslamicPodcastLibrary';
+import EnhancedZakatCalculator from '@/components/EnhancedZakatCalculator';
 
 const DiscoverTabEnhanced = () => {
   const [currentVerse, setCurrentVerse] = useState(1);
 
   const features = [
+    {
+      id: 'qibla-compass',
+      title: 'البوصلة الذكية',
+      description: 'بوصلة القبلة مع الواقع المعزز',
+      icon: Navigation,
+      badge: 'جديد',
+      component: SmartQiblaCompassAR
+    },
+    {
+      id: 'podcast-library',
+      title: 'مكتبة البودكاست',
+      description: 'محتوى صوتي إسلامي متنوع',
+      icon: Headphones,
+      badge: 'جديد',
+      component: IslamicPodcastLibrary
+    },
+    {
+      id: 'zakat-calculator',
+      title: 'حاسبة الزكاة المتقدمة',
+      description: 'حساب الزكاة مع تتبع الاستثمارات',
+      icon: DollarSign,
+      badge: 'جديد',
+      component: EnhancedZakatCalculator
+    },
     {
       id: 'habit-builder',
       title: 'بناء العادات',
@@ -212,7 +242,7 @@ const DiscoverTabEnhanced = () => {
       </Card>
 
       {/* Features Tabs */}
-      <Tabs defaultValue="ai-learning-path" className="w-full">
+      <Tabs defaultValue="qibla-compass" className="w-full">
         <TabsList className="grid grid-cols-3 lg:grid-cols-15 h-auto p-2 bg-gray-100 dark:bg-gray-800 rounded-xl">
           {features.map((feature) => {
             const Icon = feature.icon;
@@ -254,6 +284,9 @@ const DiscoverTabEnhanced = () => {
                 <p className="text-gray-600">{feature.description}</p>
               </CardHeader>
               <CardContent>
+                {feature.id === 'qibla-compass' && <SmartQiblaCompassAR />}
+                {feature.id === 'podcast-library' && <IslamicPodcastLibrary />}
+                {feature.id === 'zakat-calculator' && <EnhancedZakatCalculator />}
                 {feature.id === 'habit-builder' && <IslamicHabitBuilder />}
                 {feature.id === 'habit-visualization' && <IslamicHabitVisualization />}
                 {feature.id === 'ai-assistant' && <AIIslamicLearningAssistant />}
