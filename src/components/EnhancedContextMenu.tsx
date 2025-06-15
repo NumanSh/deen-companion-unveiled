@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   ContextMenu,
@@ -28,7 +27,7 @@ import {
   Star,
   Highlighter,
   Repeat,
-  Translate
+  Languages
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
@@ -244,7 +243,7 @@ const EnhancedContextMenu: React.FC<EnhancedContextMenuProps> = ({
 
         {content?.isArabic && (
           <ContextMenuItem onClick={handleTranslate} className="cursor-pointer">
-            <Translate className="w-4 h-4 mr-2" />
+            <Languages className="w-4 h-4 mr-2" />
             View translation
           </ContextMenuItem>
         )}
