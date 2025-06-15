@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface LanguageContextType {
@@ -107,7 +106,43 @@ const translations = {
     'about-app': 'About App',
     'version': 'Version',
     'app-description': 'Your comprehensive Islamic companion',
-    'customize-journey': 'Customize your spiritual journey'
+    'customize-journey': 'Customize your spiritual journey',
+
+    // Quranic Word Learning translations
+    'quranic-word-learning': 'Quranic Word Learning',
+    'lord-master-sustainer': 'Lord, Master, Sustainer',
+    'lord-of-all-worlds': 'Lord of all worlds',
+    'most-gracious': 'Most Gracious',
+    'most-gracious-merciful': 'Most Gracious, Most Merciful',
+    'prayer': 'Prayer',
+    'establish-prayer': 'Establish prayer',
+    'obligatory-charity': 'Obligatory charity',
+    'give-zakah': 'Give Zakah',
+    'praise': 'Praise',
+    'praise-be-allah': 'Praise be to Allah',
+    'word-learned': 'Word Learned!',
+    'youve-learned': "You've learned",
+    'progress': 'Progress',
+    'words': 'words',
+    'example': 'Example',
+    'reveal-meaning': 'Reveal Meaning',
+    'learned': 'Learned',
+    'mark-learned': 'Mark as Learned',
+    'previous': 'Previous',
+    'of': 'of',
+    'next': 'Next',
+    'remaining': 'Remaining',
+    'complete': 'Complete',
+
+    // Tab navigation
+    'dashboard': 'Dashboard',
+    'quran': 'Quran',
+    'study-tools': 'Study Tools',
+    'hadith': 'Hadith',
+    'adhkar': 'Adhkar',
+    'habits': 'Habits',
+    'saved': 'Saved',
+    'reminders': 'Reminders'
   },
   ar: {
     // Dashboard and progress
@@ -207,13 +242,49 @@ const translations = {
     'about-app': 'حول التطبيق',
     'version': 'الإصدار',
     'app-description': 'رفيقك الإسلامي الشامل',
-    'customize-journey': 'خصص رحلتك الروحية'
+    'customize-journey': 'خصص رحلتك الروحية',
+
+    // Quranic Word Learning translations
+    'quranic-word-learning': 'تعلم الكلمات القرآنية',
+    'lord-master-sustainer': 'رب، سيد، رازق',
+    'lord-of-all-worlds': 'رب العالمين',
+    'most-gracious': 'الرحمن',
+    'most-gracious-merciful': 'الرحمن الرحيم',
+    'prayer': 'صلاة',
+    'establish-prayer': 'أقيموا الصلاة',
+    'obligatory-charity': 'زكاة واجبة',
+    'give-zakah': 'آتوا الزكاة',
+    'praise': 'حمد',
+    'praise-be-allah': 'الحمد لله',
+    'word-learned': 'تم تعلم الكلمة!',
+    'youve-learned': 'لقد تعلمت',
+    'progress': 'التقدم',
+    'words': 'كلمات',
+    'example': 'مثال',
+    'reveal-meaning': 'اكشف المعنى',
+    'learned': 'تم التعلم',
+    'mark-learned': 'علم كمتعلم',
+    'previous': 'السابق',
+    'of': 'من',
+    'next': 'التالي',
+    'remaining': 'المتبقي',
+    'complete': 'مكتمل',
+
+    // Tab navigation
+    'dashboard': 'لوحة التحكم',
+    'quran': 'القرآن',
+    'study-tools': 'أدوات الدراسة',
+    'hadith': 'حديث',
+    'adhkar': 'أذكار',
+    'habits': 'عادات',
+    'saved': 'محفوظ',
+    'reminders': 'تذكيرات'
   }
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<'en' | 'ar'>('en');
 
   const t = (key: string, params?: Record<string, string>): string => {
