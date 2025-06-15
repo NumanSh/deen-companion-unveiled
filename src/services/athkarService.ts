@@ -1,5 +1,5 @@
 
-import { translateToEnglish } from '../utils/hadithUtils';
+import { translateAthkarText } from '../utils/athkarTranslations';
 import { AUTHENTIC_ATHKAR_DATA, CATEGORY_MAPPING } from '../data/authenticAthkarData';
 
 export interface AthkarItem {
@@ -28,11 +28,13 @@ export interface AthkarApiResponse {
 const convertToAthkarItems = (categoryData: any[], categoryName: string): AthkarItem[] => {
   const englishCategory = CATEGORY_MAPPING[categoryName as keyof typeof CATEGORY_MAPPING] || 'general';
   
+  console.log(`Converting ${categoryData.length} items for category: ${categoryName} -> ${englishCategory}`);
+  
   return categoryData.map((item, index) => ({
     id: `${englishCategory}-${index + 1}`,
     arabic: item.content,
     transliteration: '', // We can add transliterations later
-    translation: translateToEnglish(item.content),
+    translation: translateAthkarText(item.content),
     repetitions: parseInt(item.count) || 1,
     reference: item.reference || '',
     category: englishCategory as AthkarItem['category'],
@@ -64,7 +66,14 @@ export const fetchAthkarByCategory = async (category: string): Promise<AthkarIte
         categoryData = AUTHENTIC_ATHKAR_DATA["أذكار الاستيقاظ"];
         break;
       case 'general':
+      case 'tasbih':
         categoryData = AUTHENTIC_ATHKAR_DATA["تسابيح"];
+        break;
+      case 'quranic_duas':
+        categoryData = AUTHENTIC_ATHKAR_DATA["أدعية قرآنية"];
+        break;
+      case 'prophetic_duas':
+        categoryData = AUTHENTIC_ATHKAR_DATA["أدعية الأنبياء"];
         break;
       default:
         categoryData = AUTHENTIC_ATHKAR_DATA["أذكار الصباح"];
@@ -75,7 +84,9 @@ export const fetchAthkarByCategory = async (category: string): Promise<AthkarIte
       key => CATEGORY_MAPPING[key as keyof typeof CATEGORY_MAPPING] === category
     ) || "أذكار الصباح";
 
-    return convertToAthkarItems(categoryData, arabicCategoryName);
+    const athkarItems = convertToAthkarItems(categoryData, arabicCategoryName);
+    console.log(`Returning ${athkarItems.length} Athkar items for category: ${category}`);
+    return athkarItems;
     
   } catch (error) {
     console.error('Error processing authentic Athkar data:', error);
@@ -98,12 +109,16 @@ export const fetchAthkarByCategory = async (category: string): Promise<AthkarIte
 
 export const fetchAllAthkar = async (): Promise<AthkarItem[]> => {
   try {
-    const categories = ['morning', 'evening', 'after_prayer', 'sleeping', 'waking', 'general'];
+    const categories = ['morning', 'evening', 'after_prayer', 'sleeping', 'waking', 'general', 'quranic_duas', 'prophetic_duas'];
+    console.log('Fetching all Athkar categories:', categories);
+    
     const allAthkar = await Promise.all(
       categories.map(category => fetchAthkarByCategory(category))
     );
     
-    return allAthkar.flat();
+    const flattened = allAthkar.flat();
+    console.log(`Total Athkar loaded: ${flattened.length}`);
+    return flattened;
     
   } catch (error) {
     console.error('Failed to fetch all Athkar:', error);
