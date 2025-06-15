@@ -1,3 +1,4 @@
+
 import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -55,6 +56,8 @@ function App() {
     { id: 'study-circle', label: 'Study Circle', icon: '👥' },
     { id: 'islamic-study-group', label: 'Study Group', icon: '📚' },
     { id: 'community', label: 'Community', icon: '🤝' },
+    { id: 'community-analytics', label: 'Community Analytics', icon: '📊' },
+    { id: 'mentorship-system', label: 'Mentorship System', icon: '🎓' },
     { id: 'hadith', label: 'Hadith', icon: '📜' },
     { id: 'duas', label: 'Duas', icon: '🤲' },
     { id: 'habits', label: 'Habits', icon: '📊' },

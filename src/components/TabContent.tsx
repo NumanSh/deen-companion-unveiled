@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import DashboardTab from '@/components/tabs/DashboardTab';
 import HabitsTab from '@/components/tabs/HabitsTab';
@@ -14,6 +15,8 @@ import AdaptiveUIPreferences from '@/components/AdaptiveUIPreferences';
 import VirtualMosqueFinder from '@/components/VirtualMosqueFinder';
 import EnhancedVirtualStudyCircle from '@/components/EnhancedVirtualStudyCircle';
 import VirtualIslamicStudyGroup from '@/components/VirtualIslamicStudyGroup';
+import AdvancedCommunityAnalytics from '@/components/AdvancedCommunityAnalytics';
+import CommunityMentorshipSystem from '@/components/CommunityMentorshipSystem';
 import {
   HadithTab,
   AdhkarTab,
@@ -85,6 +88,10 @@ const TabContent: React.FC<TabContentProps> = ({
       return <EnhancedVirtualStudyCircle />;
     case 'islamic-study-group':
       return <VirtualIslamicStudyGroup />;
+    case 'community-analytics':
+      return <AdvancedCommunityAnalytics />;
+    case 'mentorship-system':
+      return <CommunityMentorshipSystem />;
     case 'hadith':
       return <HadithTab />;
     case 'duas':
