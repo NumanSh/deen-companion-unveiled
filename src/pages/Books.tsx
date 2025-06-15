@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import BottomTabBar from '@/components/BottomTabBar';
 import TabNavigation from '@/components/TabNavigation';
@@ -12,6 +11,9 @@ import IslamicHabitVisualization from '@/components/IslamicHabitVisualization';
 import { Card } from '@/components/ui/card';
 import { BookOpen, Heart, Search, Star, Target, BarChart3 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import EnhancedFloatingActionsSystem from '@/components/EnhancedFloatingActionsSystem';
+import InteractiveIslamicAchievements from '@/components/InteractiveIslamicAchievements';
+import AdvancedReadingAnalyticsDashboard from '@/components/AdvancedReadingAnalyticsDashboard';
 
 const Books = () => {
   const { toast } = useToast();
@@ -131,6 +133,26 @@ const Books = () => {
     </div>
   );
 
+  const renderAchievementsContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+        <Star className="w-6 h-6 text-yellow-600" />
+        نظام الإنجازات التفاعلي
+      </h2>
+      <InteractiveIslamicAchievements />
+    </div>
+  );
+
+  const renderAnalyticsContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+        <BarChart3 className="w-6 h-6 text-blue-600" />
+        تحليلات القراءة المتقدمة
+      </h2>
+      <AdvancedReadingAnalyticsDashboard />
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pb-20 relative overflow-hidden">
       {/* Enhanced Onboarding */}
@@ -144,6 +166,9 @@ const Books = () => {
 
       {/* Floating Help System */}
       <FloatingHelpSystem />
+
+      {/* Enhanced Floating Actions System */}
+      <EnhancedFloatingActionsSystem />
 
       {/* Islamic Pattern Background */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
@@ -211,6 +236,10 @@ const Books = () => {
           {/* Tab Content */}
           {activeTab === 'habits' ? (
             renderHabitsContent()
+          ) : activeTab === 'achievements' ? (
+            renderAchievementsContent()
+          ) : activeTab === 'analytics' ? (
+            renderAnalyticsContent()
           ) : (
             <TabContent 
               activeTab={activeTab} 

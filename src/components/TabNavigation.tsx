@@ -1,15 +1,24 @@
 
 import React from 'react';
-import { Home, Book, ScrollText, RotateCcw, Target, Compass, Heart, BarChart3, Bell, BookOpen } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { useToast } from '@/hooks/use-toast';
-
-interface Tab {
-  key: string;
-  labelKey: string;
-  icon: React.ComponentType<{ className?: string }>;
-  category: 'primary' | 'secondary';
-}
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { 
+  Home,
+  BookOpen, 
+  MessageSquare, 
+  Heart, 
+  Sparkles,
+  Target,
+  Award,
+  BarChart3,
+  Bookmark,
+  Calendar,
+  Search,
+  Settings,
+  Compass,
+  TrendingUp
+} from 'lucide-react';
 
 interface TabNavigationProps {
   activeTab: string;
@@ -17,88 +26,125 @@ interface TabNavigationProps {
 }
 
 const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange }) => {
-  const { t } = useLanguage();
-  const { toast } = useToast();
-  
-  const tabs: Tab[] = [
-    { key: 'dashboard', labelKey: 'dashboard', icon: Home, category: 'primary' },
-    { key: 'quran', labelKey: 'quran', icon: Book, category: 'primary' },
-    { key: 'discover', labelKey: 'study-tools', icon: BookOpen, category: 'primary' },
-    { key: 'hadith', labelKey: 'hadith', icon: ScrollText, category: 'primary' },
-    { key: 'duas', labelKey: 'duas', icon: Book, category: 'primary' },
-    { key: 'dhikr', labelKey: 'dhikr', icon: RotateCcw, category: 'secondary' },
-    { key: 'habits', labelKey: 'habits', icon: Target, category: 'secondary' },
-    { key: 'bookmarks', labelKey: 'saved', icon: Heart, category: 'secondary' },
-    { key: 'analytics', labelKey: 'progress', icon: BarChart3, category: 'secondary' },
+  const tabs = [
+    { 
+      id: 'dashboard', 
+      label: 'الرئيسية', 
+      icon: Home, 
+      badge: null,
+      description: 'لوحة التحكم الشخصية'
+    },
+    { 
+      id: 'quran', 
+      label: 'القرآن', 
+      icon: BookOpen, 
+      badge: null,
+      description: '114 سورة'
+    },
+    { 
+      id: 'hadith', 
+      label: 'الحديث', 
+      icon: MessageSquare, 
+      badge: null,
+      description: 'أحاديث صحيحة'
+    },
+    { 
+      id: 'duas', 
+      label: 'الأدعية', 
+      icon: Heart, 
+      badge: null,
+      description: 'أدعية مأثورة'
+    },
+    { 
+      id: 'discover', 
+      label: 'اكتشف', 
+      icon: Compass, 
+      badge: 'محدث',
+      description: 'أدوات متقدمة'
+    },
+    { 
+      id: 'habits', 
+      label: 'العادات', 
+      icon: Target, 
+      badge: 'جديد',
+      description: 'تتبع العادات الروحية'
+    },
+    { 
+      id: 'achievements', 
+      label: 'الإنجازات', 
+      icon: Award, 
+      badge: '3',
+      description: 'نظام الإنجازات التفاعلي'
+    },
+    { 
+      id: 'analytics', 
+      label: 'التحليلات', 
+      icon: BarChart3, 
+      badge: 'ذكي',
+      description: 'تحليلات القراءة المتقدمة'
+    },
+    { 
+      id: 'bookmarks', 
+      label: 'المرجعيات', 
+      icon: Bookmark, 
+      badge: null,
+      description: 'المحتوى المحفوظ'
+    }
   ];
 
-  const handleTabClick = (tabKey: string) => {
-    if (activeTab !== tabKey) {
-      // Instant feedback for tab switching
-      const selectedTab = tabs.find(tab => tab.key === tabKey);
-      toast({
-        title: `Switching to ${selectedTab?.key === 'discover' ? 'Study Tools' : t(selectedTab?.labelKey || '')}`,
-        description: "Loading content...",
-        duration: 800,
-      });
-      
-      // Slight delay for better UX
-      setTimeout(() => {
-        onTabChange(tabKey);
-      }, 100);
-    }
-  };
-
-  const primaryTabs = tabs.filter(tab => tab.category === 'primary');
-  const secondaryTabs = tabs.filter(tab => tab.category === 'secondary');
-
   return (
-    <div className="space-y-3 p-2">
-      {/* Primary Tabs - More prominent */}
-      <div className="flex flex-wrap justify-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 p-2 rounded-xl">
-        {primaryTabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.key;
-          const displayLabel = tab.key === 'discover' ? 'Study Tools' : t(tab.labelKey);
-          
-          return (
-            <button
-              key={tab.key}
-              onClick={() => handleTabClick(tab.key)}
-              className={`flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 min-h-[44px] active:scale-95 ${
-                isActive
-                  ? 'bg-emerald-600 text-white shadow-lg scale-105'
-                  : 'text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-800/30 hover:scale-102'
-              }`}
-            >
-              <Icon className="w-4 h-4 flex-shrink-0" />
-              <span className="whitespace-nowrap">{displayLabel}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Secondary Tabs - More compact */}
-      <div className="flex flex-wrap justify-center gap-1 bg-gray-50 dark:bg-gray-800/50 p-2 rounded-lg">
-        {secondaryTabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.key;
-          
-          return (
-            <button
-              key={tab.key}
-              onClick={() => handleTabClick(tab.key)}
-              className={`flex items-center gap-1 px-3 py-2 rounded-md text-xs font-medium transition-all duration-200 min-h-[36px] active:scale-95 ${
-                isActive
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700/50'
-              }`}
-            >
-              <Icon className="w-3 h-3 flex-shrink-0" />
-              <span className="whitespace-nowrap">{t(tab.labelKey)}</span>
-            </button>
-          );
-        })}
+    <div className="w-full p-4">
+      <ScrollArea className="w-full">
+        <div className="flex gap-2 pb-2" style={{ minWidth: 'max-content' }}>
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            
+            return (
+              <Button
+                key={tab.id}
+                variant={isActive ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => onTabChange(tab.id)}
+                className={`relative flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200 whitespace-nowrap ${
+                  isActive 
+                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg transform scale-105' 
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:scale-102'
+                }`}
+              >
+                <Icon className={`w-4 h-4 ${isActive ? 'animate-gentle-bounce' : ''}`} />
+                <span className="font-medium">{tab.label}</span>
+                {tab.badge && (
+                  <Badge 
+                    className={`text-xs px-1.5 py-0.5 ${
+                      isActive 
+                        ? 'bg-white/20 text-white' 
+                        : tab.badge === 'جديد' 
+                          ? 'bg-green-100 text-green-800' 
+                          : tab.badge === 'محدث'
+                            ? 'bg-blue-100 text-blue-800'
+                            : tab.badge === 'ذكي'
+                              ? 'bg-purple-100 text-purple-800'
+                              : 'bg-red-100 text-red-800'
+                    }`}
+                  >
+                    {tab.badge}
+                  </Badge>
+                )}
+                {isActive && (
+                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                )}
+              </Button>
+            );
+          })}
+        </div>
+      </ScrollArea>
+      
+      {/* Active Tab Description */}
+      <div className="mt-3 text-center">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          {tabs.find(tab => tab.id === activeTab)?.description}
+        </p>
       </div>
     </div>
   );
