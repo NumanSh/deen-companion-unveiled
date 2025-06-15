@@ -7,6 +7,7 @@ import { LanguageProvider } from '@/contexts/LanguageContext';
 import MicroInteractionFeedback from '@/components/MicroInteractionFeedback';
 import { prayerTimesApi } from '@/services/prayerTimesApi';
 import { prayerNotificationService } from '@/services/prayerNotificationService';
+import { voiceGuidedPrayerService } from '@/services/voiceGuidedPrayerService';
 import KeyboardShortcutsManager from '@/components/KeyboardShortcutsManager';
 import './App.css';
 
@@ -19,11 +20,10 @@ const PrayerTimes = lazy(() => import('./pages/PrayerTimes'));
 const Settings = lazy(() => import('./pages/Settings'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
-// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
       retry: 1,
     },
   },
@@ -44,6 +44,9 @@ const App: React.FC = () => {
     prayerNotificationService.initialize().catch(error => {
       console.error('Failed to initialize prayer notification service:', error);
     });
+
+    // Initialize voice-guided prayer service
+    voiceGuidedPrayerService.initialize();
   }, []);
 
   return (
