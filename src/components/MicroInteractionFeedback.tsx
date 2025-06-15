@@ -19,12 +19,15 @@ const MicroInteractionFeedback = () => {
       
       // Only trigger on interactive elements
       if (target.tagName === 'BUTTON' || target.closest('button') || target.closest('[role="button"]')) {
-        const rect = target.getBoundingClientRect();
+        // Ensure we have valid coordinates, fallback to center if not available
+        const x = event.clientX ?? window.innerWidth / 2;
+        const y = event.clientY ?? window.innerHeight / 2;
+        
         const animation: FeedbackAnimation = {
           id: Math.random().toString(36).substr(2, 9),
           type: getAnimationType(target),
-          x: event.clientX,
-          y: event.clientY,
+          x,
+          y,
           timestamp: Date.now()
         };
 
