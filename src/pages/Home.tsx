@@ -5,6 +5,7 @@ import EnhancedDashboard from '@/components/EnhancedDashboard';
 import NewUserWelcome from '@/components/NewUserWelcome';
 import CustomizableHomeWidgets from '@/components/CustomizableHomeWidgets';
 import EnhancedFloatingActionSystem from '@/components/EnhancedFloatingActionSystem';
+import SupportUsAdButton from '@/components/SupportUsAdButton';
 
 const Home = () => {
   return (
@@ -32,6 +33,11 @@ const Home = () => {
           <CustomizableHomeWidgets />
           
           <EnhancedDashboard />
+          
+          {/* Support Us Widget */}
+          <div className="max-w-md mx-auto">
+            <SupportUsAdButton variant="widget" />
+          </div>
         </div>
       </div>
       

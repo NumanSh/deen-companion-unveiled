@@ -14,6 +14,7 @@ import {
   Bookmark,
   Settings
 } from 'lucide-react';
+import SupportUsAdButton from './SupportUsAdButton';
 
 interface QuickAction {
   id: string;
@@ -157,7 +158,7 @@ const QuickAccessWidget: React.FC = () => {
         </div>
 
         {/* Secondary Actions - Smaller, grouped */}
-        <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 text-center">
             More Actions
           </p>
@@ -177,6 +178,11 @@ const QuickAccessWidget: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Support Us Section */}
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+          <SupportUsAdButton variant="widget" />
         </div>
       </CardContent>
     </Card>
