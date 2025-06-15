@@ -1,5 +1,6 @@
 
 import { translateToEnglish } from '../utils/hadithUtils';
+import { AUTHENTIC_ATHKAR_DATA, CATEGORY_MAPPING } from '../data/authenticAthkarData';
 
 export interface AthkarItem {
   id: string;
@@ -8,7 +9,7 @@ export interface AthkarItem {
   translation?: string;
   repetitions?: number;
   reference?: string;
-  category: 'morning' | 'evening' | 'sleeping' | 'after_prayer' | 'general';
+  category: 'morning' | 'evening' | 'sleeping' | 'after_prayer' | 'general' | 'waking' | 'tasbih' | 'quranic_duas' | 'prophetic_duas';
   benefit?: string;
 }
 
@@ -23,87 +24,81 @@ export interface AthkarApiResponse {
   }[];
 }
 
-const ATHKAR_API_BASE = 'https://www.hisnmuslim.com/api';
-
-// Fallback Athkar data
-const FALLBACK_ATHKAR: AthkarItem[] = [
-  {
-    id: 'morning-1',
-    arabic: 'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ',
-    transliteration: 'Asbahna wa asbahal-mulku lillahi, walhamdu lillahi, la ilaha illa Allahu wahdahu la shareeka lah',
-    translation: 'We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah.',
-    repetitions: 1,
-    reference: 'Abu Dawud',
-    category: 'morning',
-    benefit: 'Protection and blessing for the day'
-  },
-  {
-    id: 'evening-1',
-    arabic: 'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ',
-    transliteration: 'Amsayna wa amsal-mulku lillahi, walhamdu lillahi, la ilaha illa Allahu wahdahu la shareeka lah',
-    translation: 'We have reached the evening and at this very time unto Allah belongs all sovereignty.',
-    repetitions: 1,
-    reference: 'Abu Dawud',
-    category: 'evening',
-    benefit: 'Evening protection and peace'
-  },
-  {
-    id: 'after-prayer-1',
-    arabic: 'سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَاللَّهُ أَكْبَرُ',
-    transliteration: 'Subhan Allah wal hamdu lillahi wallahu akbar',
-    translation: 'Glory be to Allah, and praise be to Allah, and Allah is the Greatest',
-    repetitions: 33,
-    reference: 'Bukhari & Muslim',
-    category: 'after_prayer',
-    benefit: 'Spiritual purification after prayer'
-  },
-  {
-    id: 'sleeping-1',
-    arabic: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا',
-    transliteration: 'Bismika Allahumma amootu wa ahya',
-    translation: 'In Your name, O Allah, I die and I live',
-    repetitions: 1,
-    reference: 'Bukhari',
-    category: 'sleeping',
-    benefit: 'Protection during sleep'
-  }
-];
+// Convert data to AthkarItem format
+const convertToAthkarItems = (categoryData: any[], categoryName: string): AthkarItem[] => {
+  const englishCategory = CATEGORY_MAPPING[categoryName as keyof typeof CATEGORY_MAPPING] || 'general';
+  
+  return categoryData.map((item, index) => ({
+    id: `${englishCategory}-${index + 1}`,
+    arabic: item.content,
+    transliteration: '', // We can add transliterations later
+    translation: translateToEnglish(item.content),
+    repetitions: parseInt(item.count) || 1,
+    reference: item.reference || '',
+    category: englishCategory as AthkarItem['category'],
+    benefit: item.description || ''
+  }));
+};
 
 export const fetchAthkarByCategory = async (category: string): Promise<AthkarItem[]> => {
   try {
     console.log(`Fetching Athkar for category: ${category}`);
     
-    // Try to fetch from API
-    const response = await fetch(`${ATHKAR_API_BASE}/${category}.json`);
+    // Use authentic Arabic data
+    let categoryData: any[] = [];
     
-    if (response.ok) {
-      const data: AthkarApiResponse = await response.json();
-      
-      return data.array.map((item, index) => ({
-        id: `api-${category}-${item.ID}-${index}`,
-        arabic: item.TEXT,
-        transliteration: '', // API doesn't provide transliteration
-        translation: translateToEnglish(item.TEXT),
-        repetitions: item.REPEAT || 1,
-        reference: 'Hisnul Muslim',
-        category: category as AthkarItem['category'],
-        benefit: 'Spiritual benefit and protection'
-      }));
+    switch (category) {
+      case 'morning':
+        categoryData = AUTHENTIC_ATHKAR_DATA["أذكار الصباح"];
+        break;
+      case 'evening':
+        categoryData = AUTHENTIC_ATHKAR_DATA["أذكار المساء"];
+        break;
+      case 'after_prayer':
+        categoryData = AUTHENTIC_ATHKAR_DATA["أذكار بعد السلام من الصلاة المفروضة"];
+        break;
+      case 'sleeping':
+        categoryData = AUTHENTIC_ATHKAR_DATA["أذكار النوم"];
+        break;
+      case 'waking':
+        categoryData = AUTHENTIC_ATHKAR_DATA["أذكار الاستيقاظ"];
+        break;
+      case 'general':
+        categoryData = AUTHENTIC_ATHKAR_DATA["تسابيح"];
+        break;
+      default:
+        categoryData = AUTHENTIC_ATHKAR_DATA["أذكار الصباح"];
     }
-    
-    throw new Error('API response not ok');
+
+    // Find the Arabic category name for this data
+    const arabicCategoryName = Object.keys(CATEGORY_MAPPING).find(
+      key => CATEGORY_MAPPING[key as keyof typeof CATEGORY_MAPPING] === category
+    ) || "أذكار الصباح";
+
+    return convertToAthkarItems(categoryData, arabicCategoryName);
     
   } catch (error) {
-    console.error('Failed to fetch Athkar from API, using fallback:', error);
+    console.error('Error processing authentic Athkar data:', error);
     
-    // Return fallback data filtered by category
-    return FALLBACK_ATHKAR.filter(athkar => athkar.category === category);
+    // Fallback to basic athkar
+    return [
+      {
+        id: `fallback-${category}-1`,
+        arabic: 'سُبْحَانَ اللهِ وَبِحَمْدِهِ',
+        transliteration: 'Subhan Allahi wa bihamdihi',
+        translation: 'Glory be to Allah and praise be to Him',
+        repetitions: 100,
+        reference: 'Sahih Bukhari',
+        category: category as AthkarItem['category'],
+        benefit: 'Spiritual purification and divine blessings'
+      }
+    ];
   }
 };
 
 export const fetchAllAthkar = async (): Promise<AthkarItem[]> => {
   try {
-    const categories = ['morning', 'evening', 'after_prayer', 'sleeping'];
+    const categories = ['morning', 'evening', 'after_prayer', 'sleeping', 'waking', 'general'];
     const allAthkar = await Promise.all(
       categories.map(category => fetchAthkarByCategory(category))
     );
@@ -112,7 +107,7 @@ export const fetchAllAthkar = async (): Promise<AthkarItem[]> => {
     
   } catch (error) {
     console.error('Failed to fetch all Athkar:', error);
-    return FALLBACK_ATHKAR;
+    return [];
   }
 };
 
