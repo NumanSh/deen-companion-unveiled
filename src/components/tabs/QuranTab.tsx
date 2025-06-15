@@ -284,7 +284,7 @@ const QuranTab: React.FC<QuranTabProps> = ({
                   {/* Offline Indicator */}
                   {isOffline && (
                     <div className="absolute top-2 right-2">
-                      <WifiOff className="w-4 h-4 text-green-600" title="Available offline" />
+                      <WifiOff className="w-4 h-4 text-green-600" />
                     </div>
                   )}
                   
@@ -295,7 +295,7 @@ const QuranTab: React.FC<QuranTabProps> = ({
                           {surah.number}
                         </div>
                         {readingSurahs.has(surah.number) && (
-                          <span className="w-2 h-2 bg-emerald-500 rounded-full" title="Recently read" />
+                          <span className="w-2 h-2 bg-emerald-500 rounded-full" />
                         )}
                       </div>
                       <h3 className="font-bold text-lg text-gray-800 dark:text-gray-200 mb-1">
@@ -317,7 +317,6 @@ const QuranTab: React.FC<QuranTabProps> = ({
                           }}
                           disabled={downloading}
                           className="h-8 w-8"
-                          title="Download for offline reading"
                         >
                           {downloading ? (
                             <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />

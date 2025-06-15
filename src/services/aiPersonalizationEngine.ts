@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 
 export interface AIRecommendation {
@@ -153,4 +154,3 @@ class AIPersonalizationEngine {
 }
 
 export const aiPersonalizationEngine = new AIPersonalizationEngine();
-export type { AIContentType };
