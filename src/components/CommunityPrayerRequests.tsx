@@ -5,242 +5,343 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Users, Clock, Plus, MessageCircle } from 'lucide-react';
+import { 
+  Heart, 
+  MessageCircle, 
+  Users, 
+  Plus,
+  Calendar,
+  MapPin,
+  Clock,
+  Send
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface PrayerRequest {
   id: string;
   title: string;
   description: string;
-  category: string;
-  timestamp: Date;
-  prayers: number;
+  category: 'health' | 'family' | 'guidance' | 'success' | 'forgiveness' | 'general';
+  author: string;
+  timestamp: number;
+  location?: string;
   urgent: boolean;
+  prayerCount: number;
+  supporters: string[];
+  updates: Array<{
+    id: string;
+    message: string;
+    timestamp: number;
+    type: 'update' | 'gratitude' | 'request';
+  }>;
 }
 
 const CommunityPrayerRequests = () => {
-  const [requests, setRequests] = useState<PrayerRequest[]>([]);
-  const [newRequest, setNewRequest] = useState({ title: '', description: '', category: 'general', urgent: false });
-  const [showForm, setShowForm] = useState(false);
   const { toast } = useToast();
-
-  const categories = [
-    { value: 'health', label: 'Health & Healing', color: 'bg-red-100 text-red-800 border-red-200' },
-    { value: 'family', label: 'Family', color: 'bg-blue-100 text-blue-800 border-blue-200' },
-    { value: 'guidance', label: 'Guidance', color: 'bg-purple-100 text-purple-800 border-purple-200' },
-    { value: 'success', label: 'Success', color: 'bg-green-100 text-green-800 border-green-200' },
-    { value: 'general', label: 'General', color: 'bg-gray-100 text-gray-800 border-gray-200' }
-  ];
-
-  // Sample prayer requests
-  useEffect(() => {
-    const sampleRequests: PrayerRequest[] = [
-      {
-        id: '1',
-        title: 'Recovery from Surgery',
-        description: 'Please pray for my mother\'s quick recovery after her surgery. May Allah grant her strength and healing.',
-        category: 'health',
-        timestamp: new Date(),
-        prayers: 47,
-        urgent: true
-      },
-      {
-        id: '2',
-        title: 'Job Interview Success',
-        description: 'I have an important job interview tomorrow. Please make dua that Allah opens this door if it\'s best for me.',
-        category: 'success',
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        prayers: 23,
-        urgent: false
-      },
-      {
-        id: '3',
-        title: 'Family Reconciliation',
-        description: 'Seeking prayers for peace and understanding in our family during this difficult time.',
-        category: 'family',
-        timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
-        prayers: 31,
-        urgent: false
-      }
-    ];
-    setRequests(sampleRequests);
-  }, []);
-
-  const handleSubmitRequest = () => {
-    if (!newRequest.title.trim() || !newRequest.description.trim()) {
-      toast({
-        title: "Please fill all fields",
-        description: "Both title and description are required.",
-        variant: "destructive"
-      });
-      return;
+  const [requests, setRequests] = useState<PrayerRequest[]>([
+    {
+      id: '1',
+      title: 'Recovery for my mother',
+      description: 'Please pray for my mother\'s quick recovery from her surgery. May Allah grant her complete healing.',
+      category: 'health',
+      author: 'Sister Fatima',
+      timestamp: Date.now() - 2 * 60 * 60 * 1000,
+      location: 'London, UK',
+      urgent: true,
+      prayerCount: 127,
+      supporters: ['Ahmad', 'Khadijah', 'Yusuf'],
+      updates: [
+        {
+          id: '1',
+          message: 'Surgery went well, Alhamdulillah. Still need prayers for recovery.',
+          timestamp: Date.now() - 1 * 60 * 60 * 1000,
+          type: 'update'
+        }
+      ]
+    },
+    {
+      id: '2',
+      title: 'Guidance in career decision',
+      description: 'Seeking Allah\'s guidance in choosing the right career path that pleases Him.',
+      category: 'guidance',
+      author: 'Brother Omar',
+      timestamp: Date.now() - 4 * 60 * 60 * 1000,
+      urgent: false,
+      prayerCount: 89,
+      supporters: ['Aisha', 'Ibrahim'],
+      updates: []
+    },
+    {
+      id: '3',
+      title: 'Unity for our family',
+      description: 'Please pray for reconciliation and understanding within our family during difficult times.',
+      category: 'family',
+      author: 'Sister Maryam',
+      timestamp: Date.now() - 6 * 60 * 60 * 1000,
+      urgent: false,
+      prayerCount: 156,
+      supporters: ['Zaynab', 'Hassan', 'Layla'],
+      updates: []
     }
+  ]);
 
-    const request: PrayerRequest = {
-      id: Date.now().toString(),
-      ...newRequest,
-      timestamp: new Date(),
-      prayers: 0
-    };
+  const [showForm, setShowForm] = useState(false);
+  const [newRequest, setNewRequest] = useState({
+    title: '',
+    description: '',
+    category: 'general' as PrayerRequest['category'],
+    location: '',
+    urgent: false
+  });
 
-    setRequests(prev => [request, ...prev]);
-    setNewRequest({ title: '', description: '', category: 'general', urgent: false });
-    setShowForm(false);
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'health': return 'bg-red-100 text-red-800';
+      case 'family': return 'bg-blue-100 text-blue-800';
+      case 'guidance': return 'bg-purple-100 text-purple-800';
+      case 'success': return 'bg-green-100 text-green-800';
+      case 'forgiveness': return 'bg-orange-100 text-orange-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
 
-    toast({
-      title: "Prayer Request Shared",
-      description: "May Allah answer your prayers and bless you.",
-    });
+  const formatTimeAgo = (timestamp: number) => {
+    const now = Date.now();
+    const diff = now - timestamp;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    return 'Just now';
   };
 
   const handlePray = (requestId: string) => {
     setRequests(prev => 
       prev.map(req => 
         req.id === requestId 
-          ? { ...req, prayers: req.prayers + 1 }
+          ? { 
+              ...req, 
+              prayerCount: req.prayerCount + 1,
+              supporters: [...req.supporters, 'You']
+            }
           : req
       )
     );
-
+    
     toast({
-      title: "Prayer Added",
-      description: "May Allah accept your prayers and bless the requester.",
+      title: 'Prayer Recorded 🤲',
+      description: 'May Allah accept your prayers and grant ease.',
     });
   };
 
-  const getCategoryStyle = (category: string) => {
-    const cat = categories.find(c => c.value === category);
-    return cat?.color || 'bg-gray-100 text-gray-800 border-gray-200';
-  };
-
-  const formatTimeAgo = (date: Date) => {
-    const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+  const submitRequest = () => {
+    if (!newRequest.title || !newRequest.description) return;
     
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
-    return `${Math.floor(diffInMinutes / 1440)}d ago`;
+    const request: PrayerRequest = {
+      id: Date.now().toString(),
+      ...newRequest,
+      author: 'You',
+      timestamp: Date.now(),
+      prayerCount: 0,
+      supporters: [],
+      updates: []
+    };
+    
+    setRequests(prev => [request, ...prev]);
+    setNewRequest({
+      title: '',
+      description: '',
+      category: 'general',
+      location: '',
+      urgent: false
+    });
+    setShowForm(false);
+    
+    toast({
+      title: 'Prayer Request Shared',
+      description: 'May Allah answer your prayers and grant you ease.',
+    });
   };
 
   return (
-    <Card className="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950 dark:to-pink-950 border-rose-200 dark:border-rose-800">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <Users className="w-6 h-6 text-rose-600 dark:text-rose-400" />
-              <Heart className="w-3 h-3 text-pink-500 absolute -top-1 -right-1" />
+    <div className="space-y-6">
+      {/* Header */}
+      <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Heart className="w-6 h-6 text-red-500" />
+            Community Prayer Requests
+          </CardTitle>
+          <p className="text-sm text-gray-600">
+            "And when My servants ask you concerning Me, indeed I am near. I respond to the invocation of the supplicant when he calls upon Me." - Al-Baqarah 2:186
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-between items-center">
+            <div className="flex gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4 text-blue-600" />
+                <span>{requests.length} Active Requests</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Heart className="w-4 h-4 text-red-500" />
+                <span>{requests.reduce((sum, r) => sum + r.prayerCount, 0)} Prayers Made</span>
+              </div>
             </div>
-            <span className="bg-gradient-to-r from-rose-700 to-pink-700 dark:from-rose-400 dark:to-pink-400 bg-clip-text text-transparent">
-              Community Prayer Requests
-            </span>
+            <Button onClick={() => setShowForm(true)} className="bg-blue-600 hover:bg-blue-700">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Request
+            </Button>
           </div>
-          <Button
-            onClick={() => setShowForm(!showForm)}
-            size="sm"
-            className="bg-rose-600 hover:bg-rose-700 text-white"
-          >
-            <Plus className="w-4 h-4 mr-1" />
-            Request
-          </Button>
-        </CardTitle>
-        <p className="text-sm text-rose-700 dark:text-rose-300">
-          Share your needs and pray for others in our community
-        </p>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {showForm && (
-          <div className="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-rose-200 dark:border-rose-700 space-y-3">
+        </CardContent>
+      </Card>
+
+      {/* Add Request Form */}
+      {showForm && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Share Your Prayer Request</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <Input
-              placeholder="Prayer request title..."
+              placeholder="Brief title for your request"
               value={newRequest.title}
               onChange={(e) => setNewRequest(prev => ({ ...prev, title: e.target.value }))}
-              className="border-rose-200 dark:border-rose-700"
             />
+            
             <Textarea
-              placeholder="Please describe what you need prayers for..."
+              placeholder="Describe what you'd like the community to pray for..."
               value={newRequest.description}
               onChange={(e) => setNewRequest(prev => ({ ...prev, description: e.target.value }))}
-              className="border-rose-200 dark:border-rose-700"
               rows={3}
             />
-            <div className="flex items-center gap-4">
-              <select
+            
+            <div className="grid grid-cols-2 gap-4">
+              <select 
                 value={newRequest.category}
-                onChange={(e) => setNewRequest(prev => ({ ...prev, category: e.target.value }))}
-                className="border border-rose-200 dark:border-rose-700 rounded-md px-3 py-2 text-sm bg-white dark:bg-gray-800"
+                onChange={(e) => setNewRequest(prev => ({ ...prev, category: e.target.value as any }))}
+                className="p-2 border rounded-md"
               >
-                {categories.map(cat => (
-                  <option key={cat.value} value={cat.value}>{cat.label}</option>
-                ))}
+                <option value="general">General</option>
+                <option value="health">Health</option>
+                <option value="family">Family</option>
+                <option value="guidance">Guidance</option>
+                <option value="success">Success</option>
+                <option value="forgiveness">Forgiveness</option>
               </select>
+              
+              <Input
+                placeholder="Location (optional)"
+                value={newRequest.location}
+                onChange={(e) => setNewRequest(prev => ({ ...prev, location: e.target.value }))}
+              />
+            </div>
+            
+            <div className="flex justify-between">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={newRequest.urgent}
                   onChange={(e) => setNewRequest(prev => ({ ...prev, urgent: e.target.checked }))}
-                  className="text-rose-600"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Urgent</span>
+                <span className="text-sm">Urgent request</span>
               </label>
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={handleSubmitRequest} size="sm" className="bg-rose-600 hover:bg-rose-700">
-                Share Request
-              </Button>
-              <Button onClick={() => setShowForm(false)} size="sm" variant="outline">
-                Cancel
-              </Button>
-            </div>
-          </div>
-        )}
-
-        <div className="space-y-3">
-          {requests.map((request) => (
-            <div
-              key={request.id}
-              className="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-rose-200 dark:border-rose-700"
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <h4 className="font-semibold text-gray-800 dark:text-gray-200">{request.title}</h4>
-                  {request.urgent && (
-                    <Badge variant="destructive" className="text-xs">Urgent</Badge>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <Clock className="w-3 h-3" />
-                  {formatTimeAgo(request.timestamp)}
-                </div>
-              </div>
               
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">{request.description}</p>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Badge className={getCategoryStyle(request.category)}>
-                    {categories.find(c => c.value === request.category)?.label}
-                  </Badge>
-                  <span className="text-xs text-gray-500 flex items-center gap-1">
-                    <Heart className="w-3 h-3" />
-                    {request.prayers} prayers
-                  </span>
-                </div>
-                <Button
-                  onClick={() => handlePray(request.id)}
-                  size="sm"
-                  variant="outline"
-                  className="text-rose-600 border-rose-300 hover:bg-rose-50"
-                >
-                  <Heart className="w-3 h-3 mr-1" />
-                  Pray
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setShowForm(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={submitRequest}>
+                  <Send className="w-4 h-4 mr-2" />
+                  Share Request
                 </Button>
               </div>
             </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Prayer Requests List */}
+      <div className="space-y-4">
+        {requests.map((request) => (
+          <Card key={request.id} className="border-l-4 border-l-blue-500">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-semibold text-lg">{request.title}</h3>
+                    {request.urgent && (
+                      <Badge className="bg-red-100 text-red-800">Urgent</Badge>
+                    )}
+                    <Badge className={getCategoryColor(request.category)}>
+                      {request.category}
+                    </Badge>
+                  </div>
+                  
+                  <p className="text-gray-700 dark:text-gray-300 mb-3">
+                    {request.description}
+                  </p>
+                  
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <span className="flex items-center gap-1">
+                      <MessageCircle className="w-4 h-4" />
+                      {request.author}
+                    </span>
+                    {request.location && (
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-4 h-4" />
+                        {request.location}
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      {formatTimeAgo(request.timestamp)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Updates */}
+              {request.updates.length > 0 && (
+                <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg mb-4">
+                  <h4 className="font-semibold text-sm mb-2">Latest Update:</h4>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    {request.updates[0].message}
+                  </p>
+                </div>
+              )}
+              
+              {/* Actions */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Button
+                    onClick={() => handlePray(request.id)}
+                    className="bg-green-600 hover:bg-green-700"
+                    disabled={request.supporters.includes('You')}
+                  >
+                    <Heart className="w-4 h-4 mr-2" />
+                    {request.supporters.includes('You') ? 'Prayed' : 'Pray'}
+                  </Button>
+                  
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Heart className="w-4 h-4 text-red-500" />
+                    <span>{request.prayerCount} prayers</span>
+                  </div>
+                </div>
+                
+                {request.supporters.length > 0 && (
+                  <div className="text-sm text-gray-600">
+                    {request.supporters.slice(0, 3).join(', ')}
+                    {request.supporters.length > 3 && ` +${request.supporters.length - 3} more`}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
 };
 

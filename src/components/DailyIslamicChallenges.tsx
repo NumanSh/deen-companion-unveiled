@@ -2,252 +2,385 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Trophy, Star, Target, Flame, Gift, Crown } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Target, 
+  Star, 
+  Calendar, 
+  Clock,
+  CheckCircle,
+  Trophy,
+  Flame,
+  Gift,
+  BookOpen,
+  Heart,
+  Moon,
+  Sun,
+  Zap
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface Challenge {
+interface DailyChallenge {
   id: string;
   title: string;
   description: string;
-  category: 'worship' | 'knowledge' | 'character' | 'charity';
+  category: 'prayer' | 'quran' | 'dhikr' | 'charity' | 'reflection' | 'community';
   difficulty: 'easy' | 'medium' | 'hard';
   points: number;
-  completed: boolean;
+  timeEstimate: number; // in minutes
+  requirement: {
+    type: 'count' | 'duration' | 'completion';
+    target: number;
+    unit?: string;
+  };
   progress: number;
-  maxProgress: number;
-  timeLimit?: string;
+  completed: boolean;
+  completedAt?: number;
+  streak?: number;
+  icon: React.ComponentType;
 }
 
 const DailyIslamicChallenges = () => {
-  const { t } = useLanguage();
   const { toast } = useToast();
+  const [currentDate] = useState(new Date().toDateString());
+  const [totalStreak, setTotalStreak] = useState(12);
+  const [dailyPoints, setDailyPoints] = useState(0);
+  const [weeklyPoints, setWeeklyPoints] = useState(850);
   
-  const [challenges, setChallenges] = useState<Challenge[]>([
+  const [challenges, setChallenges] = useState<DailyChallenge[]>([
     {
-      id: '1',
-      title: 'اقرأ سورة الفاتحة 10 مرات',
-      description: 'اقرأ سورة الفاتحة مع التدبر والخشوع',
-      category: 'worship',
+      id: 'morning-dhikr',
+      title: 'Morning Remembrance',
+      description: 'Recite morning adhkar after Fajr prayer',
+      category: 'dhikr',
       difficulty: 'easy',
-      points: 50,
-      completed: false,
-      progress: 3,
-      maxProgress: 10,
-      timeLimit: 'اليوم'
-    },
-    {
-      id: '2',
-      title: 'تعلم 5 أسماء من أسماء الله الحسنى',
-      description: 'احفظ وافهم معاني 5 أسماء من أسماء الله',
-      category: 'knowledge',
-      difficulty: 'medium',
-      points: 100,
-      completed: false,
-      progress: 2,
-      maxProgress: 5,
-      timeLimit: 'اليوم'
-    },
-    {
-      id: '3',
-      title: 'ساعد شخصاً محتاجاً',
-      description: 'قدم المساعدة لشخص محتاج في مجتمعك',
-      category: 'character',
-      difficulty: 'hard',
-      points: 200,
-      completed: false,
+      points: 30,
+      timeEstimate: 10,
+      requirement: { type: 'completion', target: 1 },
       progress: 0,
-      maxProgress: 1,
-      timeLimit: 'اليوم'
+      completed: false,
+      icon: Sun
     },
     {
-      id: '4',
-      title: 'تصدق بأي مبلغ',
-      description: 'تصدق ولو بالقليل في سبيل الله',
-      category: 'charity',
+      id: 'quran-verses',
+      title: 'Daily Quran Reading',
+      description: 'Read at least 20 verses from the Quran',
+      category: 'quran',
+      difficulty: 'medium',
+      points: 50,
+      timeEstimate: 15,
+      requirement: { type: 'count', target: 20, unit: 'verses' },
+      progress: 8,
+      completed: false,
+      icon: BookOpen
+    },
+    {
+      id: 'istighfar-100',
+      title: 'Seek Forgiveness',
+      description: 'Say "Astaghfirullah" 100 times',
+      category: 'dhikr',
       difficulty: 'easy',
-      points: 75,
-      completed: true,
+      points: 25,
+      timeEstimate: 5,
+      requirement: { type: 'count', target: 100, unit: 'times' },
+      progress: 45,
+      completed: false,
+      icon: Heart
+    },
+    {
+      id: 'charity-act',
+      title: 'Act of Kindness',
+      description: 'Perform one act of charity or kindness',
+      category: 'charity',
+      difficulty: 'medium',
+      points: 40,
+      timeEstimate: 20,
+      requirement: { type: 'completion', target: 1 },
       progress: 1,
-      maxProgress: 1,
-      timeLimit: 'اليوم'
+      completed: true,
+      completedAt: Date.now() - 2 * 60 * 60 * 1000,
+      icon: Gift
+    },
+    {
+      id: 'reflection-dua',
+      title: 'Evening Reflection',
+      description: 'Spend 10 minutes in personal dua and reflection',
+      category: 'reflection',
+      difficulty: 'medium',
+      points: 35,
+      timeEstimate: 10,
+      requirement: { type: 'duration', target: 10, unit: 'minutes' },
+      progress: 0,
+      completed: false,
+      icon: Moon
+    },
+    {
+      id: 'salawat-prophet',
+      title: 'Send Blessings',
+      description: 'Recite Salawat on Prophet Muhammad (PBUH) 50 times',
+      category: 'dhikr',
+      difficulty: 'easy',
+      points: 20,
+      timeEstimate: 5,
+      requirement: { type: 'count', target: 50, unit: 'times' },
+      progress: 0,
+      completed: false,
+      icon: Star
     }
   ]);
 
-  const [userStats, setUserStats] = useState({
-    dailyPoints: 75,
-    totalPoints: 1250,
-    streak: 5,
-    level: 3,
-    rank: 'طالب علم'
-  });
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'easy': return 'bg-green-100 text-green-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'hard': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
 
   const getCategoryColor = (category: string) => {
-    const colors = {
-      worship: 'bg-green-100 text-green-800',
-      knowledge: 'bg-blue-100 text-blue-800',
-      character: 'bg-purple-100 text-purple-800',
-      charity: 'bg-orange-100 text-orange-800'
-    };
-    return colors[category];
-  };
-
-  const getCategoryIcon = (category: string) => {
-    const icons = {
-      worship: <Star className="w-4 h-4" />,
-      knowledge: <Target className="w-4 h-4" />,
-      character: <Crown className="w-4 h-4" />,
-      charity: <Gift className="w-4 h-4" />
-    };
-    return icons[category];
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    const colors = {
-      easy: 'text-green-600',
-      medium: 'text-yellow-600',
-      hard: 'text-red-600'
-    };
-    return colors[difficulty];
+    switch (category) {
+      case 'prayer': return 'text-blue-600';
+      case 'quran': return 'text-green-600';
+      case 'dhikr': return 'text-purple-600';
+      case 'charity': return 'text-pink-600';
+      case 'reflection': return 'text-indigo-600';
+      case 'community': return 'text-orange-600';
+      default: return 'text-gray-600';
+    }
   };
 
   const completeChallenge = (challengeId: string) => {
-    setChallenges(prev => prev.map(challenge => {
-      if (challenge.id === challengeId && !challenge.completed) {
-        const newProgress = challenge.maxProgress;
-        setUserStats(prevStats => ({
-          ...prevStats,
-          dailyPoints: prevStats.dailyPoints + challenge.points,
-          totalPoints: prevStats.totalPoints + challenge.points
-        }));
-        
-        toast({
-          title: '🎉 تم إنجاز التحدي!',
-          description: `حصلت على ${challenge.points} نقطة. بارك الله فيك!`,
-        });
-        
-        return { ...challenge, completed: true, progress: newProgress };
-      }
-      return challenge;
-    }));
+    setChallenges(prev => 
+      prev.map(challenge => 
+        challenge.id === challengeId && !challenge.completed
+          ? { 
+              ...challenge, 
+              completed: true, 
+              completedAt: Date.now(),
+              progress: challenge.requirement.target 
+            }
+          : challenge
+      )
+    );
+    
+    const challenge = challenges.find(c => c.id === challengeId);
+    if (challenge && !challenge.completed) {
+      setDailyPoints(prev => prev + challenge.points);
+      setWeeklyPoints(prev => prev + challenge.points);
+      
+      toast({
+        title: '🎉 Challenge Completed!',
+        description: `${challenge.title} - Earned ${challenge.points} points`,
+      });
+    }
   };
 
-  const updateProgress = (challengeId: string) => {
-    setChallenges(prev => prev.map(challenge => {
-      if (challenge.id === challengeId && !challenge.completed) {
-        const newProgress = Math.min(challenge.progress + 1, challenge.maxProgress);
-        if (newProgress === challenge.maxProgress) {
-          completeChallenge(challengeId);
-        }
-        return { ...challenge, progress: newProgress };
-      }
-      return challenge;
-    }));
+  const updateProgress = (challengeId: string, progress: number) => {
+    setChallenges(prev => 
+      prev.map(challenge => 
+        challenge.id === challengeId
+          ? { ...challenge, progress: Math.min(progress, challenge.requirement.target) }
+          : challenge
+      )
+    );
   };
+
+  const completedChallenges = challenges.filter(c => c.completed);
+  const completionRate = Math.round((completedChallenges.length / challenges.length) * 100);
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Trophy className="w-6 h-6 text-yellow-500" />
-          التحديات الإسلامية اليومية
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* User Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-3 bg-yellow-50 rounded-lg">
-            <Trophy className="w-6 h-6 text-yellow-600 mx-auto mb-1" />
-            <div className="text-lg font-bold text-yellow-800">{userStats.dailyPoints}</div>
-            <div className="text-xs text-yellow-600">نقاط اليوم</div>
-          </div>
-          <div className="text-center p-3 bg-blue-50 rounded-lg">
-            <Star className="w-6 h-6 text-blue-600 mx-auto mb-1" />
-            <div className="text-lg font-bold text-blue-800">{userStats.totalPoints}</div>
-            <div className="text-xs text-blue-600">إجمالي النقاط</div>
-          </div>
-          <div className="text-center p-3 bg-orange-50 rounded-lg">
-            <Flame className="w-6 h-6 text-orange-600 mx-auto mb-1" />
-            <div className="text-lg font-bold text-orange-800">{userStats.streak}</div>
-            <div className="text-xs text-orange-600">أيام متتالية</div>
-          </div>
-          <div className="text-center p-3 bg-purple-50 rounded-lg">
-            <Crown className="w-6 h-6 text-purple-600 mx-auto mb-1" />
-            <div className="text-sm font-bold text-purple-800">{userStats.rank}</div>
-            <div className="text-xs text-purple-600">المستوى {userStats.level}</div>
-          </div>
-        </div>
-
-        {/* Daily Challenges */}
-        <div className="space-y-4">
-          <h3 className="font-semibold text-lg">تحديات اليوم</h3>
-          {challenges.map((challenge) => (
-            <div key={challenge.id} className={`p-4 border rounded-lg ${challenge.completed ? 'bg-green-50 border-green-200' : 'bg-white'}`}>
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h4 className={`font-semibold ${challenge.completed ? 'text-green-800' : 'text-gray-800'}`}>
-                      {challenge.title}
-                    </h4>
-                    {challenge.completed && <Badge className="bg-green-500 text-white">مكتمل</Badge>}
-                  </div>
-                  <p className="text-sm text-gray-600 mb-2">{challenge.description}</p>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge className={getCategoryColor(challenge.category)}>
-                      {getCategoryIcon(challenge.category)}
-                      <span className="ml-1">
-                        {challenge.category === 'worship' ? 'عبادة' : 
-                         challenge.category === 'knowledge' ? 'علم' :
-                         challenge.category === 'character' ? 'أخلاق' : 'صدقة'}
-                      </span>
-                    </Badge>
-                    <span className={`text-sm font-semibold ${getDifficultyColor(challenge.difficulty)}`}>
-                      {challenge.difficulty === 'easy' ? 'سهل' : 
-                       challenge.difficulty === 'medium' ? 'متوسط' : 'صعب'}
-                    </span>
-                    <span className="text-sm text-blue-600 font-semibold">{challenge.points} نقطة</span>
-                  </div>
-                </div>
-                {!challenge.completed && (
-                  <Button 
-                    onClick={() => updateProgress(challenge.id)}
-                    size="sm"
-                    className="bg-blue-500 hover:bg-blue-600"
-                  >
-                    تقدم
-                  </Button>
-                )}
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>التقدم: {challenge.progress}/{challenge.maxProgress}</span>
-                  <span>{Math.round((challenge.progress / challenge.maxProgress) * 100)}%</span>
-                </div>
-                <Progress 
-                  value={(challenge.progress / challenge.maxProgress) * 100} 
-                  className="h-2"
-                />
-              </div>
+    <div className="space-y-6">
+      {/* Daily Progress Header */}
+      <Card className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Target className="w-6 h-6 text-orange-600" />
+            Daily Islamic Challenges
+          </CardTitle>
+          <p className="text-sm text-gray-600">{currentDate}</p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-600">{completionRate}%</div>
+              <div className="text-sm text-gray-600">Daily Progress</div>
             </div>
-          ))}
-        </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">{dailyPoints}</div>
+              <div className="text-sm text-gray-600">Points Today</div>
+            </div>
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1">
+                <Flame className="w-6 h-6 text-red-500" />
+                <span className="text-2xl font-bold text-red-600">{totalStreak}</span>
+              </div>
+              <div className="text-sm text-gray-600">Day Streak</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{weeklyPoints}</div>
+              <div className="text-sm text-gray-600">Week Total</div>
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span>Daily Completion</span>
+              <span>{completedChallenges.length}/{challenges.length}</span>
+            </div>
+            <Progress value={completionRate} className="h-3" />
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Islamic Motivation */}
-        <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-          <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-            <Star className="w-5 h-5" />
-            تذكير إيماني
-          </h4>
-          <p className="text-sm text-blue-700">
-            "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ"
-          </p>
-          <p className="text-xs text-blue-600 mt-1">سورة الطلاق - آية 2-3</p>
-        </div>
-      </CardContent>
-    </Card>
+      {/* Challenge Categories */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {['prayer', 'quran', 'dhikr', 'charity', 'reflection', 'community'].map(category => {
+          const categoryCount = challenges.filter(c => c.category === category).length;
+          const completedCount = challenges.filter(c => c.category === category && c.completed).length;
+          
+          return (
+            <Card key={category} className="p-3">
+              <div className="text-center">
+                <div className={`text-lg font-semibold ${getCategoryColor(category)} capitalize`}>
+                  {category}
+                </div>
+                <div className="text-sm text-gray-600">
+                  {completedCount}/{categoryCount} completed
+                </div>
+                <Progress value={(completedCount / categoryCount) * 100} className="h-2 mt-2" />
+              </div>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Challenges List */}
+      <div className="space-y-4">
+        {challenges.map((challenge) => {
+          const Icon = challenge.icon;
+          const progress = challenge.requirement.type === 'completion' 
+            ? (challenge.completed ? 100 : 0)
+            : (challenge.progress / challenge.requirement.target) * 100;
+          
+          return (
+            <Card 
+              key={challenge.id} 
+              className={`transition-all ${
+                challenge.completed 
+                  ? 'bg-green-50 border-green-200 dark:bg-green-900/20' 
+                  : 'hover:shadow-md'
+              }`}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Icon className={`w-6 h-6 ${getCategoryColor(challenge.category)}`} />
+                      <h3 className="font-semibold text-lg">{challenge.title}</h3>
+                      <Badge className={getDifficultyColor(challenge.difficulty)}>
+                        {challenge.difficulty}
+                      </Badge>
+                      {challenge.completed && (
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                      )}
+                    </div>
+                    
+                    <p className="text-gray-600 dark:text-gray-400 mb-3">
+                      {challenge.description}
+                    </p>
+                    
+                    <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                      <span className="flex items-center gap-1">
+                        <Trophy className="w-4 h-4" />
+                        {challenge.points} points
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        {challenge.timeEstimate} min
+                      </span>
+                    </div>
+                    
+                    {/* Progress */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>Progress</span>
+                        <span>
+                          {challenge.requirement.type === 'completion' 
+                            ? (challenge.completed ? 'Complete' : 'Not started')
+                            : `${challenge.progress}/${challenge.requirement.target} ${challenge.requirement.unit || ''}`
+                          }
+                        </span>
+                      </div>
+                      <Progress value={progress} className="h-2" />
+                    </div>
+                  </div>
+                  
+                  <div className="ml-4 flex flex-col gap-2">
+                    {!challenge.completed && (
+                      <>
+                        {challenge.requirement.type === 'completion' ? (
+                          <Button
+                            onClick={() => completeChallenge(challenge.id)}
+                            className="bg-green-600 hover:bg-green-700"
+                          >
+                            Complete
+                          </Button>
+                        ) : (
+                          <div className="space-y-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => updateProgress(challenge.id, challenge.progress + 1)}
+                            >
+                              +1
+                            </Button>
+                            {challenge.progress >= challenge.requirement.target && (
+                              <Button
+                                onClick={() => completeChallenge(challenge.id)}
+                                className="bg-green-600 hover:bg-green-700"
+                              >
+                                Complete
+                              </Button>
+                            )}
+                          </div>
+                        )}
+                      </>
+                    )}
+                    
+                    {challenge.completed && challenge.completedAt && (
+                      <div className="text-xs text-green-600 text-center">
+                        Completed at<br />
+                        {new Date(challenge.completedAt).toLocaleTimeString()}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Completion Reward */}
+      {completionRate === 100 && (
+        <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-200">
+          <CardContent className="p-6 text-center">
+            <Trophy className="w-12 h-12 text-yellow-600 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-yellow-800 mb-2">
+              🎉 Daily Challenge Complete!
+            </h3>
+            <p className="text-yellow-700 mb-4">
+              Masha'Allah! You've completed all today's challenges. 
+            </p>
+            <Badge className="bg-yellow-100 text-yellow-800 px-4 py-2">
+              +50 Bonus Points
+            </Badge>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 };
 

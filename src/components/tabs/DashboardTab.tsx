@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -11,6 +10,9 @@ import SmartLearningDashboard from '@/components/SmartLearningDashboard';
 import AdvancedAnalyticsDashboard from '@/components/AdvancedAnalyticsDashboard';
 import IntelligentHabitTracker from '@/components/IntelligentHabitTracker';
 import PersonalizedContentEngine from '@/components/PersonalizedContentEngine';
+import IslamicAchievementSystem from '@/components/IslamicAchievementSystem';
+import CommunityPrayerRequests from '@/components/CommunityPrayerRequests';
+import DailyIslamicChallenges from '@/components/DailyIslamicChallenges';
 
 const DashboardTab = () => {
   const navigate = useNavigate();
@@ -44,13 +46,22 @@ const DashboardTab = () => {
         })}
       </div>
 
-      {/* Advanced Analytics Dashboard - NEW AI-POWERED FEATURE */}
+      {/* NEW: Daily Islamic Challenges - COMMUNITY & GAMIFICATION FEATURE */}
+      <DailyIslamicChallenges />
+
+      {/* NEW: Islamic Achievement System - COMMUNITY & GAMIFICATION FEATURE */}
+      <IslamicAchievementSystem />
+
+      {/* NEW: Community Prayer Requests - COMMUNITY & GAMIFICATION FEATURE */}
+      <CommunityPrayerRequests />
+
+      {/* Advanced Analytics Dashboard - AI-POWERED FEATURE */}
       <AdvancedAnalyticsDashboard />
 
-      {/* Intelligent Habit Tracker - NEW AI-POWERED FEATURE */}
+      {/* Intelligent Habit Tracker - AI-POWERED FEATURE */}
       <IntelligentHabitTracker />
 
-      {/* Personalized Content Engine - NEW AI-POWERED FEATURE */}
+      {/* Personalized Content Engine - AI-POWERED FEATURE */}
       <PersonalizedContentEngine />
 
       {/* Enhanced Smart Learning Dashboard */}
