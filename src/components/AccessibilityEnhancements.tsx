@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,7 +11,8 @@ import {
   Sun,
   ZoomIn,
   ZoomOut,
-  RotateCcw
+  RotateCcw,
+  BookOpen
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 

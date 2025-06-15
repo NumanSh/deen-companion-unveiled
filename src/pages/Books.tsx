@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import BottomTabBar from '@/components/BottomTabBar';
 import TabNavigation from '@/components/TabNavigation';
 import TabContent from '@/components/TabContent';
+import EnhancedOnboarding from '@/components/EnhancedOnboarding';
 import { Card } from '@/components/ui/card';
 import { BookOpen, Heart, Search, Star } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -106,6 +107,9 @@ const Books = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pb-20 relative overflow-hidden">
+      {/* Enhanced Onboarding */}
+      <EnhancedOnboarding />
+
       {/* Islamic Pattern Background */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
