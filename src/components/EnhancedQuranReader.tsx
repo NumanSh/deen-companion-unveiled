@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Copy, Languages, Play, Pause, Heart, Settings, BookOpen, Volume2 } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useToast } from '@/hooks/use-toast';
 import AudioPlayer from '@/components/AudioPlayer';
+import QuranReaderHeader from '@/components/QuranReaderHeader';
+import QuranVerseDisplay from '@/components/QuranVerseDisplay';
+import QuranReaderFooter from '@/components/QuranReaderFooter';
 
 interface EnhancedQuranReaderProps {
   arabicSurah: {
@@ -115,75 +116,15 @@ const EnhancedQuranReader: React.FC<EnhancedQuranReaderProps> = ({
   return (
     <div className="min-h-screen bg-gradient-to-b from-teal-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800">
       {/* Enhanced Header */}
-      <div className="sticky top-0 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-teal-200 dark:border-gray-600 p-4 shadow-lg z-10">
-        <div className="flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onBack}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Surahs
-          </Button>
-          
-          <div className="text-center">
-            <h1 className="text-lg font-bold text-teal-800 dark:text-teal-200" dir="rtl">
-              سُورَةُ {arabicSurah.name}
-            </h1>
-            <p className="text-sm text-teal-600 dark:text-teal-400">{arabicSurah.englishNameTranslation}</p>
-            <div className="text-xs text-gray-500 mt-1">
-              {arabicSurah.numberOfAyahs} verses • {Math.round(readingProgress)}% complete
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => adjustFontSize(-2)}
-              title="Decrease font size"
-            >
-              <span className="text-lg">A-</span>
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => adjustFontSize(2)}
-              title="Increase font size"
-            >
-              <span className="text-lg">A+</span>
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onToggleTranslation}
-              className={showTranslation ? "bg-teal-100 dark:bg-teal-800" : ""}
-              title="Toggle translation"
-            >
-              <Languages className="w-5 h-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onAddToBookmarks}
-              className="text-teal-700 hover:text-teal-900 dark:text-teal-300"
-            >
-              <Heart className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mt-3">
-          <div className="w-full bg-teal-200 dark:bg-gray-700 rounded-full h-2">
-            <div
-              className="bg-teal-600 dark:bg-teal-400 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${readingProgress}%` }}
-            />
-          </div>
-        </div>
-      </div>
+      <QuranReaderHeader
+        arabicSurah={arabicSurah}
+        readingProgress={readingProgress}
+        showTranslation={showTranslation}
+        onBack={onBack}
+        onToggleTranslation={onToggleTranslation}
+        onAddToBookmarks={onAddToBookmarks}
+        onAdjustFontSize={adjustFontSize}
+      />
 
       {/* Audio Player */}
       <div className="max-w-4xl mx-auto px-6 py-4">
@@ -211,86 +152,25 @@ const EnhancedQuranReader: React.FC<EnhancedQuranReaderProps> = ({
           <CardContent className="p-8">
             {/* Verses */}
             <div className="space-y-8">
-              {arabicSurah.ayahs.map((ayah, index) => {
-                const isBookmarked = bookmarkedVerses.includes(ayah.numberInSurah);
-                const isCurrent = currentVerse === ayah.numberInSurah;
-                
-                return (
-                  <div
-                    key={ayah.numberInSurah}
-                    className={`relative p-4 rounded-lg transition-all ${
-                      isCurrent 
-                        ? 'bg-teal-50 dark:bg-teal-900/20 border-2 border-teal-300 dark:border-teal-600' 
-                        : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'
-                    }`}
-                    onClick={() => setCurrentVerse(ayah.numberInSurah)}
-                  >
-                    {/* Verse Controls */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-10 h-10 rounded-full bg-teal-500 text-white flex items-center justify-center text-sm font-bold shadow-lg">
-                          {ayah.numberInSurah}
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleVerseBookmark(ayah.numberInSurah);
-                          }}
-                          className={isBookmarked ? 'text-red-500' : 'text-gray-400'}
-                        >
-                          <Heart className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
-                        </Button>
-                      </div>
-                      
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCopyVerse(ayah.numberInSurah);
-                        }}
-                        className="text-gray-500 hover:text-gray-700"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-
-                    {/* Arabic Text */}
-                    <div
-                      className="text-right leading-loose mb-4 text-gray-800 dark:text-gray-200"
-                      style={{ 
-                        fontSize: `${fontSize}px`,
-                        fontFamily: 'Amiri, Scheherazade New, Arabic Typesetting, serif',
-                        lineHeight: '2.2'
-                      }}
-                      dir="rtl"
-                    >
-                      {ayah.text}
-                    </div>
-
-                    {/* Translation */}
-                    {showTranslation && translationSurah.ayahs[index] && (
-                      <div
-                        className="text-left text-gray-600 dark:text-gray-300 italic leading-relaxed"
-                        style={{ fontSize: `${fontSize - 4}px` }}
-                      >
-                        {translationSurah.ayahs[index].text}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              {arabicSurah.ayahs.map((ayah, index) => (
+                <QuranVerseDisplay
+                  key={ayah.numberInSurah}
+                  ayah={ayah}
+                  translationAyah={translationSurah.ayahs[index]}
+                  showTranslation={showTranslation}
+                  fontSize={fontSize}
+                  isCurrent={currentVerse === ayah.numberInSurah}
+                  isBookmarked={bookmarkedVerses.includes(ayah.numberInSurah)}
+                  onVerseClick={() => setCurrentVerse(ayah.numberInSurah)}
+                  onCopyVerse={() => handleCopyVerse(ayah.numberInSurah)}
+                  onToggleBookmark={() => toggleVerseBookmark(ayah.numberInSurah)}
+                />
+              ))}
             </div>
           </CardContent>
 
           {/* Decorative Footer */}
-          <div className="text-center py-4 border-t-4 border-teal-400 dark:border-teal-600 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-b-lg">
-            <p className="text-white text-sm">
-              صدق الله العظيم • {arabicSurah.englishName} • Page {arabicSurah.number}
-            </p>
-          </div>
+          <QuranReaderFooter arabicSurah={arabicSurah} />
         </Card>
       </div>
     </div>
