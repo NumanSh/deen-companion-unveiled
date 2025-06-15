@@ -1,11 +1,15 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useToast } from '@/hooks/use-toast';
 import AudioPlayer from '@/components/AudioPlayer';
 import QuranReaderHeader from '@/components/QuranReaderHeader';
 import QuranVerseDisplay from '@/components/QuranVerseDisplay';
 import QuranReaderFooter from '@/components/QuranReaderFooter';
+import { LayoutGrid, Rows } from 'lucide-react';
 
 interface EnhancedQuranReaderProps {
   arabicSurah: {
@@ -51,6 +55,7 @@ const EnhancedQuranReader: React.FC<EnhancedQuranReaderProps> = ({
   const [currentVerse, setCurrentVerse] = useState(1);
   const [readingProgress, setReadingProgress] = useState(0);
   const [bookmarkedVerses, setBookmarkedVerses] = useState<number[]>([]);
+  const [layoutMode, setLayoutMode] = useState<'continuous' | 'separate'>('continuous');
 
   // Load bookmarked verses from localStorage
   useEffect(() => {
@@ -132,6 +137,30 @@ const EnhancedQuranReader: React.FC<EnhancedQuranReaderProps> = ({
         />
       </div>
 
+      {/* Layout Toggle */}
+      <div className="max-w-4xl mx-auto px-6 pb-4">
+        <div className="flex justify-center gap-2">
+          <Button
+            variant={layoutMode === 'continuous' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setLayoutMode('continuous')}
+            className="flex items-center gap-2"
+          >
+            <LayoutGrid className="w-4 h-4" />
+            Traditional Flow
+          </Button>
+          <Button
+            variant={layoutMode === 'separate' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setLayoutMode('separate')}
+            className="flex items-center gap-2"
+          >
+            <Rows className="w-4 h-4" />
+            Separate Verses
+          </Button>
+        </div>
+      </div>
+
       {/* Enhanced Quran Content */}
       <div className="max-w-4xl mx-auto px-6 pb-8">
         <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-teal-300 dark:border-teal-700 shadow-2xl">
@@ -146,24 +175,87 @@ const EnhancedQuranReader: React.FC<EnhancedQuranReaderProps> = ({
           </div>
 
           <CardContent className="p-8">
-            {/* Verses */}
-            <div className="space-y-8">
-              {arabicSurah.ayahs.map((ayah) => (
-                <QuranVerseDisplay
-                  key={ayah.numberInSurah}
-                  ayah={ayah}
-                  translationAyah={undefined}
-                  showTranslation={showTranslation}
-                  fontSize={fontSize}
-                  isCurrent={currentVerse === ayah.numberInSurah}
-                  isBookmarked={bookmarkedVerses.includes(ayah.numberInSurah)}
-                  onVerseClick={() => setCurrentVerse(ayah.numberInSurah)}
-                  onCopyVerse={() => handleCopyVerse(ayah.numberInSurah)}
-                  onToggleBookmark={() => toggleVerseBookmark(ayah.numberInSurah)}
-                  surahNumber={arabicSurah.number}
-                />
-              ))}
-            </div>
+            {layoutMode === 'continuous' ? (
+              /* Continuous Flow Layout */
+              <div dir="rtl">
+                <div className="leading-loose text-justify mb-6" 
+                     style={{ 
+                       fontFamily: 'Amiri, Scheherazade New, Arabic Typesetting, serif',
+                       fontSize: `${fontSize + 2}px`,
+                       lineHeight: '2.5',
+                       textAlign: 'justify'
+                     }}>
+                  
+                  {/* Continuous Arabic text with verse markers */}
+                  <p className="text-gray-800 dark:text-gray-200">
+                    {arabicSurah.ayahs.map((ayah, index) => (
+                      <span key={ayah.numberInSurah} className="inline">
+                        {ayah.text}
+                        {/* Verse number in decorative circle */}
+                        <span 
+                          className={`inline-flex items-center justify-center w-7 h-7 mx-2 text-xs font-bold text-white rounded-full border-2 border-teal-600 cursor-pointer transition-all hover:scale-110 ${
+                            currentVerse === ayah.numberInSurah ? 'bg-red-500 border-red-600' : ''
+                          } ${
+                            bookmarkedVerses.includes(ayah.numberInSurah) ? 'ring-2 ring-yellow-400' : ''
+                          }`}
+                          style={{ 
+                            background: currentVerse === ayah.numberInSurah 
+                              ? 'radial-gradient(circle, #ef4444 0%, #dc2626 100%)'
+                              : 'radial-gradient(circle, #14b8a6 0%, #0d9488 100%)',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                            fontSize: '11px',
+                            verticalAlign: 'middle'
+                          }}
+                          onClick={() => setCurrentVerse(ayah.numberInSurah)}
+                        >
+                          {ayah.numberInSurah}
+                          <span className="absolute inset-0 rounded-full border border-white opacity-50"></span>
+                        </span>
+                        {index < arabicSurah.ayahs.length - 1 && ' '}
+                      </span>
+                    ))}
+                  </p>
+                </div>
+
+                {/* Translation in continuous mode */}
+                {showTranslation && (
+                  <div className="mt-8 pt-6 border-t-2 border-teal-200">
+                    <h3 className="text-lg font-semibold text-teal-800 mb-4 text-center" dir="ltr">
+                      English Translation
+                    </h3>
+                    <div className="space-y-3" dir="ltr">
+                      {translationSurah.ayahs.map((ayah) => (
+                        <p key={ayah.numberInSurah} className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                          <span className="inline-flex items-center justify-center w-6 h-6 mr-2 text-xs font-bold text-white bg-teal-500 rounded-full">
+                            {ayah.numberInSurah}
+                          </span>
+                          {ayah.text}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Separate Verses Layout */
+              <div className="space-y-8">
+                {arabicSurah.ayahs.map((ayah) => (
+                  <QuranVerseDisplay
+                    key={ayah.numberInSurah}
+                    ayah={ayah}
+                    translationAyah={undefined}
+                    showTranslation={showTranslation}
+                    fontSize={fontSize}
+                    isCurrent={currentVerse === ayah.numberInSurah}
+                    isBookmarked={bookmarkedVerses.includes(ayah.numberInSurah)}
+                    onVerseClick={() => setCurrentVerse(ayah.numberInSurah)}
+                    onCopyVerse={() => handleCopyVerse(ayah.numberInSurah)}
+                    onToggleBookmark={() => toggleVerseBookmark(ayah.numberInSurah)}
+                    surahNumber={arabicSurah.number}
+                  />
+                ))}
+              </div>
+            )}
           </CardContent>
 
           {/* Decorative Footer */}

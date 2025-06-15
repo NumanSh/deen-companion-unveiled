@@ -56,8 +56,8 @@ const QuranReaderTraditionalContent: React.FC<QuranReaderTraditionalContentProps
           <div className="leading-loose text-justify" 
                style={{ 
                  fontFamily: 'Amiri, Scheherazade New, Arabic Typesetting, serif',
-                 fontSize: '20px',
-                 lineHeight: '2.2',
+                 fontSize: '22px',
+                 lineHeight: '2.5',
                  textAlign: 'justify'
                }}>
             
@@ -66,14 +66,19 @@ const QuranReaderTraditionalContent: React.FC<QuranReaderTraditionalContentProps
               {arabicSurah.ayahs.map((ayah, index) => (
                 <span key={ayah.numberInSurah} className="inline">
                   {ayah.text}
-                  {/* Verse number in circle - traditional style */}
-                  <span className="inline-flex items-center justify-center w-8 h-8 mx-2 my-1 text-xs font-bold text-white bg-teal-500 rounded-full border-2 border-teal-600" 
+                  {/* Verse number in decorative circle - traditional style */}
+                  <span className="inline-flex items-center justify-center w-7 h-7 mx-2 text-xs font-bold text-white rounded-full border-2 border-teal-600 relative" 
                         style={{ 
                           background: 'radial-gradient(circle, #14b8a6 0%, #0d9488 100%)',
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                          fontSize: '11px',
+                          verticalAlign: 'middle'
                         }}>
                     {ayah.numberInSurah}
+                    {/* Decorative dots around number */}
+                    <span className="absolute inset-0 rounded-full border border-white opacity-50"></span>
                   </span>
+                  {/* Add space between verses */}
                   {index < arabicSurah.ayahs.length - 1 && ' '}
                 </span>
               ))}
