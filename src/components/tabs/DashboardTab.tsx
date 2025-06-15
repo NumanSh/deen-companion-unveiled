@@ -8,15 +8,18 @@ import { useNavigate } from 'react-router-dom';
 import PrayerTimesWidget from '@/components/PrayerTimesWidget';
 import QuranicWordLearning from '@/components/QuranicWordLearning';
 import SmartLearningDashboard from '@/components/SmartLearningDashboard';
+import AdvancedAnalyticsDashboard from '@/components/AdvancedAnalyticsDashboard';
+import IntelligentHabitTracker from '@/components/IntelligentHabitTracker';
+import PersonalizedContentEngine from '@/components/PersonalizedContentEngine';
 
 const DashboardTab = () => {
   const navigate = useNavigate();
 
   const stats = [
-    { label: 'Day Streak', value: '7', icon: TrendingUp, color: 'text-green-600' },
-    { label: 'Minutes Read', value: '45', icon: Clock, color: 'text-blue-600' },
-    { label: 'Surahs Read', value: '3', icon: BookOpen, color: 'text-purple-600' },
-    { label: 'Goals Met', value: '5/7', icon: Target, color: 'text-orange-600' },
+    { label: 'Day Streak', value: '12', icon: TrendingUp, color: 'text-green-600' },
+    { label: 'Minutes Read', value: '65', icon: Clock, color: 'text-blue-600' },
+    { label: 'Surahs Read', value: '8', icon: BookOpen, color: 'text-purple-600' },
+    { label: 'Goals Met', value: '7/8', icon: Target, color: 'text-orange-600' },
   ];
 
   return (
@@ -41,7 +44,16 @@ const DashboardTab = () => {
         })}
       </div>
 
-      {/* Smart Learning Dashboard - NEW FEATURE */}
+      {/* Advanced Analytics Dashboard - NEW AI-POWERED FEATURE */}
+      <AdvancedAnalyticsDashboard />
+
+      {/* Intelligent Habit Tracker - NEW AI-POWERED FEATURE */}
+      <IntelligentHabitTracker />
+
+      {/* Personalized Content Engine - NEW AI-POWERED FEATURE */}
+      <PersonalizedContentEngine />
+
+      {/* Enhanced Smart Learning Dashboard */}
       <SmartLearningDashboard />
 
       {/* Main Dashboard Grid */}
@@ -62,23 +74,23 @@ const DashboardTab = () => {
               <div>
                 <div className="flex justify-between text-sm mb-1">
                   <span>Prayers Completed</span>
-                  <span>4/5</span>
+                  <span>5/5</span>
                 </div>
-                <Progress value={80} className="h-2" />
+                <Progress value={100} className="h-2" />
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-1">
                   <span>Quran Reading</span>
-                  <span>30/30 min</span>
+                  <span>45/30 min</span>
                 </div>
                 <Progress value={100} className="h-2" />
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-1">
                   <span>Dhikr Count</span>
-                  <span>75/100</span>
+                  <span>150/100</span>
                 </div>
-                <Progress value={75} className="h-2" />
+                <Progress value={100} className="h-2" />
               </div>
             </div>
             <Button 
