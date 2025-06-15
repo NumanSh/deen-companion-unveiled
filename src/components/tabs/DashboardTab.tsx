@@ -14,7 +14,7 @@ import PersonalizedContentEngine from '@/components/PersonalizedContentEngine';
 import IslamicAchievementSystem from '@/components/IslamicAchievementSystem';
 import CommunityPrayerRequests from '@/components/CommunityPrayerRequests';
 import DailyIslamicChallenges from '@/components/DailyIslamicChallenges';
-import FloatingQuickAccess from '@/components/FloatingQuickAccess';
+import UnifiedFloatingActions from '@/components/UnifiedFloatingActions';
 import SmartNotificationCenter from '@/components/SmartNotificationCenter';
 
 const DashboardTab = () => {
@@ -184,8 +184,8 @@ const DashboardTab = () => {
         </CardContent>
       </Card>
 
-      {/* Floating Quick Access Widget */}
-      <FloatingQuickAccess />
+      {/* Unified Floating Actions Widget - REPLACES ALL OTHER FLOATING COMPONENTS */}
+      <UnifiedFloatingActions />
     </div>
   );
 };
