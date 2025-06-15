@@ -76,14 +76,11 @@ const EnhancedQuranReader: React.FC<EnhancedQuranReaderProps> = ({
 
   const handleCopyVerse = (verseNumber: number) => {
     const arabicVerse = arabicSurah.ayahs.find(ayah => ayah.numberInSurah === verseNumber);
-    const translationVerse = translationSurah.ayahs.find(ayah => ayah.numberInSurah === verseNumber);
     
     if (arabicVerse) {
-      const text = translationVerse 
-        ? `${arabicVerse.text}\n\n${translationVerse.text}\n\n- Surah ${arabicSurah.englishName}, Verse ${verseNumber}`
-        : `${arabicVerse.text}\n\n- Surah ${arabicSurah.englishName}, Verse ${verseNumber}`;
+      const text = `${arabicVerse.text}\n\n- سورة ${arabicSurah.name}، الآية ${verseNumber}`;
       
-      copyToClipboard(text, `Verse ${verseNumber} copied to clipboard`);
+      copyToClipboard(text, `تم نسخ الآية ${verseNumber}`);
     }
   };
 
@@ -96,8 +93,8 @@ const EnhancedQuranReader: React.FC<EnhancedQuranReaderProps> = ({
     localStorage.setItem(`bookmarked-verses-${arabicSurah.number}`, JSON.stringify(newBookmarks));
     
     toast({
-      title: bookmarkedVerses.includes(verseNumber) ? 'Bookmark Removed' : 'Verse Bookmarked',
-      description: `Verse ${verseNumber} ${bookmarkedVerses.includes(verseNumber) ? 'removed from' : 'added to'} bookmarks`,
+      title: bookmarkedVerses.includes(verseNumber) ? 'تمت إزالة المرجعية' : 'تمت إضافة المرجعية',
+      description: `الآية ${verseNumber} ${bookmarkedVerses.includes(verseNumber) ? 'تم حذفها من' : 'تمت إضافتها إلى'} المرجعيات`,
     });
   };
 
@@ -130,7 +127,7 @@ const EnhancedQuranReader: React.FC<EnhancedQuranReaderProps> = ({
       <div className="max-w-4xl mx-auto px-6 py-4">
         <AudioPlayer
           audioUrl={getAudioUrl()}
-          title={`Surah ${arabicSurah.englishName}`}
+          title={`سورة ${arabicSurah.name}`}
           onPlay={onTogglePlay}
           onPause={onTogglePlay}
         />
@@ -152,11 +149,11 @@ const EnhancedQuranReader: React.FC<EnhancedQuranReaderProps> = ({
           <CardContent className="p-8">
             {/* Verses */}
             <div className="space-y-8">
-              {arabicSurah.ayahs.map((ayah, index) => (
+              {arabicSurah.ayahs.map((ayah) => (
                 <QuranVerseDisplay
                   key={ayah.numberInSurah}
                   ayah={ayah}
-                  translationAyah={translationSurah.ayahs[index]}
+                  translationAyah={undefined}
                   showTranslation={showTranslation}
                   fontSize={fontSize}
                   isCurrent={currentVerse === ayah.numberInSurah}

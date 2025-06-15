@@ -34,6 +34,20 @@ const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
   onCopyVerse,
   onToggleBookmark
 }) => {
+  // Simple Arabic tafsir for demonstration - in a real app this would come from an API
+  const getArabicTafsir = (verseNumber: number) => {
+    // This is a placeholder - in reality you'd fetch from a tafsir database
+    const tafsirExamples = [
+      "هذه الآية تبين عظمة الله سبحانه وتعالى وقدرته على الخلق والإبداع",
+      "في هذه الآية يذكر الله تعالى نعمه على عباده ويدعوهم للتفكر",
+      "هذه الآية تحتوي على حكمة عظيمة وموعظة للمؤمنين",
+      "يبين الله في هذه الآية أهمية التوحيد والإيمان به وحده",
+      "هذه الآية تذكر المؤمنين بأهمية الصلاة والذكر"
+    ];
+    
+    return tafsirExamples[verseNumber % tafsirExamples.length];
+  };
+
   return (
     <div
       className={`relative p-4 rounded-lg transition-all ${
@@ -88,13 +102,19 @@ const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
         {ayah.text}
       </div>
 
-      {/* Translation */}
-      {showTranslation && translationAyah && (
-        <div
-          className="text-left text-gray-600 dark:text-gray-300 italic leading-relaxed"
-          style={{ fontSize: `${fontSize - 4}px` }}
-        >
-          {translationAyah.text}
+      {/* Arabic Tafsir */}
+      {showTranslation && (
+        <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg border-r-4 border-emerald-400">
+          <h4 className="text-emerald-700 dark:text-emerald-300 font-semibold mb-2 text-right" dir="rtl">
+            تفسير الآية
+          </h4>
+          <div
+            className="text-right text-emerald-800 dark:text-emerald-200 leading-relaxed"
+            style={{ fontSize: `${fontSize - 2}px` }}
+            dir="rtl"
+          >
+            {getArabicTafsir(ayah.numberInSurah)}
+          </div>
         </div>
       )}
     </div>
