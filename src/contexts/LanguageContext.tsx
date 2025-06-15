@@ -56,8 +56,8 @@ const translations = {
     'daily-duas': 'Daily Duas',
     'morning-dua': 'Morning Dua',
     'evening-dua': 'Evening Dua',
-    'morning-dua-translation': 'We have entered the morning and the kingdom belongs to Allah, and all praise is due to Allah. There is no deity except Allah alone with no partner. To Him belongs the dominion and praise, and He has power over all things',
-    'evening-dua-translation': 'We have entered the evening and the kingdom belongs to Allah, and all praise is due to Allah. There is no deity except Allah alone with no partner. To Him belongs the dominion and praise, and He has power over all things',
+    'morning-dua-translation': 'We have entered the morning and the kingdom belongs to Allah, and all praise is due to Allah',
+    'evening-dua-translation': 'We have entered the evening and the kingdom belongs to Allah, and all praise is due to Allah',
     'food-drink': 'Food & Drink',
     'before-eating': 'Before Eating',
     'after-eating': 'After Eating',
@@ -68,7 +68,7 @@ const translations = {
     'travel-dua-translation': 'Glory be to Him who has subjected this to us, and we could never have it (by our efforts). And to our Lord, surely, must we return',
     'protection': 'Protection',
     'ayat-kursi': 'Ayat ul-Kursi',
-    'ayat-kursi-translation': 'Allah - there is no deity except Him, the Ever-Living, the Self-Sustaining. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and whatever is on the earth',
+    'ayat-kursi-translation': 'Allah - there is no deity except Him, the Ever-Living, the Self-Sustaining',
     'daily-duas-supplications': 'Daily Duas & Supplications',
     'search-duas-placeholder': 'Search duas...',
     'transliteration': 'Transliteration',
@@ -110,7 +110,7 @@ const translations = {
     'customize-journey': 'Customize your spiritual journey'
   },
   ar: {
-    // Dashboard and progress (Arabic translations)
+    // Dashboard and progress
     'progress-analytics': 'تحليلات التقدم',
     'day-streak': 'أيام متتالية',
     'minutes-read': 'دقائق القراءة',
@@ -134,7 +134,7 @@ const translations = {
     'quran-reading': 'قراءة القرآن',
     'duas': 'أدعية',
     
-    // Goals and challenges (Arabic translations)
+    // Goals and challenges
     'daily-islamic-goals': 'الأهداف الإسلامية اليومية',
     'progress-colon': 'التقدم:',
     'points': 'نقاط',
@@ -152,12 +152,12 @@ const translations = {
     'may-allah-accept-efforts': 'تقبل الله جهودكم',
     'add-custom-goal': 'أضف هدفاً مخصصاً',
 
-    // Duas section translations (Arabic)
+    // Duas section translations  
     'daily-duas': 'أدعية يومية',
     'morning-dua': 'دعاء الصباح',
     'evening-dua': 'دعاء المساء',
-    'morning-dua-translation': 'أصبحنا وأصبح الملك لله والحمد لله لا إله إلا الله وحده لا شريك له له الملك وله الحمد وهو على كل شيء قدير',
-    'evening-dua-translation': 'أمسينا وأمسى الملك لله والحمد لله لا إله إلا الله وحده لا شريك له له الملك وله الحمد وهو على كل شيء قدير',
+    'morning-dua-translation': 'أصبحنا وأصبح الملك لله والحمد لله',
+    'evening-dua-translation': 'أمسينا وأمسى الملك لله والحمد لله',
     'food-drink': 'الطعام والشراب',
     'before-eating': 'قبل الأكل',
     'after-eating': 'بعد الأكل',
@@ -168,7 +168,7 @@ const translations = {
     'travel-dua-translation': 'سبحان الذي سخر لنا هذا وما كنا له مقرنين وإنا إلى ربنا لمنقلبون',
     'protection': 'الحماية',
     'ayat-kursi': 'آية الكرسي',
-    'ayat-kursi-translation': 'الله لا إله إلا هو الحي القيوم لا تأخذه سنة ولا نوم له ما في السماوات وما في الأرض',
+    'ayat-kursi-translation': 'الله لا إله إلا هو الحي القيوم',
     'daily-duas-supplications': 'الأدعية والأذكار اليومية',
     'search-duas-placeholder': 'البحث في الأدعية...',
     'transliteration': 'النقل الصوتي',
@@ -185,7 +185,7 @@ const translations = {
     'click-to-copy': 'اضغط للنسخ',
     'dua-arabic-copied': 'تم نسخ النص العربي',
 
-    // Settings translations (Arabic)
+    // Settings translations
     'settings': 'الإعدادات',
     'location': 'الموقع',
     'current-location': 'الموقع الحالي',

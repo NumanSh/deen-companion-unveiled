@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -41,7 +42,6 @@ const DuasSection: React.FC = () => {
   const { toast } = useToast();
   const { copyToClipboard, copied } = useCopyToClipboard();
 
-  // Enhanced mock data with more comprehensive duas
   const duaCategories: DuaCategory[] = [
     {
       id: "daily",
@@ -50,26 +50,18 @@ const DuasSection: React.FC = () => {
         {
           id: "morning",
           title: t('morning-dua'),
-          arabic: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
-          transliteration: "Asbahna wa asbahal-mulku lillahi, walhamdu lillahi, la ilaha illa Allahu wahdahu la shareeka lahu, lahul-mulku wa lahul-hamdu wa huwa 'ala kulli shay'in qadeer",
+          arabic: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ",
+          transliteration: "Asbahna wa asbahal-mulku lillahi, walhamdu lillah",
           translation: t('morning-dua-translation'),
           reference: "Muslim"
         },
         {
           id: "evening",
           title: t('evening-dua'),
-          arabic: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
-          transliteration: "Amsayna wa amsal-mulku lillahi, walhamdu lillahi, la ilaha illa Allahu wahdahu la shareeka lahu, lahul-mulku wa lahul-hamdu wa huwa 'ala kulli shay'in qadeer",
+          arabic: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ",
+          transliteration: "Amsayna wa amsal-mulku lillahi, walhamdu lillah",
           translation: t('evening-dua-translation'),
           reference: "Muslim"
-        },
-        {
-          id: "waking-up",
-          title: "Upon Waking Up",
-          arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
-          transliteration: "Alhamdu lillahil-ladhi ahyana ba'da ma amatana wa ilayhin-nushur",
-          translation: "All praise is due to Allah who gave us life after causing us to die, and unto Him is the resurrection",
-          reference: "Bukhari"
         }
       ]
     },
@@ -92,14 +84,6 @@ const DuasSection: React.FC = () => {
           transliteration: "Alhamdu lillahil-ladhi at'amani hadha wa razaqaneehi min ghayri hawlin minnee wa la quwwah",
           translation: t('after-eating-translation'),
           reference: "Tirmidhi"
-        },
-        {
-          id: "drinking-milk",
-          title: "After Drinking Milk",
-          arabic: "اللَّهُمَّ بَارِكْ لَنَا فِيهِ وَزِدْنَا مِنْهُ",
-          transliteration: "Allahumma barik lana feehi wa zidna minhu",
-          translation: "O Allah, bless us in it and give us more of it",
-          reference: "Tirmidhi"
         }
       ]
     },
@@ -114,14 +98,6 @@ const DuasSection: React.FC = () => {
           transliteration: "Subhanal-ladhi sakhkhara lana hadha wa ma kunna lahu muqrineen, wa inna ila rabbina la munqaliboon",
           translation: t('travel-dua-translation'),
           reference: "Quran 43:13-14"
-        },
-        {
-          id: "entering-vehicle",
-          title: "When Boarding a Vehicle",
-          arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ خَيْرِ هَذِهِ السَّفْرَةِ وَخَيْرِ مَا فِيهَا، وَأَعُوذُ بِكَ مِنْ شَرِّهَا وَشَرِّ مَا فِيهَا",
-          transliteration: "Allahumma inni as'aluka min khayri hadhihis-safrati wa khayri ma feeha, wa a'udhu bika min sharriha wa sharri ma feeha",
-          translation: "O Allah, I ask You for the goodness of this journey and the goodness of what is in it, and I seek refuge in You from its evil and the evil of what is in it",
-          reference: "Muslim"
         }
       ]
     },
@@ -132,40 +108,10 @@ const DuasSection: React.FC = () => {
         {
           id: "ayat-kursi",
           title: t('ayat-kursi'),
-          arabic: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ",
-          transliteration: "Allahu la ilaha illa huwal-hayyul-qayyumu la ta'khudhahu sinatun wa la nawm, lahu ma fis-samawati wa ma fil-ard",
+          arabic: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ",
+          transliteration: "Allahu la ilaha illa huwal-hayyul-qayyum",
           translation: t('ayat-kursi-translation'),
           reference: "Quran 2:255"
-        },
-        {
-          id: "seeking-protection",
-          title: "Seeking Allah's Protection",
-          arabic: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
-          transliteration: "A'udhu bi kalimatillahit-tammati min sharri ma khalaq",
-          translation: "I seek refuge in the perfect words of Allah from the evil of what He has created",
-          reference: "Muslim"
-        }
-      ]
-    },
-    {
-      id: "forgiveness",
-      name: "Forgiveness & Repentance",
-      duas: [
-        {
-          id: "istighfar",
-          title: "Master of Seeking Forgiveness",
-          arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ",
-          transliteration: "Allahumma anta rabbi la ilaha illa ant, khalaqtani wa ana 'abduk, wa ana 'ala 'ahdika wa wa'dika mastata't",
-          translation: "O Allah, You are my Lord, there is no deity except You. You created me and I am Your servant, and I am faithful to my covenant and my promise to You as much as I can",
-          reference: "Bukhari"
-        },
-        {
-          id: "simple-istighfar",
-          title: "Simple Seeking Forgiveness",
-          arabic: "أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيَّ الْقَيُّومَ وَأَتُوبُ إِلَيْهِ",
-          transliteration: "Astaghfirullaha al-'azeem alladhi la ilaha illa huwa al-hayya al-qayyuma wa atubu ilayh",
-          translation: "I seek forgiveness from Allah the Mighty, whom there is no deity except Him, the Living, the Eternal, and I repent to Him",
-          reference: "Tirmidhi"
         }
       ]
     }
