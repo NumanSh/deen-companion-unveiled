@@ -1,5 +1,5 @@
 
-interface QuranSurah {
+export interface QuranSurah {
   number: number;
   name: string;
   englishName: string;

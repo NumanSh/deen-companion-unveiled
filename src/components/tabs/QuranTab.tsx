@@ -1,26 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Book, Search, Heart, Play, Pause, Languages, ArrowLeft, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { fetchAllSurahs, fetchSurahArabic, fetchSurahTranslation, searchSurahs } from '@/services/quranService';
+import { fetchAllSurahs, fetchSurahArabic, fetchSurahTranslation, searchSurahs, QuranSurah } from '@/services/quranService';
 import QuranReader from '@/components/QuranReader';
-
-interface QuranSurah {
-  number: number;
-  name: string;
-  englishName: string;
-  englishNameTranslation: string;
-  numberOfAyahs: number;
-  revelationType?: string;
-  ayahs?: Array<{
-    number: number;
-    text: string;
-    numberInSurah: number;
-  }>;
-}
 
 interface QuranTabProps {
   onAddToBookmarks: (item: any, type: 'surah' | 'dua' | 'hadith') => void;
@@ -139,7 +124,7 @@ const QuranTab: React.FC<QuranTabProps> = ({
   };
 
   // Show surah reader if a surah is selected
-  if (selectedSurah && arabicSurah && translationSurah) {
+  if (selectedSurah && arabicSurah && translationSurah && arabicSurah.ayahs && translationSurah.ayahs) {
     return (
       <QuranReader
         arabicSurah={arabicSurah}
@@ -234,7 +219,7 @@ const QuranTab: React.FC<QuranTabProps> = ({
                       <span className="w-2 h-2 bg-emerald-500 rounded-full" title="Recently read" />
                     )}
                     <span className="text-xs px-2 py-1 bg-gray-100 rounded text-gray-600">
-                      {surah.revelationType || 'API'}
+                      {surah.revelationType}
                     </span>
                   </div>
                   <h3 className="font-bold text-lg text-gray-800 dark:text-gray-200 mb-1">
