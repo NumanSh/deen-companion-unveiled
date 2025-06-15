@@ -1,4 +1,6 @@
 
+import { prayerTimesCacheService } from './prayerTimesCacheService';
+
 interface PrayerTimes {
   Fajr: string;
   Sunrise: string;
@@ -49,10 +51,18 @@ interface QiblaResponse {
 class PrayerTimesApiService {
   private baseUrl = 'https://api.aladhan.com/v1';
 
-  async getPrayerTimes(latitude: number, longitude: number, method: number = 2): Promise<PrayerTimesResponse> {
+  async getPrayerTimes(latitude: number, longitude: number, method: number = 2, date?: string): Promise<PrayerTimesResponse> {
     try {
+      // Try to get from cache first
+      const cachedData = prayerTimesCacheService.getCachedPrayerTimes(latitude, longitude, date);
+      if (cachedData) {
+        return cachedData;
+      }
+
+      // If not in cache, fetch from API
+      const dateParam = date || new Date().toISOString().split('T')[0];
       const response = await fetch(
-        `${this.baseUrl}/timings?latitude=${latitude}&longitude=${longitude}&method=${method}`
+        `${this.baseUrl}/timings/${dateParam}?latitude=${latitude}&longitude=${longitude}&method=${method}`
       );
       
       if (!response.ok) {
@@ -60,9 +70,21 @@ class PrayerTimesApiService {
       }
       
       const data = await response.json();
+      
+      // Cache the result
+      prayerTimesCacheService.cachePrayerTimes(latitude, longitude, data, date);
+      
       return data;
     } catch (error) {
       console.error('Error fetching prayer times:', error);
+      
+      // Try to return cached data even if expired as fallback
+      const cachedData = prayerTimesCacheService.getCachedPrayerTimes(latitude, longitude, date);
+      if (cachedData) {
+        console.log('Using expired cache as fallback');
+        return cachedData;
+      }
+      
       throw error;
     }
   }
@@ -122,6 +144,32 @@ class PrayerTimesApiService {
         }
       );
     });
+  }
+
+  async initializePrayerTimesCache(): Promise<void> {
+    try {
+      const coords = await this.getCurrentLocation();
+      console.log('Initializing prayer times cache...');
+      
+      // Clear expired cache first
+      prayerTimesCacheService.clearExpiredCache();
+      
+      // Preload prayer times for the next 30 days
+      await prayerTimesCacheService.preloadPrayerTimes(coords.latitude, coords.longitude);
+      
+      const stats = prayerTimesCacheService.getCacheStats();
+      console.log('Cache initialized:', stats);
+    } catch (error) {
+      console.error('Failed to initialize prayer times cache:', error);
+    }
+  }
+
+  getCacheStats() {
+    return prayerTimesCacheService.getCacheStats();
+  }
+
+  clearExpiredCache() {
+    prayerTimesCacheService.clearExpiredCache();
   }
 }
 

@@ -1,7 +1,7 @@
-
 import React from "react";
 import WeatherGif from "./WeatherGif";
 import { Card, CardContent } from "@/components/ui/card";
+import { prayerTimesApi } from "@/services/prayerTimesApi";
 
 // Helper: Get user's coordinates with browser geolocation, fallback to IP-based if denied
 function useUserLocation() {
@@ -64,7 +64,7 @@ function useWeather(lat: number | null, lon: number | null) {
   return weather;
 }
 
-// Helper: Fetch prayer times and derive next prayer
+// Updated prayer times hook to use cached API
 function usePrayerTimes(lat: number | null, lon: number | null) {
   const [prayer, setPrayer] = React.useState<{
     nextPrayer: string;
@@ -74,32 +74,47 @@ function usePrayerTimes(lat: number | null, lon: number | null) {
 
   React.useEffect(() => {
     if (lat == null || lon == null) return;
-    const today = new Date();
-    const dateStr = `${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}`;
-    fetch(`https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lon}&method=2`)
-      .then(res => res.json())
-      .then(data => {
-        const timings: Record<string, string> = data.data.timings;
+    
+    const fetchPrayerTimes = async () => {
+      try {
+        const response = await prayerTimesApi.getPrayerTimes(lat, lon);
+        const timings: Record<string, string> = response.data.timings;
+        
         // Prayer order (filter out Sunrise/Sunset/Imsak/Midnight) 
         const prayerOrder = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
-        const now = today.getHours() * 60 + today.getMinutes();
-        let nextPrayer = "Fajr"; let time = timings["Fajr"];
+        const now = new Date();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        
+        let nextPrayer = "Fajr"; 
+        let time = timings["Fajr"];
+        
         for (let i = 0; i < prayerOrder.length; i++) {
           const t = timings[prayerOrder[i]].split(":");
-          const mins = parseInt(t[0]) * 60 + parseInt(t[1]);
-          if (mins > now) {
+          const prayerMinutes = parseInt(t[0]) * 60 + parseInt(t[1]);
+          if (prayerMinutes > currentMinutes) {
             nextPrayer = prayerOrder[i];
             time = timings[prayerOrder[i]];
             break;
           }
-          // If passed all, next after Isha is next Fajr (for now, just show Fajr)
         }
+        
         setPrayer({
           nextPrayer,
           time,
           all: timings,
         });
-      });
+      } catch (error) {
+        console.error('Error fetching prayer times:', error);
+        // Fallback to default display
+        setPrayer({
+          nextPrayer: "Loading...",
+          time: "--:--",
+          all: {},
+        });
+      }
+    };
+
+    fetchPrayerTimes();
   }, [lat, lon]);
 
   return prayer;
