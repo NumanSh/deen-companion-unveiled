@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   Search, 
@@ -33,6 +32,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
+import VoiceControlButton from './VoiceControlButton';
 
 interface FloatingAction {
   id: string;
@@ -51,7 +51,7 @@ const EnhancedFloatingActionSystem: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isConfiguring, setIsConfiguring] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [actions, setActions] = useState<FloatingAction[]>([]);
 
@@ -281,8 +281,88 @@ const EnhancedFloatingActionSystem: React.FC = () => {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [actions, handleActionClick]);
 
+  const handleQuickSearch = () => {
+    navigate('/books');
+  };
+
+  const handleQuickBookmark = () => {
+    toast({ title: 'Bookmark Added', description: 'Content saved' });
+  };
+
+  const handleReadingTimer = () => {
+    navigate('/calendar');
+  };
+
+  const handleSettings = () => {
+    navigate('/');
+  };
+
+  const toggleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <div className="fixed bottom-6 right-4 z-50">
+    <>
+      {/* Main Floating Action Button */}
+      <div className="fixed bottom-24 right-6 z-50">
+        <div className="relative">
+          {/* Voice Control Button - Always visible */}
+          <div className="absolute bottom-16 right-0 mb-2">
+            <VoiceControlButton />
+          </div>
+
+          {/* Secondary Actions */}
+          {isOpen && (
+            <div className="absolute bottom-16 right-0 flex flex-col gap-3 mb-2">
+              {/* Quick Search */}
+              <Button
+                onClick={handleQuickSearch}
+                className="rounded-full w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 shadow-lg transform hover:scale-105 transition-all duration-200"
+                size="icon"
+              >
+                <Search className="w-5 h-5" />
+              </Button>
+
+              {/* Quick Bookmark */}
+              <Button
+                onClick={handleQuickBookmark}
+                className="rounded-full w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 shadow-lg transform hover:scale-105 transition-all duration-200"
+                size="icon"
+              >
+                <BookmarkPlus className="w-5 h-5" />
+              </Button>
+
+              {/* Reading Timer */}
+              <Button
+                onClick={handleReadingTimer}
+                className="rounded-full w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg transform hover:scale-105 transition-all duration-200"
+                size="icon"
+              >
+                <Clock className="w-5 h-5" />
+              </Button>
+
+              {/* Settings */}
+              <Button
+                onClick={handleSettings}
+                className="rounded-full w-12 h-12 bg-gradient-to-r from-gray-500 to-slate-600 hover:from-gray-600 hover:to-slate-700 shadow-lg transform hover:scale-105 transition-all duration-200"
+                size="icon"
+              >
+                <Settings className="w-5 h-5" />
+              </Button>
+            </div>
+          )}
+
+          {/* Main Action Button */}
+          <Button
+            onClick={toggleOpen}
+            className="rounded-full w-14 h-14 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 shadow-xl transform hover:scale-105 transition-all duration-200"
+            size="icon"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
+          </Button>
+        </div>
+      </div>
+
       {/* Expanded Actions Menu */}
       {isExpanded && (
         <div className="mb-4 animate-fade-in">
@@ -422,33 +502,6 @@ const EnhancedFloatingActionSystem: React.FC = () => {
         </div>
       )}
       
-      {/* Main Toggle Button */}
-      <Button
-        onClick={toggleExpanded}
-        className={cn(
-          "h-14 w-14 rounded-full shadow-xl transition-all duration-300 active:scale-90 relative overflow-hidden",
-          isExpanded 
-            ? 'bg-red-500 hover:bg-red-600 rotate-45' 
-            : 'bg-gradient-to-br from-teal-500 via-emerald-500 to-green-600 hover:from-teal-600 hover:via-emerald-600 hover:to-green-700 hover:scale-110'
-        )}
-        size="icon"
-        aria-label={isExpanded ? 'Close quick actions' : 'Open quick actions'}
-      >
-        {isExpanded ? (
-          <X className="w-6 h-6 text-white relative z-10" />
-        ) : (
-          <Plus className="w-6 h-6 text-white relative z-10" />
-        )}
-        
-        {/* Pulse rings for main button */}
-        {!isExpanded && (
-          <>
-            <div className="absolute inset-0 rounded-full border-2 border-teal-300 animate-ping opacity-30" />
-            <div className="absolute inset-2 rounded-full border border-emerald-200 animate-pulse opacity-50" />
-          </>
-        )}
-      </Button>
-
       {/* First-time user hint */}
       {!hasInteracted && !isExpanded && (
         <div className="absolute -top-20 -left-28 bg-gradient-to-r from-teal-600 to-emerald-600 text-white text-xs px-3 py-2 rounded-xl shadow-xl animate-fade-in max-w-36">
@@ -462,7 +515,7 @@ const EnhancedFloatingActionSystem: React.FC = () => {
           <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-6 border-transparent border-t-teal-600"></div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

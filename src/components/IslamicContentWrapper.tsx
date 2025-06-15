@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import EnhancedContextMenu from '@/components/EnhancedContextMenu';
 import { cn } from '@/lib/utils';
+import { voiceReadingService } from '@/services/voiceReadingService';
 
 interface IslamicContentWrapperProps {
   children: React.ReactNode;
@@ -31,6 +32,24 @@ const IslamicContentWrapper: React.FC<IslamicContentWrapperProps> = ({
   onAddNote,
   selectable = true
 }) => {
+  useEffect(() => {
+    // Listen for voice bookmark events
+    const handleVoiceBookmark = () => {
+      if (onBookmark) {
+        onBookmark();
+      }
+    };
+
+    window.addEventListener('voice-bookmark', handleVoiceBookmark);
+    return () => window.removeEventListener('voice-bookmark', handleVoiceBookmark);
+  }, [onBookmark]);
+
+  const handleVoiceReading = () => {
+    if (content?.text) {
+      voiceReadingService.speak(content.text);
+    }
+  };
+
   return (
     <EnhancedContextMenu
       content={content}
@@ -45,6 +64,10 @@ const IslamicContentWrapper: React.FC<IslamicContentWrapperProps> = ({
           selectable && "select-text cursor-text hover:bg-gray-50/50 rounded-lg p-1",
           className
         )}
+        onClick={handleVoiceReading}
+        data-verse-text={content?.type === 'verse' ? content.text : undefined}
+        data-hadith-text={content?.type === 'hadith' ? content.text : undefined}
+        data-dua-text={content?.type === 'dua' ? content.text : undefined}
       >
         {children}
       </div>

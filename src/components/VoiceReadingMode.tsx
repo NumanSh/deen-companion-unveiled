@@ -15,29 +15,32 @@ import {
   Mic
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { voiceReadingService } from '@/services/voiceReadingService';
 
 interface VoiceReadingModeProps {
   surahNumber: number;
   surahName: string;
   totalVerses: number;
   onVerseChange: (verse: number) => void;
+  currentVerseText?: string;
 }
 
 const VoiceReadingMode: React.FC<VoiceReadingModeProps> = ({
   surahNumber,
   surahName,
   totalVerses,
-  onVerseChange
+  onVerseChange,
+  currentVerseText
 }) => {
   const { toast } = useToast();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentVerse, setCurrentVerse] = useState(1);
   const [volume, setVolume] = useState([75]);
-  const [speed, setSpeed] = useState([1]);
-  const [reciter, setReciter] = useState('abdul-basit');
+  const [speed, setSpeed] = useState([100]);
   const [autoScroll, setAutoScroll] = useState(true);
 
   const reciters = [
+    { id: 'browser-tts', name: 'Browser Text-to-Speech', style: 'تلقائي' },
     { id: 'abdul-basit', name: 'عبد الباسط عبد الصمد', style: 'مجود' },
     { id: 'mishary', name: 'مشاري راشد العفاسي', style: 'مرتل' },
     { id: 'saad-al-ghamidi', name: 'سعد الغامدي', style: 'مرتل' },
@@ -48,12 +51,66 @@ const VoiceReadingMode: React.FC<VoiceReadingModeProps> = ({
     onVerseChange(currentVerse);
   }, [currentVerse, onVerseChange]);
 
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
-    toast({
-      title: isPlaying ? 'تم إيقاف التشغيل' : 'جاري التشغيل',
-      description: `سورة ${surahName} - الآية ${currentVerse}`,
+  useEffect(() => {
+    // Set up voice reading service callback
+    voiceReadingService.setPlayStateCallback(setIsPlaying);
+
+    // Listen for voice navigation events
+    const handleVoiceNext = () => handleNextVerse();
+    const handleVoicePrev = () => handlePrevVerse();
+
+    window.addEventListener('voice-next-verse', handleVoiceNext);
+    window.addEventListener('voice-previous-verse', handleVoicePrev);
+
+    return () => {
+      window.removeEventListener('voice-next-verse', handleVoiceNext);
+      window.removeEventListener('voice-previous-verse', handleVoicePrev);
+    };
+  }, [currentVerse, totalVerses]);
+
+  useEffect(() => {
+    // Update voice settings when sliders change
+    voiceReadingService.setSettings({
+      volume: volume[0] / 100,
+      rate: speed[0] / 100
     });
+  }, [volume, speed]);
+
+  const handlePlayPause = () => {
+    if (isPlaying) {
+      voiceReadingService.stop();
+    } else {
+      if (currentVerseText) {
+        voiceReadingService.speak(currentVerseText, {
+          onStart: () => {
+            toast({
+              title: 'بدء التلاوة',
+              description: `سورة ${surahName} - الآية ${currentVerse}`,
+            });
+          },
+          onEnd: () => {
+            // Auto-advance to next verse if enabled
+            if (autoScroll && currentVerse < totalVerses) {
+              setTimeout(() => {
+                handleNextVerse();
+                // Continue reading next verse
+                setTimeout(() => {
+                  if (currentVerseText) {
+                    voiceReadingService.speak(currentVerseText);
+                  }
+                }, 500);
+              }, 1000);
+            }
+          }
+        });
+      } else {
+        toast({
+          title: 'لا يوجد نص للتلاوة',
+          description: 'يرجى اختيار آية للتلاوة',
+          variant: 'destructive'
+        });
+      }
+    }
   };
 
   const handleNextVerse = () => {
@@ -82,12 +139,12 @@ const VoiceReadingMode: React.FC<VoiceReadingModeProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-xl font-bold">تلاوة صوتية</h3>
+            <h3 className="text-xl font-bold">تلاوة صوتية تفاعلية</h3>
             <p className="text-emerald-100">سورة {surahName}</p>
           </div>
           <Badge className="bg-white/20 text-white">
             <Mic className="w-3 h-3 mr-1" />
-            {reciters.find(r => r.id === reciter)?.name}
+            Voice Enabled
           </Badge>
         </div>
 
@@ -136,12 +193,21 @@ const VoiceReadingMode: React.FC<VoiceReadingModeProps> = ({
           </Button>
         </div>
 
+        {/* Voice Instructions */}
+        {isPlaying && (
+          <div className="mb-4 p-3 bg-white/10 rounded-lg">
+            <p className="text-sm text-center">
+              💡 جرب الأوامر الصوتية: "الآية التالية" أو "الآية السابقة" أو "توقف"
+            </p>
+          </div>
+        )}
+
         {/* Volume & Speed Controls */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Volume2 className="w-4 h-4" />
-              <span className="text-sm">الصوت</span>
+              <span className="text-sm">الصوت ({volume[0]}%)</span>
             </div>
             <Slider
               value={volume}
@@ -155,17 +221,29 @@ const VoiceReadingMode: React.FC<VoiceReadingModeProps> = ({
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Settings className="w-4 h-4" />
-              <span className="text-sm">السرعة</span>
+              <span className="text-sm">السرعة ({speed[0]}%)</span>
             </div>
             <Slider
               value={speed}
               onValueChange={setSpeed}
-              min={0.5}
-              max={2}
-              step={0.25}
+              min={25}
+              max={200}
+              step={5}
               className="w-full"
             />
           </div>
+        </div>
+
+        {/* Auto-scroll toggle */}
+        <div className="flex items-center justify-center mb-4">
+          <Button
+            variant={autoScroll ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setAutoScroll(!autoScroll)}
+            className={autoScroll ? 'bg-white text-emerald-600' : 'text-white hover:bg-white/20'}
+          >
+            التقدم التلقائي {autoScroll ? '✓' : '✗'}
+          </Button>
         </div>
 
         {/* Quick Verse Navigation */}
