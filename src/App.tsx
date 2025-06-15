@@ -21,6 +21,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/books" element={<Books />} />
             <Route path="/calendar" element={<Calendar />} />
+            <Route path="/prayer-times" element={<PrayerTimes />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

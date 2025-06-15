@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import PrayerTimesWidget from '@/components/PrayerTimesWidget';
 import QuranicWordLearning from '@/components/QuranicWordLearning';
+import SmartLearningDashboard from '@/components/SmartLearningDashboard';
 
 const DashboardTab = () => {
   const navigate = useNavigate();
@@ -39,6 +40,9 @@ const DashboardTab = () => {
           );
         })}
       </div>
+
+      {/* Smart Learning Dashboard - NEW FEATURE */}
+      <SmartLearningDashboard />
 
       {/* Main Dashboard Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
