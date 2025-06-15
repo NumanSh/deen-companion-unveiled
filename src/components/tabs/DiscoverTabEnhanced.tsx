@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,7 +18,10 @@ import {
   Calculator,
   Heart,
   Target,
-  BarChart3
+  BarChart3,
+  Moon,
+  Globe,
+  Cloud
 } from 'lucide-react';
 import IslamicBookLibrary from '@/components/IslamicBookLibrary';
 import VoiceReadingMode from '@/components/VoiceReadingMode';
@@ -33,6 +35,11 @@ import CommunityPrayerRequestsSystem from '@/components/CommunityPrayerRequestsS
 import IslamicFinanceCalculatorEnhanced from '@/components/IslamicFinanceCalculatorEnhanced';
 import IslamicHabitBuilder from '@/components/IslamicHabitBuilder';
 import IslamicHabitVisualization from '@/components/IslamicHabitVisualization';
+import SmartPrayerWeatherIntegration from '@/components/SmartPrayerWeatherIntegration';
+import AIPersonalizedLearningPath from '@/components/AIPersonalizedLearningPath';
+import IslamicDreamJournal from '@/components/IslamicDreamJournal';
+import VirtualStudyCircle from '@/components/VirtualStudyCircle';
+import TafsirComparisonTool from '@/components/TafsirComparisonTool';
 
 const DiscoverTabEnhanced = () => {
   const [currentVerse, setCurrentVerse] = useState(1);
@@ -120,6 +127,46 @@ const DiscoverTabEnhanced = () => {
       description: 'مجموعة شاملة من الكتب الإسلامية',
       icon: Star,
       component: IslamicBookLibrary
+    },
+    {
+      id: 'ai-learning-path',
+      title: 'مسار التعلم الذكي',
+      description: 'نظام تعلم مخصص مدعوم بالذكاء الاصطناعي',
+      icon: Brain,
+      badge: 'جديد',
+      component: AIPersonalizedLearningPath
+    },
+    {
+      id: 'prayer-weather',
+      title: 'الطقس والصلاة',
+      description: 'تنبيهات ذكية للصلاة مع حالة الطقس',
+      icon: Cloud,
+      badge: 'جديد',
+      component: SmartPrayerWeatherIntegration
+    },
+    {
+      id: 'dream-journal',
+      title: 'مفكرة الأحلام',
+      description: 'سجل وفسر أحلامك بالمنظور الإسلامي',
+      icon: Moon,
+      badge: 'جديد',
+      component: IslamicDreamJournal
+    },
+    {
+      id: 'study-circle',
+      title: 'حلقة الدراسة',
+      description: 'انضم لحلقات دراسة افتراضية مع علماء',
+      icon: Users,
+      badge: 'جديد',
+      component: VirtualStudyCircle
+    },
+    {
+      id: 'tafsir-comparison',
+      title: 'مقارنة التفاسير',
+      description: 'قارن تفسيرات العلماء جنباً إلى جنب',
+      icon: BookOpen,
+      badge: 'جديد',
+      component: TafsirComparisonTool
     }
   ];
 
@@ -165,8 +212,8 @@ const DiscoverTabEnhanced = () => {
       </Card>
 
       {/* Features Tabs */}
-      <Tabs defaultValue="habit-builder" className="w-full">
-        <TabsList className="grid grid-cols-3 lg:grid-cols-11 h-auto p-2 bg-gray-100 dark:bg-gray-800 rounded-xl">
+      <Tabs defaultValue="ai-learning-path" className="w-full">
+        <TabsList className="grid grid-cols-3 lg:grid-cols-15 h-auto p-2 bg-gray-100 dark:bg-gray-800 rounded-xl">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
@@ -225,6 +272,11 @@ const DiscoverTabEnhanced = () => {
                 {feature.id === 'islamic-calendar' && <DailyIslamicCalendar />}
                 {feature.id === 'typography' && <EnhancedTypographyControls />}
                 {feature.id === 'library' && <IslamicBookLibrary />}
+                {feature.id === 'ai-learning-path' && <AIPersonalizedLearningPath />}
+                {feature.id === 'prayer-weather' && <SmartPrayerWeatherIntegration />}
+                {feature.id === 'dream-journal' && <IslamicDreamJournal />}
+                {feature.id === 'study-circle' && <VirtualStudyCircle />}
+                {feature.id === 'tafsir-comparison' && <TafsirComparisonTool />}
               </CardContent>
             </Card>
           </TabsContent>

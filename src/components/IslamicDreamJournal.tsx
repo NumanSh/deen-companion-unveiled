@@ -2,174 +2,338 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Moon, Plus, Calendar, Search } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { 
+  Moon, 
+  Star, 
+  BookOpen, 
+  Brain,
+  Clock,
+  Calendar,
+  Search,
+  Heart,
+  Eye,
+  Sparkles
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 interface DreamEntry {
   id: string;
-  date: string;
-  dream: string;
-  interpretation: string;
-  mood: 'positive' | 'neutral' | 'negative';
-  tags: string[];
+  date: Date;
+  title: string;
+  description: string;
+  emotions: string[];
+  islamicInterpretation: string;
+  symbols: string[];
+  significance: 'low' | 'medium' | 'high';
+  category: 'spiritual' | 'personal' | 'guidance' | 'warning' | 'blessing';
 }
 
-const IslamicDreamJournal: React.FC = () => {
-  const { t } = useLanguage();
-  const [dreams, setDreams] = useState<DreamEntry[]>([
+const IslamicDreamJournal = () => {
+  const { toast } = useToast();
+  const [newDream, setNewDream] = useState({
+    title: '',
+    description: '',
+    emotions: [] as string[]
+  });
+
+  const [dreamEntries] = useState<DreamEntry[]>([
     {
       id: '1',
-      date: '2024-01-15',
-      dream: t('sample-dream-mosque-light'),
-      interpretation: t('sample-dream-interpretation'),
-      mood: 'positive',
-      tags: [t('prayer'), t('mosque'), t('light')]
+      date: new Date(Date.now() - 86400000),
+      title: 'Walking in a Beautiful Garden',
+      description: 'I was walking through a lush green garden with flowing water and beautiful flowers. There was a bright light in the distance.',
+      emotions: ['peaceful', 'joyful', 'hopeful'],
+      islamicInterpretation: 'Gardens in dreams often represent Paradise (Jannah) and spiritual growth. The flowing water signifies purification and Allah\'s blessings. The bright light may represent divine guidance.',
+      symbols: ['garden', 'water', 'light', 'flowers'],
+      significance: 'high',
+      category: 'spiritual'
+    },
+    {
+      id: '2',
+      date: new Date(Date.now() - 172800000),
+      title: 'Reading Quran',
+      description: 'I was reading the Quran in a mosque, and the words were glowing with golden light.',
+      emotions: ['serene', 'blessed', 'focused'],
+      islamicInterpretation: 'Reading Quran in dreams is considered highly blessed and indicates spiritual elevation. The golden light represents divine knowledge and barakah.',
+      symbols: ['quran', 'mosque', 'golden light', 'reading'],
+      significance: 'high',
+      category: 'blessing'
+    },
+    {
+      id: '3',
+      date: new Date(Date.now() - 259200000),
+      title: 'Flying Over Mountains',
+      description: 'I was flying over high mountains and could see the whole world below me.',
+      emotions: ['free', 'amazed', 'powerful'],
+      islamicInterpretation: 'Flying dreams can indicate spiritual liberation and overcoming difficulties. Mountains represent challenges that you will overcome with Allah\'s help.',
+      symbols: ['flying', 'mountains', 'height', 'world'],
+      significance: 'medium',
+      category: 'guidance'
     }
   ]);
-  const [newDream, setNewDream] = useState('');
-  const [showAddForm, setShowAddForm] = useState(false);
-  const { toast } = useToast();
 
-  const addDream = () => {
-    if (!newDream.trim()) return;
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-    const dream: DreamEntry = {
-      id: Date.now().toString(),
-      date: new Date().toISOString().split('T')[0],
-      dream: newDream,
-      interpretation: t('reflect-dream-islamic-teachings'),
-      mood: 'neutral',
-      tags: [t('personal')]
-    };
+  const emotionOptions = [
+    'peaceful', 'joyful', 'fearful', 'confused', 'hopeful', 'anxious', 
+    'blessed', 'serene', 'powerful', 'humble', 'grateful', 'worried'
+  ];
 
-    setDreams([dream, ...dreams]);
-    setNewDream('');
-    setShowAddForm(false);
-    
+  const islamicSymbols = [
+    { symbol: 'water', meaning: 'Purification, life, knowledge' },
+    { symbol: 'light', meaning: 'Divine guidance, truth, righteousness' },
+    { symbol: 'garden', meaning: 'Paradise, spiritual growth, peace' },
+    { symbol: 'book', meaning: 'Knowledge, guidance, divine message' },
+    { symbol: 'mosque', meaning: 'Spiritual center, community, worship' },
+    { symbol: 'mountain', meaning: 'Challenges, stability, perseverance' },
+    { symbol: 'bird', meaning: 'Soul, freedom, divine message' },
+    { symbol: 'gold', meaning: 'Purity, value, divine blessing' }
+  ];
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'spiritual': return 'bg-purple-100 text-purple-800';
+      case 'blessing': return 'bg-green-100 text-green-800';
+      case 'guidance': return 'bg-blue-100 text-blue-800';
+      case 'warning': return 'bg-red-100 text-red-800';
+      case 'personal': return 'bg-yellow-100 text-yellow-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getSignificanceColor = (significance: string) => {
+    switch (significance) {
+      case 'high': return 'bg-red-100 text-red-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'low': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleSaveDream = () => {
+    if (!newDream.title || !newDream.description) {
+      toast({
+        title: 'Incomplete Entry',
+        description: 'Please provide both title and description',
+        variant: 'destructive'
+      });
+      return;
+    }
+
     toast({
-      title: t('dream-added'),
-      description: t('dream-recorded'),
+      title: 'Dream Saved',
+      description: 'Your dream has been recorded for Islamic interpretation',
+      duration: 3000,
+    });
+
+    setNewDream({ title: '', description: '', emotions: [] });
+  };
+
+  const handleGetInterpretation = (dreamId: string) => {
+    toast({
+      title: 'AI Islamic Interpretation',
+      description: 'Generating interpretation based on Islamic dream principles...',
+      duration: 3000,
     });
   };
 
-  const getMoodColor = (mood: string) => {
-    switch (mood) {
-      case 'positive': return 'bg-green-100 text-green-800 border-green-200';
-      case 'negative': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
-  const getMoodText = (mood: string) => {
-    switch (mood) {
-      case 'positive': return t('positive');
-      case 'negative': return t('negative');
-      default: return t('neutral');
-    }
-  };
+  const filteredDreams = selectedCategory === 'all' 
+    ? dreamEntries 
+    : dreamEntries.filter(dream => dream.category === selectedCategory);
 
   return (
-    <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Moon className="w-5 h-5 text-indigo-600" />
-            {t('islamic-dream-journal')}
+    <div className="space-y-6">
+      {/* Header */}
+      <Card className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Moon className="w-8 h-8" />
+              <div>
+                <h1 className="text-3xl font-bold">Islamic Dream Journal</h1>
+                <p className="text-indigo-200">Record and understand your dreams through Islamic wisdom</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="flex items-center gap-2 mb-2">
+                <Star className="w-5 h-5" />
+                <span className="text-lg font-semibold">{dreamEntries.length} Dreams</span>
+              </div>
+              <p className="text-sm text-indigo-200">Recorded</p>
+            </div>
           </div>
-          <Button
-            onClick={() => setShowAddForm(!showAddForm)}
-            size="sm"
-            className="bg-indigo-600 hover:bg-indigo-700"
-          >
-            <Plus className="w-4 h-4 mr-1" />
-            {t('add-dream')}
+        </CardContent>
+      </Card>
+
+      {/* New Dream Entry */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Eye className="w-5 h-5 text-purple-600" />
+            Record New Dream
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Dream Title</label>
+            <input
+              type="text"
+              value={newDream.title}
+              onChange={(e) => setNewDream({ ...newDream, title: e.target.value })}
+              placeholder="Give your dream a meaningful title..."
+              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-2">Dream Description</label>
+            <Textarea
+              value={newDream.description}
+              onChange={(e) => setNewDream({ ...newDream, description: e.target.value })}
+              placeholder="Describe your dream in detail. Include people, places, actions, and feelings..."
+              className="min-h-32 resize-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Emotions Felt</label>
+            <div className="flex flex-wrap gap-2">
+              {emotionOptions.map((emotion) => (
+                <Button
+                  key={emotion}
+                  variant={newDream.emotions.includes(emotion) ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => {
+                    const emotions = newDream.emotions.includes(emotion)
+                      ? newDream.emotions.filter(e => e !== emotion)
+                      : [...newDream.emotions, emotion];
+                    setNewDream({ ...newDream, emotions });
+                  }}
+                >
+                  {emotion}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <Button onClick={handleSaveDream} className="w-full bg-purple-600 hover:bg-purple-700">
+            <Moon className="w-4 h-4 mr-2" />
+            Save Dream & Get Islamic Interpretation
           </Button>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Add Dream Form */}
-        {showAddForm && (
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
-            <div className="space-y-3">
-              <div className="text-sm font-medium">{t('describe-dream')}</div>
-              <Textarea
-                value={newDream}
-                onChange={(e) => setNewDream(e.target.value)}
-                placeholder={t('dream-placeholder')}
-                className="min-h-[100px]"
-              />
-              <div className="flex gap-2">
-                <Button onClick={addDream} className="bg-indigo-600 hover:bg-indigo-700">
-                  {t('save-dream')}
-                </Button>
-                <Button variant="outline" onClick={() => setShowAddForm(false)}>
-                  {t('cancel')}
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
+        </CardContent>
+      </Card>
 
-        {/* Islamic Dream Guidance */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-          <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
-            🌙 {t('islamic-perspective')}
-          </h4>
-          <p className="text-sm text-blue-700 dark:text-blue-300">
-            {t('dream-guidance')}
-          </p>
-        </div>
+      {/* Dream Categories Filter */}
+      <div className="flex flex-wrap gap-2">
+        {['all', 'spiritual', 'blessing', 'guidance', 'warning', 'personal'].map((category) => (
+          <Button
+            key={category}
+            variant={selectedCategory === category ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedCategory(category)}
+          >
+            {category === 'all' ? 'All Dreams' : category.charAt(0).toUpperCase() + category.slice(1)}
+          </Button>
+        ))}
+      </div>
 
-        {/* Dreams List */}
-        <div className="space-y-3">
-          {dreams.map((dream) => (
-            <div key={dream.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {new Date(dream.date).toLocaleDateString()}
-                  </span>
-                </div>
-                <Badge className={getMoodColor(dream.mood)}>
-                  {getMoodText(dream.mood)}
-                </Badge>
-              </div>
-              
-              <div className="space-y-3">
+      {/* Dream Entries */}
+      <div className="space-y-4">
+        {filteredDreams.map((dream) => (
+          <Card key={dream.id} className="hover:shadow-lg transition-shadow duration-200">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
                 <div>
-                  <div className="font-medium text-gray-800 dark:text-gray-200 mb-1">{t('dream')}</div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">{dream.dream}</p>
-                </div>
-                
-                <div>
-                  <div className="font-medium text-gray-800 dark:text-gray-200 mb-1">{t('reflection')}</div>
-                  <p className="text-sm text-indigo-700 dark:text-indigo-300">{dream.interpretation}</p>
-                </div>
-                
-                <div className="flex flex-wrap gap-1">
-                  {dream.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
+                  <h3 className="text-xl font-semibold mb-2">{dream.title}</h3>
+                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      <span>{dream.date.toLocaleDateString()}</span>
+                    </div>
+                    <Badge className={getCategoryColor(dream.category)}>
+                      {dream.category}
                     </Badge>
-                  ))}
+                    <Badge className={getSignificanceColor(dream.significance)}>
+                      {dream.significance} significance
+                    </Badge>
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleGetInterpretation(dream.id)}
+                >
+                  <Brain className="w-4 h-4 mr-2" />
+                  Re-analyze
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-medium mb-2">Dream Description</h4>
+                  <p className="text-gray-700 bg-gray-50 p-3 rounded-lg">{dream.description}</p>
+                </div>
+
+                <div>
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-green-600" />
+                    Islamic Interpretation
+                  </h4>
+                  <p className="text-gray-700 bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
+                    {dream.islamicInterpretation}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-medium mb-2">Emotions</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {dream.emotions.map((emotion) => (
+                        <Badge key={emotion} variant="secondary" className="text-xs">
+                          {emotion}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-2">Symbols</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {dream.symbols.map((symbol) => (
+                        <Badge key={symbol} className="bg-blue-100 text-blue-800 text-xs">
+                          {symbol}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-        {dreams.length === 0 && (
-          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-            <Moon className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p>{t('no-dreams')}</p>
+      {/* Islamic Dream Symbols Reference */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-amber-600" />
+            Islamic Dream Symbols Reference
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {islamicSymbols.map((item) => (
+              <div key={item.symbol} className="p-3 bg-amber-50 rounded-lg border border-amber-200">
+                <div className="font-semibold text-amber-800 mb-1 capitalize">{item.symbol}</div>
+                <div className="text-sm text-amber-700">{item.meaning}</div>
+              </div>
+            ))}
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

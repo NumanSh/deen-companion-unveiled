@@ -3,8 +3,26 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Cloud, Sun, CloudRain, Wind, Thermometer, Clock, Bell } from 'lucide-react';
+import { 
+  Cloud, 
+  Sun, 
+  CloudRain, 
+  Snow, 
+  Wind,
+  Clock,
+  MapPin,
+  Bell,
+  Thermometer,
+  Umbrella,
+  AlertTriangle
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
+interface PrayerTime {
+  name: string;
+  time: string;
+  arabic: string;
+}
 
 interface WeatherData {
   temperature: number;
@@ -12,294 +30,241 @@ interface WeatherData {
   humidity: number;
   windSpeed: number;
   visibility: number;
-  icon: string;
-}
-
-interface LocationPrayerTimes {
-  city: string;
-  country: string;
-  fajr: string;
-  dhuhr: string;
-  asr: string;
-  maghrib: string;
-  isha: string;
-  sunrise: string;
-  sunset: string;
 }
 
 const SmartPrayerWeatherIntegration = () => {
   const { toast } = useToast();
-  
-  const [weather, setWeather] = useState<WeatherData>({
-    temperature: 28,
-    condition: 'صافي',
+  const [currentWeather, setCurrentWeather] = useState<WeatherData>({
+    temperature: 22,
+    condition: 'clear',
     humidity: 65,
-    windSpeed: 12,
-    visibility: 10,
-    icon: 'sun'
+    windSpeed: 8,
+    visibility: 10
   });
 
-  const [prayerTimes, setPrayerTimes] = useState<LocationPrayerTimes>({
-    city: 'الرياض',
-    country: 'السعودية',
-    fajr: '04:45',
-    dhuhr: '12:15',
-    asr: '15:30',
-    maghrib: '18:45',
-    isha: '20:15',
-    sunrise: '06:15',
-    sunset: '18:45'
-  });
+  const [prayerTimes] = useState<PrayerTime[]>([
+    { name: 'Fajr', time: '05:24', arabic: 'الفجر' },
+    { name: 'Sunrise', time: '06:42', arabic: 'الشروق' },
+    { name: 'Dhuhr', time: '12:15', arabic: 'الظهر' },
+    { name: 'Asr', time: '15:30', arabic: 'العصر' },
+    { name: 'Maghrib', time: '18:45', arabic: 'المغرب' },
+    { name: 'Isha', time: '20:15', arabic: 'العشاء' }
+  ]);
 
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [nextPrayer, setNextPrayer] = useState<{name: string, time: string, remaining: string} | null>(null);
-  const [weatherAlerts, setWeatherAlerts] = useState<string[]>([]);
+  const [alerts, setAlerts] = useState<any[]>([]);
+  const [location] = useState('Riyadh, Saudi Arabia');
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-      calculateNextPrayer();
-      checkWeatherAlerts();
-    }, 1000);
+    // Simulate weather-based prayer alerts
+    const weatherAlerts = [];
+    
+    if (currentWeather.condition === 'rain') {
+      weatherAlerts.push({
+        id: 1,
+        type: 'weather',
+        title: 'Rain Alert',
+        message: 'Consider taking an umbrella for Maghrib prayer',
+        icon: Umbrella,
+        priority: 'medium'
+      });
+    }
+    
+    if (currentWeather.temperature < 10) {
+      weatherAlerts.push({
+        id: 2,
+        type: 'weather',
+        title: 'Cold Weather',
+        message: 'Dress warmly for Fajr prayer',
+        icon: Thermometer,
+        priority: 'low'
+      });
+    }
 
-    return () => clearInterval(timer);
-  }, [prayerTimes, weather]);
+    if (currentWeather.windSpeed > 20) {
+      weatherAlerts.push({
+        id: 3,
+        type: 'weather',
+        title: 'High Winds',
+        message: 'Strong winds may affect outdoor prayer',
+        icon: Wind,
+        priority: 'high'
+      });
+    }
 
-  const calculateNextPrayer = () => {
-    const now = new Date();
-    const currentTimeMinutes = now.getHours() * 60 + now.getMinutes();
-    
-    const prayers = [
-      { name: 'الفجر', time: prayerTimes.fajr },
-      { name: 'الظهر', time: prayerTimes.dhuhr },
-      { name: 'العصر', time: prayerTimes.asr },
-      { name: 'المغرب', time: prayerTimes.maghrib },
-      { name: 'العشاء', time: prayerTimes.isha }
-    ];
-
-    for (const prayer of prayers) {
-      const [hours, minutes] = prayer.time.split(':').map(Number);
-      const prayerTimeMinutes = hours * 60 + minutes;
-      
-      if (prayerTimeMinutes > currentTimeMinutes) {
-        const remainingMinutes = prayerTimeMinutes - currentTimeMinutes;
-        const hours = Math.floor(remainingMinutes / 60);
-        const mins = remainingMinutes % 60;
-        
-        setNextPrayer({
-          name: prayer.name,
-          time: prayer.time,
-          remaining: `${hours}:${mins.toString().padStart(2, '0')}`
-        });
-        return;
-      }
-    }
-    
-    // If no prayer found today, return first prayer tomorrow
-    const firstPrayer = prayers[0];
-    const [hours, minutes] = firstPrayer.time.split(':').map(Number);
-    const prayerTimeMinutes = hours * 60 + minutes;
-    const minutesUntilTomorrow = (24 * 60) - currentTimeMinutes + prayerTimeMinutes;
-    const remainingHours = Math.floor(minutesUntilTomorrow / 60);
-    const remainingMins = minutesUntilTomorrow % 60;
-    
-    setNextPrayer({
-      name: firstPrayer.name,
-      time: firstPrayer.time,
-      remaining: `${remainingHours}:${remainingMins.toString().padStart(2, '0')}`
-    });
-  };
-
-  const checkWeatherAlerts = () => {
-    const alerts: string[] = [];
-    
-    if (weather.temperature > 40) {
-      alerts.push('حرارة عالية - يُنصح بالصلاة في مكان مكيف');
-    }
-    
-    if (weather.condition.includes('مطر')) {
-      alerts.push('أمطار - تأكد من أوقات الصلاة المحدثة');
-    }
-    
-    if (weather.windSpeed > 30) {
-      alerts.push('رياح قوية - احذر عند التوجه للمسجد');
-    }
-    
-    if (weather.visibility < 5) {
-      alerts.push('ضباب كثيف - قد تتأثر رؤية القبلة');
-    }
-    
-    setWeatherAlerts(alerts);
-  };
+    setAlerts(weatherAlerts);
+  }, [currentWeather]);
 
   const getWeatherIcon = (condition: string) => {
-    if (condition.includes('مطر')) return <CloudRain className="w-8 h-8 text-blue-500" />;
-    if (condition.includes('غائم')) return <Cloud className="w-8 h-8 text-gray-500" />;
-    return <Sun className="w-8 h-8 text-yellow-500" />;
+    switch (condition) {
+      case 'clear': return Sun;
+      case 'cloudy': return Cloud;
+      case 'rain': return CloudRain;
+      case 'snow': return Snow;
+      default: return Sun;
+    }
   };
 
-  const getPrayerRecommendation = () => {
-    if (weather.temperature > 35) {
-      return {
-        text: 'يُنصح بالصلاة في مكان مكيف أو مظلل',
-        color: 'text-orange-600',
-        bg: 'bg-orange-50'
-      };
-    }
+  const getNextPrayer = () => {
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes();
     
-    if (weather.condition.includes('مطر')) {
-      return {
-        text: 'يمكن الجمع بين الصلوات حسب الحاجة',
-        color: 'text-blue-600',
-        bg: 'bg-blue-50'
-      };
+    for (const prayer of prayerTimes) {
+      const [hours, minutes] = prayer.time.split(':').map(Number);
+      const prayerTime = hours * 60 + minutes;
+      
+      if (prayerTime > currentTime) {
+        return prayer;
+      }
     }
-    
-    return {
-      text: 'طقس مناسب للصلاة في المسجد',
-      color: 'text-green-600',
-      bg: 'bg-green-50'
-    };
+    return prayerTimes[0]; // Return Fajr for next day
   };
 
-  const recommendation = getPrayerRecommendation();
+  const nextPrayer = getNextPrayer();
+  const WeatherIcon = getWeatherIcon(currentWeather.condition);
 
-  const refreshLocation = () => {
+  const handleSetAlert = (prayer: PrayerTime) => {
     toast({
-      title: '📍 يتم تحديث الموقع',
-      description: 'جاري الحصول على أحدث مواقيت الصلاة والطقس',
+      title: `Alert Set for ${prayer.name}`,
+      description: `You'll be notified 15 minutes before ${prayer.arabic} prayer`,
+      duration: 3000,
     });
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <MapPin className="w-6 h-6 text-blue-500" />
-          مواقيت الصلاة والطقس الذكي
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Location and Weather Header */}
-        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-sky-50 rounded-lg">
-          <div className="flex items-center gap-3">
-            <div>
-              <div className="font-semibold text-blue-900">{prayerTimes.city}, {prayerTimes.country}</div>
-              <div className="text-sm text-blue-600">
-                {currentTime.toLocaleDateString('ar-SA', { 
-                  weekday: 'long',
-                  day: 'numeric',
-                  month: 'long'
-                })}
-              </div>
-            </div>
-          </div>
-          <Button onClick={refreshLocation} size="sm" variant="outline" className="border-blue-300">
-            تحديث الموقع
-          </Button>
-        </div>
-
-        {/* Next Prayer Card */}
-        {nextPrayer && (
-          <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
-            <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      {/* Weather Overview */}
+      <Card className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <WeatherIcon className="w-16 h-16" />
               <div>
-                <h4 className="font-semibold text-green-800 mb-1">الصلاة القادمة</h4>
-                <div className="text-2xl font-bold text-green-900">{nextPrayer.name}</div>
-                <div className="text-green-700">{nextPrayer.time}</div>
-              </div>
-              <div className="text-right">
-                <div className="text-sm text-green-600 mb-1">متبقي</div>
-                <div className="text-3xl font-bold text-green-800">{nextPrayer.remaining}</div>
-                <Bell className="w-5 h-5 text-green-600 mx-auto mt-1" />
+                <h2 className="text-3xl font-bold">{currentWeather.temperature}°C</h2>
+                <p className="text-blue-100 capitalize">{currentWeather.condition}</p>
+                <div className="flex items-center gap-1 text-sm text-blue-200">
+                  <MapPin className="w-4 h-4" />
+                  <span>{location}</span>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Weather Info */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 bg-white border rounded-lg">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-sm text-gray-600">الطقس الحالي</span>
-              {getWeatherIcon(weather.condition)}
-            </div>
-            <div className="text-2xl font-bold mb-1">{weather.temperature}°</div>
-            <div className="text-sm text-gray-600">{weather.condition}</div>
-          </div>
-          
-          <div className="p-4 bg-white border rounded-lg">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">الرطوبة</span>
-                <span className="font-medium">{weather.humidity}%</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">الرياح</span>
-                <span className="font-medium">{weather.windSpeed} كم/س</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">الرؤية</span>
-                <span className="font-medium">{weather.visibility} كم</span>
-              </div>
+            <div className="text-right">
+              <div className="text-sm text-blue-200">Next Prayer</div>
+              <div className="text-2xl font-bold">{nextPrayer.arabic}</div>
+              <div className="text-blue-200">{nextPrayer.time}</div>
             </div>
           </div>
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* Prayer Recommendation */}
-        <div className={`p-3 rounded-lg ${recommendation.bg}`}>
-          <div className="flex items-center gap-2">
-            <Thermometer className={`w-5 h-5 ${recommendation.color}`} />
-            <span className={`font-medium ${recommendation.color}`}>توصية الطقس</span>
-          </div>
-          <p className={`text-sm mt-1 ${recommendation.color}`}>{recommendation.text}</p>
-        </div>
+      {/* Weather Alerts */}
+      {alerts.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-amber-600" />
+              Weather Alerts
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {alerts.map((alert) => {
+              const AlertIcon = alert.icon;
+              return (
+                <div
+                  key={alert.id}
+                  className={`p-4 rounded-lg border-l-4 ${
+                    alert.priority === 'high' ? 'border-red-500 bg-red-50' :
+                    alert.priority === 'medium' ? 'border-amber-500 bg-amber-50' :
+                    'border-blue-500 bg-blue-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <AlertIcon className="w-5 h-5" />
+                    <div>
+                      <div className="font-semibold">{alert.title}</div>
+                      <div className="text-sm text-gray-600">{alert.message}</div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </CardContent>
+        </Card>
+      )}
 
-        {/* Weather Alerts */}
-        {weatherAlerts.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="font-semibold text-orange-800">تنبيهات الطقس</h4>
-            {weatherAlerts.map((alert, index) => (
-              <div key={index} className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                <p className="text-sm text-orange-700">{alert}</p>
-              </div>
+      {/* Prayer Times with Weather Context */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Clock className="w-5 h-5 text-green-600" />
+            Smart Prayer Schedule
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {prayerTimes.map((prayer, index) => (
+              <Card key={index} className={`transition-all duration-200 hover:shadow-md ${
+                prayer.name === nextPrayer.name ? 'ring-2 ring-green-500 bg-green-50' : ''
+              }`}>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <div className="font-semibold">{prayer.arabic}</div>
+                      <div className="text-sm text-gray-600">{prayer.name}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xl font-bold">{prayer.time}</div>
+                      {prayer.name === nextPrayer.name && (
+                        <Badge className="bg-green-100 text-green-800 text-xs">Next</Badge>
+                      )}
+                    </div>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => handleSetAlert(prayer)}
+                  >
+                    <Bell className="w-4 h-4 mr-2" />
+                    Set Alert
+                  </Button>
+                </CardContent>
+              </Card>
             ))}
           </div>
-        )}
+        </CardContent>
+      </Card>
 
-        {/* All Prayer Times */}
-        <div className="space-y-3">
-          <h4 className="font-semibold">مواقيت اليوم</h4>
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { name: 'الفجر', time: prayerTimes.fajr },
-              { name: 'الشروق', time: prayerTimes.sunrise },
-              { name: 'الظهر', time: prayerTimes.dhuhr },
-              { name: 'العصر', time: prayerTimes.asr },
-              { name: 'المغرب', time: prayerTimes.maghrib },
-              { name: 'العشاء', time: prayerTimes.isha }
-            ].map((prayer, index) => (
-              <div key={index} className="flex items-center justify-between p-2 border rounded">
-                <span className="font-medium">{prayer.name}</span>
-                <span className="text-blue-600">{prayer.time}</span>
-              </div>
-            ))}
+      {/* Weather Details */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Weather Details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <Thermometer className="w-6 h-6 mx-auto mb-2 text-red-500" />
+              <div className="text-sm text-gray-600">Temperature</div>
+              <div className="text-lg font-semibold">{currentWeather.temperature}°C</div>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <Cloud className="w-6 h-6 mx-auto mb-2 text-blue-500" />
+              <div className="text-sm text-gray-600">Humidity</div>
+              <div className="text-lg font-semibold">{currentWeather.humidity}%</div>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <Wind className="w-6 h-6 mx-auto mb-2 text-green-500" />
+              <div className="text-sm text-gray-600">Wind Speed</div>
+              <div className="text-lg font-semibold">{currentWeather.windSpeed} km/h</div>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <Sun className="w-6 h-6 mx-auto mb-2 text-yellow-500" />
+              <div className="text-sm text-gray-600">Visibility</div>
+              <div className="text-lg font-semibold">{currentWeather.visibility} km</div>
+            </div>
           </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="flex gap-2">
-          <Button size="sm" variant="outline" className="flex-1">
-            <Clock className="w-4 h-4 mr-1" />
-            عرض القبلة
-          </Button>
-          <Button size="sm" variant="outline" className="flex-1">
-            <Wind className="w-4 h-4 mr-1" />
-            تفاصيل الطقس
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

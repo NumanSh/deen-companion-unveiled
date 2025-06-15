@@ -1,329 +1,390 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Users, Calendar, Clock, MessageSquare, BookOpen, Trophy, Star } from 'lucide-react';
+import { Avatar } from '@/components/ui/avatar';
+import { 
+  Users, 
+  BookOpen, 
+  Clock,
+  Star,
+  Calendar,
+  Heart,
+  Play,
+  User,
+  Globe,
+  Award
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface StudySession {
-  id: number;
+interface StudyCircle {
+  id: string;
   title: string;
+  description: string;
   topic: string;
   instructor: string;
   participants: number;
   maxParticipants: number;
-  startTime: string;
   duration: number;
   level: 'beginner' | 'intermediate' | 'advanced';
-  type: 'quran' | 'hadith' | 'fiqh' | 'seerah';
+  language: string;
+  rating: number;
+  nextSession: Date;
   isLive: boolean;
+  category: 'quran' | 'hadith' | 'fiqh' | 'arabic' | 'general';
 }
 
-interface Participant {
-  id: number;
-  name: string;
-  level: number;
-  contributions: number;
-  joined: string;
+interface StudySession {
+  id: string;
+  title: string;
+  time: string;
+  duration: number;
+  participants: number;
+  topic: string;
+  isJoined: boolean;
 }
 
 const VirtualStudyCircle = () => {
   const { toast } = useToast();
-  
-  const [activeTab, setActiveTab] = useState<'sessions' | 'community' | 'achievements'>('sessions');
-  const [joinedSessions, setJoinedSessions] = useState<Set<number>>(new Set());
-  
-  const studySessions: StudySession[] = [
+  const [activeTab, setActiveTab] = useState<'browse' | 'joined' | 'schedule'>('browse');
+
+  const studyCircles: StudyCircle[] = [
     {
-      id: 1,
-      title: "تفسير سورة البقرة",
-      topic: "الآيات 1-20",
-      instructor: "الشيخ أحمد محمد",
+      id: '1',
+      title: 'Tafsir Study Group',
+      description: 'Weekly deep dive into Quranic interpretation with scholarly guidance',
+      topic: 'Tafsir Al-Tabari',
+      instructor: 'Sheikh Ahmad Hassan',
+      participants: 24,
+      maxParticipants: 30,
+      duration: 90,
+      level: 'intermediate',
+      language: 'Arabic/English',
+      rating: 4.8,
+      nextSession: new Date(Date.now() + 86400000),
+      isLive: false,
+      category: 'quran'
+    },
+    {
+      id: '2',
+      title: 'Hadith Sciences Workshop',
+      description: 'Learn the methodology of hadith authentication and classification',
+      topic: 'Hadith Authentication',
+      instructor: 'Dr. Fatima Al-Zahra',
+      participants: 18,
+      maxParticipants: 25,
+      duration: 60,
+      level: 'advanced',
+      language: 'English',
+      rating: 4.9,
+      nextSession: new Date(Date.now() + 172800000),
+      isLive: true,
+      category: 'hadith'
+    },
+    {
+      id: '3',
+      title: 'Arabic Grammar Circle',
+      description: 'Master Quranic Arabic through interactive lessons and practice',
+      topic: 'Nahw & Sarf',
+      instructor: 'Ustadh Muhammad Ali',
+      participants: 32,
+      maxParticipants: 40,
+      duration: 75,
+      level: 'beginner',
+      language: 'Arabic',
+      rating: 4.7,
+      nextSession: new Date(Date.now() + 259200000),
+      isLive: false,
+      category: 'arabic'
+    },
+    {
+      id: '4',
+      title: 'Fiqh Q&A Session',
+      description: 'Interactive session addressing contemporary Islamic jurisprudence questions',
+      topic: 'Contemporary Fiqh',
+      instructor: 'Sheikh Omar Ibn Malik',
       participants: 45,
       maxParticipants: 50,
-      startTime: "20:00",
-      duration: 60,
+      duration: 120,
       level: 'intermediate',
-      type: 'quran',
-      isLive: true
-    },
-    {
-      id: 2,
-      title: "أحاديث الأخلاق",
-      topic: "بر الوالدين في السنة",
-      instructor: "الأستاذة فاطمة علي",
-      participants: 23,
-      maxParticipants: 30,
-      startTime: "21:30",
-      duration: 45,
-      level: 'beginner',
-      type: 'hadith',
-      isLive: false
-    },
-    {
-      id: 3,
-      title: "السيرة النبوية",
-      topic: "غزوة بدر - دروس وعبر",
-      instructor: "الدكتور محمد حسن",
-      participants: 67,
-      maxParticipants: 80,
-      startTime: "19:00",
-      duration: 90,
-      level: 'advanced',
-      type: 'seerah',
-      isLive: false
+      language: 'English',
+      rating: 4.6,
+      nextSession: new Date(Date.now() + 345600000),
+      isLive: false,
+      category: 'fiqh'
     }
   ];
 
-  const communityMembers: Participant[] = [
-    { id: 1, name: "أحمد محمد", level: 15, contributions: 142, joined: "منذ شهرين" },
-    { id: 2, name: "فاطمة أحمد", level: 12, contributions: 89, joined: "منذ شهر" },
-    { id: 3, name: "محمد علي", level: 18, contributions: 203, joined: "منذ 3 أشهر" },
-    { id: 4, name: "عائشة حسن", level: 9, contributions: 67, joined: "منذ أسبوعين" }
+  const upcomingSessions: StudySession[] = [
+    {
+      id: '1',
+      title: 'Tafsir Study Group',
+      time: '8:00 PM',
+      duration: 90,
+      participants: 24,
+      topic: 'Surah Al-Baqarah Verses 1-10',
+      isJoined: true
+    },
+    {
+      id: '2',
+      title: 'Arabic Grammar Circle',
+      time: '7:00 PM',
+      duration: 75,
+      participants: 32,
+      topic: 'Verb Conjugations in Quran',
+      isJoined: true
+    },
+    {
+      id: '3',
+      title: 'Hadith Sciences Workshop',
+      time: '9:30 PM',
+      duration: 60,
+      participants: 18,
+      topic: 'Chain of Narration Analysis',
+      isJoined: false
+    }
   ];
 
-  const [userStats] = useState({
-    sessionsAttended: 23,
-    hoursLearned: 45,
-    rank: 15,
-    streakDays: 12,
-    certificates: 3
-  });
-
-  const joinSession = (sessionId: number) => {
-    setJoinedSessions(prev => new Set([...prev, sessionId]));
-    const session = studySessions.find(s => s.id === sessionId);
-    
-    toast({
-      title: '🎉 تم الانضمام بنجاح',
-      description: `انضممت إلى جلسة "${session?.title}"`,
-    });
-  };
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'quran': return 'bg-green-100 text-green-800';
-      case 'hadith': return 'bg-blue-100 text-blue-800';
-      case 'fiqh': return 'bg-purple-100 text-purple-800';
-      case 'seerah': return 'bg-orange-100 text-orange-800';
+  const getLevelColor = (level: string) => {
+    switch (level) {
+      case 'beginner': return 'bg-green-100 text-green-800';
+      case 'intermediate': return 'bg-yellow-100 text-yellow-800';
+      case 'advanced': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const getTypeLabel = (type: string) => {
-    switch (type) {
-      case 'quran': return 'قرآن';
-      case 'hadith': return 'حديث';
-      case 'fiqh': return 'فقه';
-      case 'seerah': return 'سيرة';
-      default: return 'عام';
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'quran': return BookOpen;
+      case 'hadith': return Star;
+      case 'fiqh': return Award;
+      case 'arabic': return Globe;
+      default: return BookOpen;
     }
   };
 
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case 'beginner': return 'bg-green-500';
-      case 'intermediate': return 'bg-yellow-500';
-      case 'advanced': return 'bg-red-500';
-      default: return 'bg-gray-500';
-    }
+  const handleJoinCircle = (circle: StudyCircle) => {
+    toast({
+      title: `Joined ${circle.title}`,
+      description: `You'll receive notifications for upcoming sessions`,
+      duration: 3000,
+    });
+  };
+
+  const handleJoinSession = (session: StudySession) => {
+    toast({
+      title: 'Joining Session',
+      description: `Connecting you to ${session.title}...`,
+      duration: 2000,
+    });
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Users className="w-6 h-6 text-indigo-500" />
-          حلقة الدراسة الافتراضية
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* User Stats */}
-        <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-            <div>
-              <div className="text-lg font-bold text-indigo-600">{userStats.sessionsAttended}</div>
-              <div className="text-xs text-indigo-600">جلسة حضرت</div>
+    <div className="space-y-6">
+      {/* Header */}
+      <Card className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Users className="w-8 h-8" />
+              <div>
+                <h1 className="text-3xl font-bold">Virtual Study Circles</h1>
+                <p className="text-teal-200">Connect, Learn, and Grow Together in Islamic Knowledge</p>
+              </div>
             </div>
-            <div>
-              <div className="text-lg font-bold text-purple-600">{userStats.hoursLearned}</div>
-              <div className="text-xs text-purple-600">ساعة تعلم</div>
-            </div>
-            <div>
-              <div className="text-lg font-bold text-pink-600">#{userStats.rank}</div>
-              <div className="text-xs text-pink-600">الترتيب</div>
-            </div>
-            <div>
-              <div className="text-lg font-bold text-green-600">{userStats.streakDays}</div>
-              <div className="text-xs text-green-600">يوم متتالي</div>
-            </div>
-            <div>
-              <div className="text-lg font-bold text-orange-600">{userStats.certificates}</div>
-              <div className="text-xs text-orange-600">شهادة</div>
+            <div className="text-right">
+              <div className="text-2xl font-bold">1,247</div>
+              <div className="text-teal-200">Active Learners</div>
             </div>
           </div>
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* Tab Navigation */}
-        <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
-          {[
-            { key: 'sessions', label: 'الجلسات', icon: Calendar },
-            { key: 'community', label: 'المجتمع', icon: Users },
-            { key: 'achievements', label: 'الإنجازات', icon: Trophy }
-          ].map((tab) => {
-            const Icon = tab.icon;
+      {/* Tab Navigation */}
+      <div className="flex gap-2">
+        {[
+          { id: 'browse', label: 'Browse Circles', icon: Users },
+          { id: 'joined', label: 'My Circles', icon: Heart },
+          { id: 'schedule', label: 'Schedule', icon: Calendar }
+        ].map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <Button
+              key={tab.id}
+              variant={activeTab === tab.id ? 'default' : 'outline'}
+              onClick={() => setActiveTab(tab.id as any)}
+              className="flex items-center gap-2"
+            >
+              <Icon className="w-4 h-4" />
+              {tab.label}
+            </Button>
+          );
+        })}
+      </div>
+
+      {/* Browse Circles */}
+      {activeTab === 'browse' && (
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Available Study Circles</h2>
+          {studyCircles.map((circle) => {
+            const CategoryIcon = getCategoryIcon(circle.category);
             return (
-              <Button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key as any)}
-                variant={activeTab === tab.key ? 'default' : 'ghost'}
-                className="flex-1 gap-2"
-                size="sm"
-              >
-                <Icon className="w-4 h-4" />
-                {tab.label}
-              </Button>
+              <Card key={circle.id} className="hover:shadow-lg transition-shadow duration-200">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-start gap-4">
+                      <div className="p-3 bg-teal-100 rounded-full">
+                        <CategoryIcon className="w-6 h-6 text-teal-600" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="text-xl font-semibold">{circle.title}</h3>
+                          {circle.isLive && (
+                            <Badge className="bg-red-500 text-white animate-pulse">LIVE</Badge>
+                          )}
+                          <Badge className={getLevelColor(circle.level)}>
+                            {circle.level}
+                          </Badge>
+                        </div>
+                        <p className="text-gray-600 mb-3">{circle.description}</p>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <span className="text-gray-500">Instructor:</span>
+                            <div className="font-medium">{circle.instructor}</div>
+                          </div>
+                          <div>
+                            <span className="text-gray-500">Topic:</span>
+                            <div className="font-medium">{circle.topic}</div>
+                          </div>
+                          <div>
+                            <span className="text-gray-500">Duration:</span>
+                            <div className="font-medium">{circle.duration} min</div>
+                          </div>
+                          <div>
+                            <span className="text-gray-500">Language:</span>
+                            <div className="font-medium">{circle.language}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="flex items-center gap-1 mb-2">
+                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                        <span className="font-semibold">{circle.rating}</span>
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {circle.participants}/{circle.maxParticipants} members
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4 text-gray-500" />
+                        <span className="text-sm">Next: {circle.nextSession.toLocaleDateString()}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Users className="w-4 h-4 text-gray-500" />
+                        <span className="text-sm">{circle.participants} joined</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">
+                        <BookOpen className="w-4 h-4 mr-2" />
+                        Preview
+                      </Button>
+                      <Button onClick={() => handleJoinCircle(circle)} className="bg-teal-600 hover:bg-teal-700">
+                        <Users className="w-4 h-4 mr-2" />
+                        Join Circle
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
+      )}
 
-        {/* Sessions Tab */}
-        {activeTab === 'sessions' && (
-          <div className="space-y-4">
-            {studySessions.map((session) => (
-              <div key={session.id} className="p-4 border rounded-lg hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-lg mb-1">{session.title}</h4>
-                    <p className="text-gray-600 text-sm mb-2">{session.topic}</p>
-                    <p className="text-sm text-gray-500">المدرس: {session.instructor}</p>
-                  </div>
-                  {session.isLive && (
-                    <Badge className="bg-red-500 text-white animate-pulse">
-                      مباشر
-                    </Badge>
-                  )}
-                </div>
+      {/* My Circles */}
+      {activeTab === 'joined' && (
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Your Study Circles</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {studyCircles.slice(0, 2).map((circle) => {
+              const CategoryIcon = getCategoryIcon(circle.category);
+              return (
+                <Card key={circle.id} className="border-teal-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3 mb-3">
+                      <CategoryIcon className="w-5 h-5 text-teal-600" />
+                      <h3 className="font-semibold">{circle.title}</h3>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-3">{circle.description}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm">
+                        <div>Next session:</div>
+                        <div className="font-medium">{circle.nextSession.toLocaleDateString()}</div>
+                      </div>
+                      <Button size="sm" className="bg-teal-600 hover:bg-teal-700">
+                        <Play className="w-4 h-4 mr-2" />
+                        Enter
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
-                <div className="flex flex-wrap gap-2 mb-3">
-                  <Badge className={getTypeColor(session.type)}>
-                    {getTypeLabel(session.type)}
-                  </Badge>
-                  <Badge variant="outline" className="flex items-center gap-1">
-                    <div className={`w-2 h-2 rounded-full ${getLevelColor(session.level)}`}></div>
-                    {session.level === 'beginner' ? 'مبتدئ' : session.level === 'intermediate' ? 'متوسط' : 'متقدم'}
-                  </Badge>
-                </div>
-
-                <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
+      {/* Schedule */}
+      {activeTab === 'schedule' && (
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Today's Schedule</h2>
+          {upcomingSessions.map((session) => (
+            <Card key={session.id} className={`${
+              session.isJoined ? 'border-green-200 bg-green-50' : ''
+            }`}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {session.startTime}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Users className="w-4 h-4" />
-                      {session.participants}/{session.maxParticipants}
-                    </span>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{session.time}</div>
+                      <div className="text-sm text-gray-500">{session.duration}min</div>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{session.title}</h3>
+                      <p className="text-sm text-gray-600">{session.topic}</p>
+                      <div className="flex items-center gap-1 mt-1">
+                        <User className="w-4 h-4 text-gray-400" />
+                        <span className="text-sm text-gray-500">{session.participants} participants</span>
+                      </div>
+                    </div>
                   </div>
-                  <span>{session.duration} دقيقة</span>
-                </div>
-
-                <div className="flex gap-2">
-                  {joinedSessions.has(session.id) ? (
-                    <Button disabled className="bg-green-500 text-white">
-                      منضم ✓
-                    </Button>
-                  ) : (
+                  <div className="flex items-center gap-2">
+                    {session.isJoined && (
+                      <Badge className="bg-green-100 text-green-800">Joined</Badge>
+                    )}
                     <Button
-                      onClick={() => joinSession(session.id)}
-                      disabled={session.participants >= session.maxParticipants}
-                      className="bg-indigo-500 hover:bg-indigo-600 text-white"
+                      onClick={() => handleJoinSession(session)}
+                      className={session.isJoined ? 'bg-green-600 hover:bg-green-700' : 'bg-teal-600 hover:bg-teal-700'}
                     >
-                      انضم للجلسة
+                      <Play className="w-4 h-4 mr-2" />
+                      {session.isJoined ? 'Enter' : 'Join'}
                     </Button>
-                  )}
-                  <Button variant="outline" size="sm">
-                    <MessageSquare className="w-4 h-4 mr-1" />
-                    التفاصيل
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Community Tab */}
-        {activeTab === 'community' && (
-          <div className="space-y-4">
-            <h4 className="font-semibold">أعضاء نشطون</h4>
-            {communityMembers.map((member) => (
-              <div key={member.id} className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Avatar>
-                    <AvatarFallback className="bg-indigo-100 text-indigo-600">
-                      {member.name[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="font-medium">{member.name}</div>
-                    <div className="text-sm text-gray-600">{member.joined}</div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="flex items-center gap-1 mb-1">
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <span className="font-medium">المستوى {member.level}</span>
-                  </div>
-                  <div className="text-sm text-gray-600">{member.contributions} مساهمة</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Achievements Tab */}
-        {activeTab === 'achievements' && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                <div className="flex items-center gap-3 mb-2">
-                  <Trophy className="w-6 h-6 text-yellow-600" />
-                  <span className="font-semibold text-yellow-800">طالب مجتهد</span>
-                </div>
-                <p className="text-sm text-yellow-700">حضرت 20+ جلسة دراسية</p>
-              </div>
-              
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="flex items-center gap-3 mb-2">
-                  <BookOpen className="w-6 h-6 text-blue-600" />
-                  <span className="font-semibold text-blue-800">حافظ القرآن</span>
-                </div>
-                <p className="text-sm text-blue-700">أتممت حفظ 3 سور كاملة</p>
-              </div>
-              
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <div className="flex items-center gap-3 mb-2">
-                  <Users className="w-6 h-6 text-green-600" />
-                  <span className="font-semibold text-green-800">عضو فعال</span>
-                </div>
-                <p className="text-sm text-green-700">شاركت في المناقشات 50+ مرة</p>
-              </div>
-              
-              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                <div className="flex items-center gap-3 mb-2">
-                  <Clock className="w-6 h-6 text-purple-600" />
-                  <span className="font-semibold text-purple-800">ملتزم بالوقت</span>
-                </div>
-                <p className="text-sm text-purple-700">حافظت على حضورك 12 يوم متتالي</p>
-              </div>
-            </div>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 
