@@ -109,15 +109,21 @@ export const fetchAthkarByCategory = async (category: string): Promise<AthkarIte
 
 export const fetchAllAthkar = async (): Promise<AthkarItem[]> => {
   try {
-    const categories = ['morning', 'evening', 'after_prayer', 'sleeping', 'waking', 'general', 'quranic_duas', 'prophetic_duas'];
-    console.log('Fetching all Athkar categories:', categories);
+    // Get all available categories from the authentic data
+    const allCategories = Object.keys(CATEGORY_MAPPING);
+    const englishCategories = Object.values(CATEGORY_MAPPING);
+    
+    console.log('Fetching all Athkar categories:', englishCategories);
+    console.log('Total Arabic categories available:', allCategories);
     
     const allAthkar = await Promise.all(
-      categories.map(category => fetchAthkarByCategory(category))
+      englishCategories.map(category => fetchAthkarByCategory(category))
     );
     
     const flattened = allAthkar.flat();
     console.log(`Total Athkar loaded: ${flattened.length}`);
+    console.log(`Categories processed: ${englishCategories.length}`);
+    
     return flattened;
     
   } catch (error) {

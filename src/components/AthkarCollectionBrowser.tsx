@@ -13,13 +13,17 @@ const AthkarCollectionBrowser = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
+  // Updated categories to include all from the authentic data
   const categories = [
     { id: 'all', name: 'All Athkar', count: 0 },
-    { id: 'morning', name: 'Morning', count: 0 },
-    { id: 'evening', name: 'Evening', count: 0 },
-    { id: 'after_prayer', name: 'After Prayer', count: 0 },
-    { id: 'sleeping', name: 'Before Sleep', count: 0 },
-    { id: 'general', name: 'General', count: 0 }
+    { id: 'morning', name: 'Morning أذكار الصباح', count: 0 },
+    { id: 'evening', name: 'Evening أذكار المساء', count: 0 },
+    { id: 'after_prayer', name: 'After Prayer أذكار بعد الصلاة', count: 0 },
+    { id: 'sleeping', name: 'Before Sleep أذكار النوم', count: 0 },
+    { id: 'waking', name: 'Upon Waking أذكار الاستيقاظ', count: 0 },
+    { id: 'general', name: 'General تسابيح', count: 0 },
+    { id: 'quranic_duas', name: 'Quranic Duas أدعية قرآنية', count: 0 },
+    { id: 'prophetic_duas', name: 'Prophetic Duas أدعية الأنبياء', count: 0 }
   ];
 
   useEffect(() => {
@@ -35,6 +39,7 @@ const AthkarCollectionBrowser = () => {
     setIsLoading(true);
     try {
       const athkar = await fetchAllAthkar();
+      console.log(`Total Athkar loaded in browser: ${athkar.length}`);
       setAllAthkar(athkar);
     } catch (error) {
       console.error('Failed to load Athkar:', error);
