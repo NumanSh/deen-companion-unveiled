@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -13,6 +14,8 @@ import PersonalizedContentEngine from '@/components/PersonalizedContentEngine';
 import IslamicAchievementSystem from '@/components/IslamicAchievementSystem';
 import CommunityPrayerRequests from '@/components/CommunityPrayerRequests';
 import DailyIslamicChallenges from '@/components/DailyIslamicChallenges';
+import FloatingQuickAccess from '@/components/FloatingQuickAccess';
+import SmartNotificationCenter from '@/components/SmartNotificationCenter';
 
 const DashboardTab = () => {
   const navigate = useNavigate();
@@ -25,13 +28,30 @@ const DashboardTab = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {/* Enhanced Header with Notifications */}
+      <Card className="bg-gradient-to-r from-teal-50 to-blue-50 dark:from-teal-900/20 dark:to-blue-900/20">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-2xl font-bold text-teal-700 dark:text-teal-300">
+                Assalamu Alaikum! 🌙
+              </CardTitle>
+              <p className="text-teal-600 dark:text-teal-400 mt-1">
+                May this day bring you closer to Allah
+              </p>
+            </div>
+            <SmartNotificationCenter />
+          </div>
+        </CardHeader>
+      </Card>
+
       {/* Quick Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <Card key={index} className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+            <Card key={index} className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 hover:shadow-lg transition-all">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -130,7 +150,7 @@ const DashboardTab = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Button 
               variant="outline" 
-              className="h-20 flex flex-col gap-2"
+              className="h-20 flex flex-col gap-2 hover:shadow-md transition-all"
               onClick={() => navigate('/books?tab=quran')}
             >
               <BookOpen className="w-6 h-6" />
@@ -138,7 +158,7 @@ const DashboardTab = () => {
             </Button>
             <Button 
               variant="outline" 
-              className="h-20 flex flex-col gap-2"
+              className="h-20 flex flex-col gap-2 hover:shadow-md transition-all"
               onClick={() => navigate('/prayer-times')}
             >
               <Clock className="w-6 h-6" />
@@ -146,7 +166,7 @@ const DashboardTab = () => {
             </Button>
             <Button 
               variant="outline" 
-              className="h-20 flex flex-col gap-2"
+              className="h-20 flex flex-col gap-2 hover:shadow-md transition-all"
               onClick={() => navigate('/books?tab=duas')}
             >
               <Star className="w-6 h-6" />
@@ -154,7 +174,7 @@ const DashboardTab = () => {
             </Button>
             <Button 
               variant="outline" 
-              className="h-20 flex flex-col gap-2"
+              className="h-20 flex flex-col gap-2 hover:shadow-md transition-all"
               onClick={() => navigate('/calendar')}
             >
               <Calendar className="w-6 h-6" />
@@ -163,6 +183,9 @@ const DashboardTab = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Floating Quick Access Widget */}
+      <FloatingQuickAccess />
     </div>
   );
 };

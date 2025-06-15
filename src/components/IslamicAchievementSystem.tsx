@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,7 +14,8 @@ import {
   Heart,
   Zap,
   Crown,
-  Gift
+  Gift,
+  LucideIcon
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -23,7 +23,7 @@ interface Achievement {
   id: string;
   title: string;
   description: string;
-  icon: React.ComponentType;
+  icon: LucideIcon;
   category: 'prayer' | 'quran' | 'dhikr' | 'charity' | 'knowledge' | 'consistency';
   difficulty: 'bronze' | 'silver' | 'gold' | 'platinum';
   requirement: number;

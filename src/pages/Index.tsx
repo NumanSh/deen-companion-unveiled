@@ -18,6 +18,8 @@ import PersonalDashboard from "@/components/PersonalDashboard";
 import QuranicVerseOfDay from "@/components/QuranicVerseOfDay";
 import IslamicQuoteWidget from "@/components/IslamicQuoteWidget";
 import PrayerTimesWidget from "@/components/PrayerTimesWidget";
+import FloatingQuickAccess from "@/components/FloatingQuickAccess";
+import SmartNotificationCenter from "@/components/SmartNotificationCenter";
 import { cn } from "@/lib/utils";
 
 const Index = () => {
@@ -52,20 +54,23 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 pb-20">
-      {/* Header */}
+      {/* Enhanced Header */}
       <div className="bg-gradient-to-br from-teal-600 to-teal-700 pt-12 pb-6 px-4">
         <div className="flex justify-between items-center mb-6">
           <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
             <Menu className="w-6 h-6" />
           </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="text-white hover:bg-white/20"
-            onClick={() => navigate("/settings")}
-          >
-            <Settings className="w-6 h-6" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <SmartNotificationCenter />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="text-white hover:bg-white/20"
+              onClick={() => navigate("/settings")}
+            >
+              <Settings className="w-6 h-6" />
+            </Button>
+          </div>
         </div>
 
         <div className="text-center text-white">
@@ -115,6 +120,9 @@ const Index = () => {
           <PrayerTimesWidget />
         </div>
       </div>
+      
+      {/* Floating Quick Access Widget */}
+      <FloatingQuickAccess />
       
       <BottomTabBar />
     </div>

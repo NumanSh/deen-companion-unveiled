@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +16,8 @@ import {
   Heart,
   Moon,
   Sun,
-  Zap
+  Zap,
+  LucideIcon
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -38,7 +38,7 @@ interface DailyChallenge {
   completed: boolean;
   completedAt?: number;
   streak?: number;
-  icon: React.ComponentType;
+  icon: LucideIcon;
 }
 
 const DailyIslamicChallenges = () => {
