@@ -64,7 +64,9 @@ function App() {
     { id: 'habits', label: 'Habits', icon: '📊' },
     { id: 'discover', label: 'Discover', icon: '🌟' },
     { id: 'prayer-notifications', label: 'Prayer Notifications', icon: '🔔' },
-    { id: 'community-prayer-sync', label: 'Prayer Sync', icon: '🕐' }
+    { id: 'community-prayer-sync', label: 'Prayer Sync', icon: '🕐' },
+    { id: 'advanced-location-services', label: 'Location Services', icon: '📍' },
+    { id: 'enhanced-community-features', label: 'Community Features', icon: '👨‍👩‍👧‍👦' }
   ];
 
   return (

@@ -20,6 +20,8 @@ import CommunityMentorshipSystem from '@/components/CommunityMentorshipSystem';
 import CommunityPrayerTimeSync from '@/components/CommunityPrayerTimeSync';
 import AdvancedCommunityLearningDashboard from '@/components/AdvancedCommunityLearningDashboard';
 import IslamicBookLibrary from '@/components/IslamicBookLibrary';
+import AdvancedIslamicLocationServices from '@/components/AdvancedIslamicLocationServices';
+import EnhancedCommunityLearningFeatures from '@/components/EnhancedCommunityLearningFeatures';
 import {
   HadithTab,
   AdhkarTab,
@@ -119,6 +121,10 @@ const TabContent: React.FC<TabContentProps> = ({
       return <CommunityPrayerTimeSync />;
     case 'community-learning-dashboard':
       return <AdvancedCommunityLearningDashboard />;
+    case 'advanced-location-services':
+      return <AdvancedIslamicLocationServices />;
+    case 'enhanced-community-features':
+      return <EnhancedCommunityLearningFeatures />;
     default:
       return <DashboardTab />;
   }
