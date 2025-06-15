@@ -47,6 +47,7 @@ function App() {
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
     { id: 'quran', label: 'Quran', icon: '📖' },
+    { id: 'islamic-library', label: 'Islamic Library', icon: '📚' },
     { id: 'offline-quran', label: 'Offline Quran', icon: '📱' },
     { id: 'ai-recommendations', label: 'AI Recommendations', icon: '🤖' },
     { id: 'hadith-checker', label: 'Hadith Checker', icon: '🔍' },
@@ -62,7 +63,8 @@ function App() {
     { id: 'duas', label: 'Duas', icon: '🤲' },
     { id: 'habits', label: 'Habits', icon: '📊' },
     { id: 'discover', label: 'Discover', icon: '🌟' },
-    { id: 'prayer-notifications', label: 'Prayer Notifications', icon: '🔔' }
+    { id: 'prayer-notifications', label: 'Prayer Notifications', icon: '🔔' },
+    { id: 'community-prayer-sync', label: 'Prayer Sync', icon: '🕐' }
   ];
 
   return (

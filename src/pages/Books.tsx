@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import BottomTabBar from '@/components/BottomTabBar';
 import TabNavigation from '@/components/TabNavigation';
@@ -8,8 +9,9 @@ import FloatingHelpSystem from '@/components/FloatingHelpSystem';
 import EnhancedSearchExperience from '@/components/EnhancedSearchExperience';
 import IslamicHabitBuilder from '@/components/IslamicHabitBuilder';
 import IslamicHabitVisualization from '@/components/IslamicHabitVisualization';
+import IslamicBookLibrary from '@/components/IslamicBookLibrary';
 import { Card } from '@/components/ui/card';
-import { BookOpen, Heart, Search, Star, Target, BarChart3 } from 'lucide-react';
+import { BookOpen, Heart, Search, Star, Target, BarChart3, Library } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import EnhancedFloatingActionsSystem from '@/components/EnhancedFloatingActionsSystem';
 import InteractiveIslamicAchievements from '@/components/InteractiveIslamicAchievements';
@@ -153,6 +155,16 @@ const Books = () => {
     </div>
   );
 
+  const renderIslamicLibraryContent = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+        <Library className="w-6 h-6 text-emerald-600" />
+        المكتبة الإسلامية الرقمية
+      </h2>
+      <IslamicBookLibrary />
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pb-20 relative overflow-hidden">
       {/* Enhanced Onboarding */}
@@ -240,6 +252,8 @@ const Books = () => {
             renderAchievementsContent()
           ) : activeTab === 'analytics' ? (
             renderAnalyticsContent()
+          ) : activeTab === 'islamic-library' ? (
+            renderIslamicLibraryContent()
           ) : (
             <TabContent 
               activeTab={activeTab} 

@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import DashboardTab from '@/components/tabs/DashboardTab';
 import HabitsTab from '@/components/tabs/HabitsTab';
@@ -18,6 +19,7 @@ import AdvancedCommunityAnalytics from '@/components/AdvancedCommunityAnalytics'
 import CommunityMentorshipSystem from '@/components/CommunityMentorshipSystem';
 import CommunityPrayerTimeSync from '@/components/CommunityPrayerTimeSync';
 import AdvancedCommunityLearningDashboard from '@/components/AdvancedCommunityLearningDashboard';
+import IslamicBookLibrary from '@/components/IslamicBookLibrary';
 import {
   HadithTab,
   AdhkarTab,
@@ -73,6 +75,8 @@ const TabContent: React.FC<TabContentProps> = ({
           isLoading={isLoading}
         />
       );
+    case 'islamic-library':
+      return <IslamicBookLibrary />;
     case 'offline-quran':
       return <OfflineQuranManager surahs={surahs} />;
     case 'ai-recommendations':
