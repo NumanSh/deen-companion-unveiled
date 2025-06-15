@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Minus, RotateCcw, Target, Volume2, VolumeX } from "lucide-react";
+import { Plus, Minus, RotateCcw, Target, Volume2, VolumeX, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const DhikrCounter: React.FC = () => {
@@ -92,14 +92,38 @@ const DhikrCounter: React.FC = () => {
     });
   };
 
+  const resetAllData = () => {
+    if (window.confirm('Reset all dhikr data including settings and history?')) {
+      localStorage.removeItem('dhikr-settings');
+      localStorage.removeItem('dhikr-count');
+      setCount(0);
+      setTarget(33);
+      setSoundEnabled(true);
+      setVibrationEnabled(true);
+      toast({
+        title: "All Data Reset",
+        description: "All dhikr data has been completely reset.",
+      });
+    }
+  };
+
   const progress = Math.min((count / target) * 100, 100);
 
   return (
     <div className="space-y-4">
       <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20">
         <CardHeader>
-          <CardTitle className="text-center text-2xl text-purple-900 dark:text-purple-100">
-            Dhikr Counter
+          <CardTitle className="text-center text-2xl text-purple-900 dark:text-purple-100 flex items-center justify-between">
+            <span>Dhikr Counter</span>
+            <Button
+              onClick={resetAllData}
+              variant="outline"
+              size="sm"
+              className="text-red-600 border-red-300 hover:bg-red-50"
+            >
+              <RefreshCw className="w-4 h-4 mr-1" />
+              Reset All
+            </Button>
           </CardTitle>
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 text-sm text-purple-700 dark:text-purple-300">

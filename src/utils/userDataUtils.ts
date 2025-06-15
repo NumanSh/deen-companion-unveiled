@@ -1,4 +1,3 @@
-
 export const resetUserDataForNewUser = () => {
   // Clear all user progress data
   const keysToRemove = [
@@ -29,6 +28,46 @@ export const resetUserDataForNewUser = () => {
   });
 
   console.log('User data reset for new user experience');
+};
+
+export const resetAllCounters = () => {
+  // Reset all counter-related data
+  const counterKeys = [
+    'dhikr-settings',
+    'dhikr-count',
+    'reading-streak-data',
+    'readingStreakData',
+    'spiritual-mood-history',
+    'sadaqah-entries',
+    'sadaqah-monthly-goal',
+    'athkar-progress',
+    'tasbih-counter',
+    'prayer-streak',
+    'prayer-history',
+    'spiritual-habits-streaks'
+  ];
+
+  counterKeys.forEach(key => {
+    localStorage.removeItem(key);
+  });
+
+  // Clear all daily tasks and goals
+  const allKeys = Object.keys(localStorage);
+  allKeys.forEach(key => {
+    if (key.startsWith('dailyTasks_') || 
+        key.startsWith('dailyGoals_') || 
+        key.startsWith('prayers-') ||
+        key.includes('counter') ||
+        key.includes('streak') ||
+        key.includes('progress')) {
+      localStorage.removeItem(key);
+    }
+  });
+
+  console.log('All counters have been reset');
+  
+  // Reload the page to reflect changes
+  window.location.reload();
 };
 
 export const initializeNewUserData = () => {

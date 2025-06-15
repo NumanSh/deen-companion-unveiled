@@ -28,6 +28,7 @@ import IslamicPrayerTimeAlerts from '@/components/IslamicPrayerTimeAlerts';
 import IslamicCalendarEvents from '@/components/IslamicCalendarEvents';
 import IslamicDateEventsTracker from '@/components/IslamicDateEventsTracker';
 import IslamicFinanceCalculator from '@/components/IslamicFinanceCalculator';
+import GlobalCounterReset from '@/components/GlobalCounterReset';
 
 export const HadithTab = () => (
   <div className="space-y-6">
@@ -76,6 +77,7 @@ export const AnalyticsTab = () => (
       <SpiritualMoodTracker />
       <SadaqahTracker />
     </div>
+    <GlobalCounterReset />
   </div>
 );
 
