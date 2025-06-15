@@ -50,6 +50,8 @@ function App() {
     { id: 'offline-quran', label: 'Offline Quran', icon: '📱' },
     { id: 'ai-recommendations', label: 'AI Recommendations', icon: '🤖' },
     { id: 'hadith-checker', label: 'Hadith Checker', icon: '🔍' },
+    { id: 'smart-learning-path', label: 'Learning Path', icon: '🎯' },
+    { id: 'adaptive-ui', label: 'Adaptive UI', icon: '🎨' },
     { id: 'hadith', label: 'Hadith', icon: '📜' },
     { id: 'duas', label: 'Duas', icon: '🤲' },
     { id: 'habits', label: 'Habits', icon: '📊' },

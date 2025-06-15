@@ -10,6 +10,8 @@ import OfflineQuranManager from '@/components/OfflineQuranManager';
 import SmartDailyRecommendations from '@/components/SmartDailyRecommendations';
 import SmartHadithAuthenticityChecker from '@/components/SmartHadithAuthenticityChecker';
 import PersonalizedPrayerNotifications from '@/components/PersonalizedPrayerNotifications';
+import SmartLearningPathSuggestions from '@/components/SmartLearningPathSuggestions';
+import AdaptiveUIPreferences from '@/components/AdaptiveUIPreferences';
 import {
   HadithTab,
   AdhkarTab,
@@ -71,6 +73,10 @@ const TabContent: React.FC<TabContentProps> = ({
       return <SmartDailyRecommendations />;
     case 'hadith-checker':
       return <SmartHadithAuthenticityChecker />;
+    case 'smart-learning-path':
+      return <SmartLearningPathSuggestions />;
+    case 'adaptive-ui':
+      return <AdaptiveUIPreferences />;
     case 'hadith':
       return <HadithTab />;
     case 'duas':
