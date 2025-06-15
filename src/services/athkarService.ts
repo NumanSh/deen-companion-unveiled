@@ -76,7 +76,13 @@ export const fetchAthkarByCategory = async (category: string): Promise<AthkarIte
         categoryData = AUTHENTIC_ATHKAR_DATA["أدعية الأنبياء"];
         break;
       default:
+        console.warn(`Unknown category: ${category}, using morning athkar as fallback`);
         categoryData = AUTHENTIC_ATHKAR_DATA["أذكار الصباح"];
+    }
+
+    if (!categoryData || categoryData.length === 0) {
+      console.warn(`No data found for category: ${category}`);
+      return [];
     }
 
     // Find the Arabic category name for this data
@@ -85,7 +91,7 @@ export const fetchAthkarByCategory = async (category: string): Promise<AthkarIte
     ) || "أذكار الصباح";
 
     const athkarItems = convertToAthkarItems(categoryData, arabicCategoryName);
-    console.log(`Returning ${athkarItems.length} Athkar items for category: ${category}`);
+    console.log(`Successfully converted ${athkarItems.length} Athkar items for category: ${category}`);
     return athkarItems;
     
   } catch (error) {
@@ -115,14 +121,30 @@ export const fetchAllAthkar = async (): Promise<AthkarItem[]> => {
     
     console.log('Fetching all Athkar categories:', englishCategories);
     console.log('Total Arabic categories available:', allCategories);
+    console.log('Available data keys:', Object.keys(AUTHENTIC_ATHKAR_DATA));
     
     const allAthkar = await Promise.all(
-      englishCategories.map(category => fetchAthkarByCategory(category))
+      englishCategories.map(async (category) => {
+        try {
+          const categoryAthkar = await fetchAthkarByCategory(category);
+          console.log(`Category ${category}: ${categoryAthkar.length} items loaded`);
+          return categoryAthkar;
+        } catch (error) {
+          console.error(`Failed to load category ${category}:`, error);
+          return [];
+        }
+      })
     );
     
     const flattened = allAthkar.flat();
     console.log(`Total Athkar loaded: ${flattened.length}`);
     console.log(`Categories processed: ${englishCategories.length}`);
+    
+    // Log summary of each category
+    englishCategories.forEach(category => {
+      const categoryItems = flattened.filter(item => item.category === category);
+      console.log(`${category}: ${categoryItems.length} items`);
+    });
     
     return flattened;
     
