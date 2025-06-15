@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Home from './pages/Home';
 import Books from './pages/Books';
 import Calendar from './pages/Calendar';
+import PrayerTimes from './pages/PrayerTimes';
 import Settings from './pages/Settings';
 import Index from './pages/Index';
 import NotFound from './pages/NotFound';
