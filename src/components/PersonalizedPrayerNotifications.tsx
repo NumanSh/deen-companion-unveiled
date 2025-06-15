@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,7 +17,7 @@ import {
   AlertCircle,
   CheckCircle,
   Loader2,
-  Test
+  Play
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { prayerNotificationService, NotificationSettings, PrayerNotificationConfig } from '@/services/prayerNotificationService';
@@ -295,7 +294,7 @@ const PersonalizedPrayerNotifications = () => {
                       onClick={() => testNotification(prayer as keyof PrayerNotificationConfig)}
                       disabled={!settings.enabled || permissionStatus.notification !== 'granted'}
                     >
-                      <Test className="w-4 h-4" />
+                      <Play className="w-4 h-4" />
                     </Button>
                   </div>
                 </CardTitle>
