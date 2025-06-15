@@ -1,3 +1,4 @@
+
 import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -6,6 +7,7 @@ import { LanguageProvider } from '@/contexts/LanguageContext';
 import MicroInteractionFeedback from '@/components/MicroInteractionFeedback';
 import { prayerTimesApi } from '@/services/prayerTimesApi';
 import { prayerNotificationService } from '@/services/prayerNotificationService';
+import KeyboardShortcutsManager from '@/components/KeyboardShortcutsManager';
 import './App.css';
 
 // Lazy load pages for better performance
@@ -32,8 +34,6 @@ const LoadingFallback = () => (
     <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-teal-600"></div>
   </div>
 );
-
-import KeyboardShortcutsManager from '@/components/KeyboardShortcutsManager';
 
 const App: React.FC = () => {
   useEffect(() => {

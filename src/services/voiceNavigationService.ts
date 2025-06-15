@@ -67,7 +67,7 @@ class VoiceNavigationService {
       },
       {
         patterns: ['open quran', 'go to quran', 'show quran'],
-        action: () => this.navigate?('/books'),
+        action: () => this.navigate?.('/books'),
         description: 'Open Quran reader',
         category: 'navigation'
       },
