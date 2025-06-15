@@ -12,7 +12,9 @@ import {
   Search,
   Plus,
   X,
-  Zap
+  Zap,
+  Target,
+  Star
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -22,7 +24,6 @@ const FloatingQuickAccess = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  // Auto-hide after first interaction for cleaner UX
   useEffect(() => {
     const hasUsedBefore = localStorage.getItem('floating-access-used');
     if (hasUsedBefore) {
@@ -37,7 +38,8 @@ const FloatingQuickAccess = () => {
       icon: BookOpen,
       action: () => navigate('/books?tab=quran'),
       color: 'bg-emerald-500 hover:bg-emerald-600',
-      description: 'Read & Study'
+      description: 'Read & Study',
+      gradient: 'from-emerald-400 to-emerald-600'
     },
     {
       id: 'prayer-times',
@@ -45,7 +47,8 @@ const FloatingQuickAccess = () => {
       icon: Clock,
       action: () => navigate('/calendar'),
       color: 'bg-blue-500 hover:bg-blue-600',
-      description: 'Times & Tracker'
+      description: 'Times & Tracker',
+      gradient: 'from-blue-400 to-blue-600'
     },
     {
       id: 'qibla',
@@ -53,7 +56,8 @@ const FloatingQuickAccess = () => {
       icon: Compass,
       action: () => navigate('/calendar'),
       color: 'bg-purple-500 hover:bg-purple-600',
-      description: 'Find Direction'
+      description: 'Find Direction',
+      gradient: 'from-purple-400 to-purple-600'
     },
     {
       id: 'duas',
@@ -61,7 +65,8 @@ const FloatingQuickAccess = () => {
       icon: Heart,
       action: () => navigate('/books?tab=duas'),
       color: 'bg-rose-500 hover:bg-rose-600',
-      description: 'Daily Supplications'
+      description: 'Daily Supplications',
+      gradient: 'from-rose-400 to-rose-600'
     },
     {
       id: 'search',
@@ -69,31 +74,30 @@ const FloatingQuickAccess = () => {
       icon: Search,
       action: () => navigate('/books'),
       color: 'bg-orange-500 hover:bg-orange-600',
-      description: 'Find Content'
+      description: 'Find Content',
+      gradient: 'from-orange-400 to-orange-600'
     },
     {
-      id: 'calendar',
-      title: 'Calendar',
-      icon: Calendar,
-      action: () => navigate('/calendar'),
+      id: 'goals',
+      title: 'Goals',
+      icon: Target,
+      action: () => navigate('/home'),
       color: 'bg-indigo-500 hover:bg-indigo-600',
-      description: 'Islamic Dates'
+      description: 'Track Progress',
+      gradient: 'from-indigo-400 to-indigo-600'
     }
   ];
 
   const handleActionClick = (action: any) => {
-    // Instant feedback principle - provide immediate confirmation
     toast({
       title: `Opening ${action.title}`,
       description: action.description,
       duration: 1500,
     });
     
-    // Mark as used for personalization
     localStorage.setItem('floating-access-used', 'true');
     setHasInteracted(true);
     
-    // Visual feedback with slight delay for better UX
     setTimeout(() => {
       action.action();
       setIsExpanded(false);
@@ -102,7 +106,6 @@ const FloatingQuickAccess = () => {
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
-    // Haptic feedback simulation through toast for interaction confirmation
     if (!isExpanded) {
       toast({
         title: "Quick Access",
@@ -114,27 +117,49 @@ const FloatingQuickAccess = () => {
 
   return (
     <div className="fixed bottom-24 right-4 z-50">
-      {/* Expanded Menu - Touch-friendly design with larger hit areas */}
+      {/* Enhanced Expanded Menu */}
       {isExpanded && (
         <div className="mb-4 animate-scale-in">
-          <Card className="shadow-2xl border-2 border-teal-200/50 bg-white/95 backdrop-blur-sm">
-            <CardContent className="p-3">
-              <div className="grid grid-cols-2 gap-3 w-40">
-                {quickActions.map((action) => {
+          <Card className="shadow-2xl border-2 border-teal-200/30 bg-white/95 backdrop-blur-sm overflow-hidden">
+            <CardContent className="p-4">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200">
+                <div className="flex items-center gap-2">
+                  <Star className="w-4 h-4 text-teal-600" />
+                  <span className="font-semibold text-gray-700 text-sm">Quick Actions</span>
+                </div>
+                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                  {quickActions.length} actions
+                </span>
+              </div>
+              
+              {/* Actions Grid */}
+              <div className="grid grid-cols-2 gap-3 w-48">
+                {quickActions.map((action, index) => {
                   const Icon = action.icon;
                   return (
                     <Button
                       key={action.id}
                       onClick={() => handleActionClick(action)}
-                      className={`h-20 w-20 rounded-2xl text-white shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 ${action.color}`}
+                      className={`h-20 w-20 rounded-2xl text-white shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 group relative overflow-hidden ${action.color}`}
                       size="icon"
+                      style={{
+                        animationDelay: `${index * 50}ms`,
+                        animationFillMode: 'both'
+                      }}
                     >
-                      <div className="flex flex-col items-center gap-1">
-                        <Icon className="w-5 h-5" />
+                      {/* Gradient overlay */}
+                      <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-200`} />
+                      
+                      <div className="flex flex-col items-center gap-1 relative z-10">
+                        <Icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
                         <span className="text-xs font-medium leading-tight text-center">
                           {action.title}
                         </span>
                       </div>
+                      
+                      {/* Shine effect on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-700" />
                     </Button>
                   );
                 })}
@@ -144,31 +169,42 @@ const FloatingQuickAccess = () => {
         </div>
       )}
 
-      {/* Main Toggle Button - Larger touch target */}
+      {/* Enhanced Main Toggle Button */}
       <Button
         onClick={toggleExpanded}
-        className={`h-16 w-16 rounded-full shadow-2xl transition-all duration-300 active:scale-90 ${
+        className={`h-16 w-16 rounded-full shadow-2xl transition-all duration-300 active:scale-90 relative overflow-hidden ${
           isExpanded 
             ? 'bg-red-500 hover:bg-red-600 rotate-45' 
-            : 'bg-teal-600 hover:bg-teal-700 hover:scale-110'
+            : 'bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 hover:scale-110'
         }`}
         size="icon"
       >
+        {/* Animated background */}
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-emerald-500 opacity-0 hover:opacity-20 transition-opacity duration-300" />
+        
         {isExpanded ? (
-          <X className="w-7 h-7 text-white" />
+          <X className="w-7 h-7 text-white relative z-10" />
         ) : (
-          <Zap className="w-7 h-7 text-white" />
+          <Zap className="w-7 h-7 text-white relative z-10" />
+        )}
+        
+        {/* Pulse ring */}
+        {!isExpanded && (
+          <div className="absolute inset-0 rounded-full border-2 border-teal-300 animate-ping opacity-50" />
         )}
       </Button>
 
-      {/* First-time user hint */}
+      {/* Enhanced first-time user hint */}
       {!hasInteracted && !isExpanded && (
-        <div className="absolute -top-16 -left-20 bg-teal-600 text-white text-xs px-3 py-2 rounded-lg shadow-lg animate-fade-in">
+        <div className="absolute -top-20 -left-28 bg-gradient-to-r from-teal-600 to-emerald-600 text-white text-xs px-4 py-3 rounded-xl shadow-xl animate-fade-in max-w-40">
           <div className="text-center">
-            <p className="font-medium">Quick Access</p>
-            <p className="opacity-90">Tap to explore</p>
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <Star className="w-3 h-3" />
+              <p className="font-semibold">Quick Access</p>
+            </div>
+            <p className="opacity-90 text-xs">Tap to explore amazing features</p>
           </div>
-          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-teal-600"></div>
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-6 border-transparent border-t-teal-600"></div>
         </div>
       )}
     </div>
