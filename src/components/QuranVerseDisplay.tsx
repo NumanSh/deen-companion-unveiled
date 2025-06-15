@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, Heart } from 'lucide-react';
+import { Copy, Heart, Loader2 } from 'lucide-react';
+import { useTafsir } from '@/hooks/useTafsir';
 
 interface QuranVerseDisplayProps {
   ayah: {
@@ -21,6 +22,7 @@ interface QuranVerseDisplayProps {
   onVerseClick: () => void;
   onCopyVerse: () => void;
   onToggleBookmark: () => void;
+  surahNumber: number;
 }
 
 const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
@@ -32,21 +34,15 @@ const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
   isBookmarked,
   onVerseClick,
   onCopyVerse,
-  onToggleBookmark
+  onToggleBookmark,
+  surahNumber
 }) => {
-  // Simple Arabic tafsir for demonstration - in a real app this would come from an API
-  const getArabicTafsir = (verseNumber: number) => {
-    // This is a placeholder - in reality you'd fetch from a tafsir database
-    const tafsirExamples = [
-      "هذه الآية تبين عظمة الله سبحانه وتعالى وقدرته على الخلق والإبداع",
-      "في هذه الآية يذكر الله تعالى نعمه على عباده ويدعوهم للتفكر",
-      "هذه الآية تحتوي على حكمة عظيمة وموعظة للمؤمنين",
-      "يبين الله في هذه الآية أهمية التوحيد والإيمان به وحده",
-      "هذه الآية تذكر المؤمنين بأهمية الصلاة والذكر"
-    ];
-    
-    return tafsirExamples[verseNumber % tafsirExamples.length];
-  };
+  // Fetch tafsir from API
+  const { tafsir, isLoading: tafsirLoading, error: tafsirError } = useTafsir(
+    surahNumber, 
+    ayah.numberInSurah, 
+    showTranslation
+  );
 
   return (
     <div
@@ -102,7 +98,7 @@ const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
         {ayah.text}
       </div>
 
-      {/* Arabic Tafsir */}
+      {/* Arabic Tafsir from API */}
       {showTranslation && (
         <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg border-r-4 border-emerald-400">
           <h4 className="text-emerald-700 dark:text-emerald-300 font-semibold mb-2 text-right" dir="rtl">
@@ -113,7 +109,18 @@ const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
             style={{ fontSize: `${fontSize - 2}px` }}
             dir="rtl"
           >
-            {getArabicTafsir(ayah.numberInSurah)}
+            {tafsirLoading ? (
+              <div className="flex items-center justify-center gap-2 py-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-sm">جارٍ تحميل التفسير...</span>
+              </div>
+            ) : tafsirError ? (
+              <div className="text-red-600 dark:text-red-400 text-sm">
+                عذراً، لم نتمكن من تحميل التفسير
+              </div>
+            ) : (
+              tafsir
+            )}
           </div>
         </div>
       )}

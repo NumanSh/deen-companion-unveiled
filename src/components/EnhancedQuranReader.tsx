@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
@@ -161,6 +160,7 @@ const EnhancedQuranReader: React.FC<EnhancedQuranReaderProps> = ({
                   onVerseClick={() => setCurrentVerse(ayah.numberInSurah)}
                   onCopyVerse={() => handleCopyVerse(ayah.numberInSurah)}
                   onToggleBookmark={() => toggleVerseBookmark(ayah.numberInSurah)}
+                  surahNumber={arabicSurah.number}
                 />
               ))}
             </div>
