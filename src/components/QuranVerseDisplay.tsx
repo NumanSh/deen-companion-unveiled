@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, Heart, Loader2 } from 'lucide-react';
+import { Copy, Heart, Loader2, Share2 } from 'lucide-react';
 import { useTafsir } from '@/hooks/useTafsir';
 
 interface QuranVerseDisplayProps {
@@ -22,7 +22,9 @@ interface QuranVerseDisplayProps {
   onVerseClick: () => void;
   onCopyVerse: () => void;
   onToggleBookmark: () => void;
+  onShareVerse?: (verse: any) => void;
   surahNumber: number;
+  surahName?: string;
 }
 
 const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
@@ -35,7 +37,9 @@ const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
   onVerseClick,
   onCopyVerse,
   onToggleBookmark,
-  surahNumber
+  onShareVerse,
+  surahNumber,
+  surahName = 'Unknown'
 }) => {
   // Fetch tafsir from API
   const { tafsir, isLoading: tafsirLoading, error: tafsirError } = useTafsir(
@@ -43,6 +47,18 @@ const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
     ayah.numberInSurah, 
     showTranslation
   );
+
+  const handleShare = () => {
+    if (onShareVerse) {
+      onShareVerse({
+        text: ayah.text,
+        number: ayah.numberInSurah,
+        surahName,
+        surahNumber,
+        translation: translationAyah?.text
+      });
+    }
+  };
 
   return (
     <div
@@ -72,17 +88,30 @@ const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
           </Button>
         </div>
         
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={(e) => {
-            e.stopPropagation();
-            onCopyVerse();
-          }}
-          className="text-gray-500 hover:text-gray-700"
-        >
-          <Copy className="w-4 h-4" />
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleShare();
+            }}
+            className="text-gray-500 hover:text-blue-600"
+          >
+            <Share2 className="w-4 h-4" />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={(e) => {
+              e.stopPropagation();
+              onCopyVerse();
+            }}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <Copy className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
 
       {/* Arabic Text */}
