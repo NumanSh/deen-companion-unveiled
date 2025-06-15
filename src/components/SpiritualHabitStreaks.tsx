@@ -65,7 +65,7 @@ const SpiritualHabitStreaks = () => {
   };
 
   const getStreakIcon = (streak: number) => {
-    if (streak >= 30) return <Trophy className="w-5 h-5 text-gold-500" />;
+    if (streak >= 30) return <Trophy className="w-5 h-5 text-yellow-500" />;
     if (streak >= 15) return <Star className="w-5 h-5 text-yellow-500" />;
     if (streak >= 7) return <Flame className="w-5 h-5 text-orange-500" />;
     return <Calendar className="w-5 h-5 text-gray-500" />;
