@@ -24,7 +24,10 @@ import {
   Cloud,
   Headphones,
   DollarSign,
-  Navigation
+  Navigation,
+  MessageCircle,
+  Bell,
+  Bot
 } from 'lucide-react';
 import IslamicBookLibrary from '@/components/IslamicBookLibrary';
 import VoiceReadingMode from '@/components/VoiceReadingMode';
@@ -46,17 +49,44 @@ import TafsirComparisonTool from '@/components/TafsirComparisonTool';
 import SmartQiblaCompassAR from '@/components/SmartQiblaCompassAR';
 import IslamicPodcastLibrary from '@/components/IslamicPodcastLibrary';
 import EnhancedZakatCalculator from '@/components/EnhancedZakatCalculator';
+import AIIslamicChatbot from '@/components/AIIslamicChatbot';
+import SmartNotificationDashboard from '@/components/SmartNotificationDashboard';
+import CommunityEngagementHub from '@/components/CommunityEngagementHub';
 
 const DiscoverTabEnhanced = () => {
   const [currentVerse, setCurrentVerse] = useState(1);
 
   const features = [
     {
+      id: 'ai-chatbot',
+      title: 'المساعد الذكي',
+      description: 'مساعد AI للأسئلة الإسلامية مع إجابات فورية',
+      icon: Bot,
+      badge: 'جديد',
+      component: AIIslamicChatbot
+    },
+    {
+      id: 'community-hub',
+      title: 'مركز المجتمع',
+      description: 'تفاعل مع المجتمع الإسلامي ومشاركة التجارب',
+      icon: Users,
+      badge: 'جديد',
+      component: CommunityEngagementHub
+    },
+    {
+      id: 'smart-notifications',
+      title: 'التنبيهات الذكية',
+      description: 'نظام تنبيهات متقدم مع تخصيص كامل',
+      icon: Bell,
+      badge: 'جديد',
+      component: SmartNotificationDashboard
+    },
+    {
       id: 'qibla-compass',
       title: 'البوصلة الذكية',
       description: 'بوصلة القبلة مع الواقع المعزز',
       icon: Navigation,
-      badge: 'جديد',
+      badge: 'محدث',
       component: SmartQiblaCompassAR
     },
     {
@@ -64,7 +94,7 @@ const DiscoverTabEnhanced = () => {
       title: 'مكتبة البودكاست',
       description: 'محتوى صوتي إسلامي متنوع',
       icon: Headphones,
-      badge: 'جديد',
+      badge: 'محدث',
       component: IslamicPodcastLibrary
     },
     {
@@ -72,7 +102,7 @@ const DiscoverTabEnhanced = () => {
       title: 'حاسبة الزكاة المتقدمة',
       description: 'حساب الزكاة مع تتبع الاستثمارات',
       icon: DollarSign,
-      badge: 'جديد',
+      badge: 'محدث',
       component: EnhancedZakatCalculator
     },
     {
@@ -80,7 +110,7 @@ const DiscoverTabEnhanced = () => {
       title: 'بناء العادات',
       description: 'نظام تتبع العادات الإسلامية مع التحفيز',
       icon: Target,
-      badge: 'جديد',
+      badge: 'محدث',
       component: IslamicHabitBuilder
     },
     {
@@ -88,15 +118,15 @@ const DiscoverTabEnhanced = () => {
       title: 'مرئيات العادات',
       description: 'تحليل بصري لتقدم العادات الروحية',
       icon: BarChart3,
-      badge: 'جديد',
+      badge: 'محدث',
       component: IslamicHabitVisualization
     },
     {
       id: 'ai-assistant',
-      title: 'المساعد الذكي',
-      description: 'مساعد AI للأسئلة الإسلامية',
+      title: 'مساعد التعلم',
+      description: 'مساعد AI متخصص في التعلم الإسلامي',
       icon: Brain,
-      badge: 'محدث',
+      badge: null,
       component: AIIslamicLearningAssistant
     },
     {
@@ -104,7 +134,7 @@ const DiscoverTabEnhanced = () => {
       title: 'طلبات الدعاء',
       description: 'شبكة مجتمعية للدعاء',
       icon: Heart,
-      badge: 'محدث',
+      badge: null,
       component: CommunityPrayerRequestsSystem
     },
     {
@@ -112,7 +142,7 @@ const DiscoverTabEnhanced = () => {
       title: 'الحاسبة المالية',
       description: 'زكاة وصدقات واستثمار حلال',
       icon: Calculator,
-      badge: 'محدث',
+      badge: null,
       component: IslamicFinanceCalculatorEnhanced
     },
     {
@@ -120,7 +150,7 @@ const DiscoverTabEnhanced = () => {
       title: 'التلاوة الصوتية',
       description: 'استمع للقرآن مع تحكم متقدم',
       icon: BookOpen,
-      badge: 'محدث',
+      badge: null,
       component: VoiceReadingMode
     },
     {
@@ -163,7 +193,7 @@ const DiscoverTabEnhanced = () => {
       title: 'مسار التعلم الذكي',
       description: 'نظام تعلم مخصص مدعوم بالذكاء الاصطناعي',
       icon: Brain,
-      badge: 'جديد',
+      badge: null,
       component: AIPersonalizedLearningPath
     },
     {
@@ -171,7 +201,7 @@ const DiscoverTabEnhanced = () => {
       title: 'الطقس والصلاة',
       description: 'تنبيهات ذكية للصلاة مع حالة الطقس',
       icon: Cloud,
-      badge: 'جديد',
+      badge: null,
       component: SmartPrayerWeatherIntegration
     },
     {
@@ -179,7 +209,7 @@ const DiscoverTabEnhanced = () => {
       title: 'مفكرة الأحلام',
       description: 'سجل وفسر أحلامك بالمنظور الإسلامي',
       icon: Moon,
-      badge: 'جديد',
+      badge: null,
       component: IslamicDreamJournal
     },
     {
@@ -187,7 +217,7 @@ const DiscoverTabEnhanced = () => {
       title: 'حلقة الدراسة',
       description: 'انضم لحلقات دراسة افتراضية مع علماء',
       icon: Users,
-      badge: 'جديد',
+      badge: null,
       component: VirtualStudyCircle
     },
     {
@@ -195,7 +225,7 @@ const DiscoverTabEnhanced = () => {
       title: 'مقارنة التفاسير',
       description: 'قارن تفسيرات العلماء جنباً إلى جنب',
       icon: BookOpen,
-      badge: 'جديد',
+      badge: null,
       component: TafsirComparisonTool
     }
   ];
@@ -242,9 +272,9 @@ const DiscoverTabEnhanced = () => {
       </Card>
 
       {/* Features Tabs */}
-      <Tabs defaultValue="qibla-compass" className="w-full">
-        <TabsList className="grid grid-cols-3 lg:grid-cols-15 h-auto p-2 bg-gray-100 dark:bg-gray-800 rounded-xl">
-          {features.map((feature) => {
+      <Tabs defaultValue="ai-chatbot" className="w-full">
+        <TabsList className="grid grid-cols-3 lg:grid-cols-8 h-auto p-2 bg-gray-100 dark:bg-gray-800 rounded-xl">
+          {features.slice(0, 8).map((feature) => {
             const Icon = feature.icon;
             return (
               <TabsTrigger
@@ -268,6 +298,36 @@ const DiscoverTabEnhanced = () => {
           })}
         </TabsList>
 
+        {/* Show remaining features in a second row if needed */}
+        {features.length > 8 && (
+          <div className="mt-2">
+            <TabsList className="grid grid-cols-3 lg:grid-cols-8 h-auto p-2 bg-gray-100 dark:bg-gray-800 rounded-xl">
+              {features.slice(8).map((feature) => {
+                const Icon = feature.icon;
+                return (
+                  <TabsTrigger
+                    key={feature.id}
+                    value={feature.id}
+                    className="flex flex-col items-center gap-2 p-4 text-xs data-[state=active]:bg-white data-[state=active]:shadow-md"
+                  >
+                    <div className="relative">
+                      <Icon className="w-5 h-5" />
+                      {feature.badge && (
+                        <Badge className="absolute -top-2 -right-2 text-xs px-1 py-0 bg-red-500 text-white">
+                          {feature.badge}
+                        </Badge>
+                      )}
+                    </div>
+                    <span className="font-medium text-center leading-tight">
+                      {feature.title}
+                    </span>
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </div>
+        )}
+
         {features.map((feature) => (
           <TabsContent key={feature.id} value={feature.id} className="mt-6">
             <Card>
@@ -284,6 +344,9 @@ const DiscoverTabEnhanced = () => {
                 <p className="text-gray-600">{feature.description}</p>
               </CardHeader>
               <CardContent>
+                {feature.id === 'ai-chatbot' && <AIIslamicChatbot />}
+                {feature.id === 'community-hub' && <CommunityEngagementHub />}
+                {feature.id === 'smart-notifications' && <SmartNotificationDashboard />}
                 {feature.id === 'qibla-compass' && <SmartQiblaCompassAR />}
                 {feature.id === 'podcast-library' && <IslamicPodcastLibrary />}
                 {feature.id === 'zakat-calculator' && <EnhancedZakatCalculator />}
