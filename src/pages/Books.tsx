@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { BookOpen, MessageSquare, Lightbulb, Calendar, Quote, Brain } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 // Import existing components
 import QuranSurahGrid from '@/components/QuranSurahGrid';
@@ -18,10 +19,50 @@ import IslamicEventsCalendar from '@/components/IslamicEventsCalendar';
 import HadithOfTheDay from '@/components/HadithOfTheDay';
 import IslamicQuoteGenerator from '@/components/IslamicQuoteGenerator';
 
+// Import hooks and services
+import { useQuranData } from '@/hooks/useQuranData';
+import { useSurahContent } from '@/hooks/useSurahContent';
+
 const Books: React.FC = () => {
   const [searchParams] = useSearchParams();
   const initialTab = searchParams.get('tab') || 'quran';
   const [activeTab, setActiveTab] = useState(initialTab);
+  const [readingSurahs, setReadingSurahs] = useState<Set<number>>(new Set());
+  const { toast } = useToast();
+
+  // Use Quran data hook for the Quran tab
+  const {
+    surahs,
+    filteredSurahs,
+    searchTerm,
+    setSearchTerm,
+    isLoading: isLoadingSurahs,
+    clearSearch
+  } = useQuranData();
+
+  // Handle surah reading tracking
+  const handleSurahRead = (surah: any) => {
+    setReadingSurahs(prev => new Set([...prev, surah.number]));
+  };
+
+  // Handle surah click
+  const handleSurahClick = (surah: any) => {
+    console.log(`Clicked on surah ${surah.number}: ${surah.englishName}`);
+    handleSurahRead(surah);
+    toast({
+      title: 'Surah Selected',
+      description: `Opening ${surah.englishName}`,
+    });
+  };
+
+  // Handle bookmark functionality
+  const handleAddToBookmarks = (surah: any) => {
+    console.log('Adding to bookmarks:', surah);
+    toast({
+      title: 'Bookmarked',
+      description: `${surah.englishName} added to bookmarks`,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-teal-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
@@ -74,7 +115,14 @@ const Books: React.FC = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <QuranSurahGrid />
+                  <QuranSurahGrid
+                    surahs={filteredSurahs}
+                    readingSurahs={readingSurahs}
+                    onSurahClick={handleSurahClick}
+                    onAddToBookmarks={handleAddToBookmarks}
+                    searchTerm={searchTerm}
+                    onClearSearch={clearSearch}
+                  />
                 </CardContent>
               </Card>
             </TabsContent>
