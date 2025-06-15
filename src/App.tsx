@@ -1,4 +1,3 @@
-
 import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -37,6 +36,18 @@ function App() {
     // Initialize prayer times cache on app start
     prayerTimesApi.initializePrayerTimesCache();
   }, []);
+
+  const navigationItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
+    { id: 'quran', label: 'Quran', icon: '📖' },
+    { id: 'offline-quran', label: 'Offline Quran', icon: '📱' },
+    { id: 'ai-recommendations', label: 'AI Recommendations', icon: '🤖' },
+    { id: 'hadith-checker', label: 'Hadith Checker', icon: '🔍' },
+    { id: 'hadith', label: 'Hadith', icon: '📜' },
+    { id: 'duas', label: 'Duas', icon: '🤲' },
+    { id: 'habits', label: 'Habits', icon: '📊' },
+    { id: 'discover', label: 'Discover', icon: '🌟' }
+  ];
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -7,6 +7,8 @@ import QuranTab from '@/components/tabs/QuranTab';
 import DuasSection from '@/components/DuasSection';
 import SpiritualHabitStreaks from '@/components/SpiritualHabitStreaks';
 import OfflineQuranManager from '@/components/OfflineQuranManager';
+import PersonalizedRecommendations from '@/components/PersonalizedRecommendations';
+import SmartHadithAuthenticityChecker from '@/components/SmartHadithAuthenticityChecker';
 import {
   HadithTab,
   AdhkarTab,
@@ -64,6 +66,10 @@ const TabContent: React.FC<TabContentProps> = ({
       );
     case 'offline-quran':
       return <OfflineQuranManager surahs={surahs} />;
+    case 'ai-recommendations':
+      return <PersonalizedRecommendations />;
+    case 'hadith-checker':
+      return <SmartHadithAuthenticityChecker />;
     case 'hadith':
       return <HadithTab />;
     case 'duas':
