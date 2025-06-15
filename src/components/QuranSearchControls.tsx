@@ -2,20 +2,22 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Filter, TrendingUp } from 'lucide-react';
+import { Search, Filter, TrendingUp, BookText } from 'lucide-react';
 
 interface QuranSearchControlsProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
   onAdvancedSearchClick: () => void;
   onProgressClick: () => void;
+  onWordSearchClick?: () => void;
 }
 
 const QuranSearchControls: React.FC<QuranSearchControlsProps> = ({
   searchTerm,
   onSearchChange,
   onAdvancedSearchClick,
-  onProgressClick
+  onProgressClick,
+  onWordSearchClick
 }) => {
   return (
     <div className="flex flex-col sm:flex-row gap-3">
@@ -37,6 +39,16 @@ const QuranSearchControls: React.FC<QuranSearchControlsProps> = ({
           <Filter className="w-4 h-4" />
           Advanced Search
         </Button>
+        {onWordSearchClick && (
+          <Button
+            variant="outline"
+            onClick={onWordSearchClick}
+            className="flex items-center gap-2"
+          >
+            <BookText className="w-4 h-4" />
+            Word Search
+          </Button>
+        )}
         <Button
           variant="outline"
           onClick={onProgressClick}

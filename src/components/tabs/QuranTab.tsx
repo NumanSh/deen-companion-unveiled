@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,7 @@ import QuranStats from '@/components/QuranStats';
 import QuranLoadingStates from '@/components/QuranLoadingStates';
 import { useQuranData } from '@/hooks/useQuranData';
 import { useSurahContent } from '@/hooks/useSurahContent';
+import QuranWordSearch from '@/components/QuranWordSearch';
 
 interface QuranTabProps {
   onAddToBookmarks: (item: any, type: 'surah' | 'dua' | 'hadith') => void;
@@ -31,6 +31,7 @@ const QuranTab: React.FC<QuranTabProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
+  const [showWordSearch, setShowWordSearch] = useState(false);
 
   // Custom hooks for data management
   const {
@@ -76,6 +77,22 @@ const QuranTab: React.FC<QuranTabProps> = ({
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
   };
+
+  // Show word search modal
+  if (showWordSearch) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Quran Word Search</h2>
+          <Button variant="ghost" onClick={() => setShowWordSearch(false)}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Surahs
+          </Button>
+        </div>
+        <QuranWordSearch />
+      </div>
+    );
+  }
 
   // Show advanced search modal
   if (showAdvancedSearch) {
@@ -170,6 +187,7 @@ const QuranTab: React.FC<QuranTabProps> = ({
           onSearchChange={setSearchTerm}
           onAdvancedSearchClick={() => setShowAdvancedSearch(true)}
           onProgressClick={() => setShowProgress(true)}
+          onWordSearchClick={() => setShowWordSearch(true)}
         />
 
         {/* Loading state */}
