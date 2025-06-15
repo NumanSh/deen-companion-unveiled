@@ -12,6 +12,9 @@ import SmartHadithAuthenticityChecker from '@/components/SmartHadithAuthenticity
 import PersonalizedPrayerNotifications from '@/components/PersonalizedPrayerNotifications';
 import SmartLearningPathSuggestions from '@/components/SmartLearningPathSuggestions';
 import AdaptiveUIPreferences from '@/components/AdaptiveUIPreferences';
+import VirtualMosqueFinder from '@/components/VirtualMosqueFinder';
+import VirtualStudyCircle from '@/components/VirtualStudyCircle';
+import VirtualIslamicStudyGroup from '@/components/VirtualIslamicStudyGroup';
 import {
   HadithTab,
   AdhkarTab,
@@ -77,6 +80,12 @@ const TabContent: React.FC<TabContentProps> = ({
       return <SmartLearningPathSuggestions />;
     case 'adaptive-ui':
       return <AdaptiveUIPreferences />;
+    case 'mosque-finder':
+      return <VirtualMosqueFinder />;
+    case 'study-circle':
+      return <VirtualStudyCircle />;
+    case 'islamic-study-group':
+      return <VirtualIslamicStudyGroup />;
     case 'hadith':
       return <HadithTab />;
     case 'duas':
