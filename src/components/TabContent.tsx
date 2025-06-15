@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import DashboardTab from '@/components/tabs/DashboardTab';
 import HabitsTab from '@/components/tabs/HabitsTab';
@@ -5,6 +6,7 @@ import DiscoverTab from '@/components/tabs/DiscoverTab';
 import QuranTab from '@/components/tabs/QuranTab';
 import DuasSection from '@/components/DuasSection';
 import SpiritualHabitStreaks from '@/components/SpiritualHabitStreaks';
+import OfflineQuranManager from '@/components/OfflineQuranManager';
 import {
   HadithTab,
   AdhkarTab,
@@ -16,6 +18,7 @@ import {
   PersonalizedTab,
   CommunityTab
 } from '@/components/tabs/OtherTabs';
+import { useQuranData } from '@/hooks/useQuranData';
 
 interface TabContentProps {
   activeTab: string;
@@ -32,6 +35,8 @@ const TabContent: React.FC<TabContentProps> = ({
   readingSurahs,
   isLoading
 }) => {
+  const { surahs } = useQuranData();
+
   // Update stored tab selection when activeTab changes
   useEffect(() => {
     localStorage.setItem('selected-tab', activeTab);
@@ -57,6 +62,8 @@ const TabContent: React.FC<TabContentProps> = ({
           isLoading={isLoading}
         />
       );
+    case 'offline-quran':
+      return <OfflineQuranManager surahs={surahs} />;
     case 'hadith':
       return <HadithTab />;
     case 'duas':

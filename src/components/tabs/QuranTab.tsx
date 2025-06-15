@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Book, ArrowLeft, TrendingUp } from 'lucide-react';
+import { Book, ArrowLeft, TrendingUp, Download, WifiOff } from 'lucide-react';
 import { QuranSurah } from '@/services/quranService';
 import EnhancedQuranReader from '@/components/EnhancedQuranReader';
 import AdvancedQuranSearch from '@/components/AdvancedQuranSearch';
@@ -17,6 +17,7 @@ import EnhancedQuranSearch from '@/components/EnhancedQuranSearch';
 import VerseShareCard from '@/components/VerseShareCard';
 import { useQuranData } from '@/hooks/useQuranData';
 import { useSurahContent } from '@/hooks/useSurahContent';
+import { useOfflineQuran } from '@/hooks/useOfflineQuran';
 import QuranWordSearch from '@/components/QuranWordSearch';
 import { useToast } from '@/hooks/use-toast';
 
@@ -62,6 +63,12 @@ const QuranTab: React.FC<QuranTabProps> = ({
     resetSurahContent
   } = useSurahContent(onSurahRead);
 
+  const {
+    isSurahAvailableOffline,
+    downloadSurah,
+    isDownloading
+  } = useOfflineQuran();
+
   const handleSurahClick = (surah: QuranSurah) => {
     loadSurahContent(surah);
   };
@@ -103,6 +110,10 @@ const QuranTab: React.FC<QuranTabProps> = ({
   const handleEnhancedSearch = (term: string) => {
     setSearchTerm(term);
     setShowEnhancedSearch(false);
+  };
+
+  const handleDownloadForOffline = async (surah: QuranSurah) => {
+    await downloadSurah(surah);
   };
 
   // Show word search modal
@@ -258,15 +269,78 @@ const QuranTab: React.FC<QuranTabProps> = ({
             filteredSurahs={filteredSurahs.length}
           />
 
-          {/* Surahs Grid */}
-          <QuranSurahGrid
-            surahs={filteredSurahs}
-            readingSurahs={readingSurahs}
-            onSurahClick={handleSurahClick}
-            onAddToBookmarks={handleAddToBookmarks}
-            searchTerm={searchTerm}
-            onClearSearch={clearSearch}
-          />
+          {/* Enhanced Surahs Grid with Offline Support */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredSurahs.map((surah) => {
+              const isOffline = isSurahAvailableOffline(surah.number);
+              const downloading = isDownloading(surah.number);
+              
+              return (
+                <div
+                  key={surah.number}
+                  className="p-4 rounded-lg border transition-all cursor-pointer hover:shadow-md border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 relative"
+                  onClick={() => handleSurahClick(surah)}
+                >
+                  {/* Offline Indicator */}
+                  {isOffline && (
+                    <div className="absolute top-2 right-2">
+                      <WifiOff className="w-4 h-4 text-green-600" title="Available offline" />
+                    </div>
+                  )}
+                  
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="bg-emerald-100 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-200 px-3 py-1 rounded-full text-sm font-bold">
+                          {surah.number}
+                        </div>
+                        {readingSurahs.has(surah.number) && (
+                          <span className="w-2 h-2 bg-emerald-500 rounded-full" title="Recently read" />
+                        )}
+                      </div>
+                      <h3 className="font-bold text-lg text-gray-800 dark:text-gray-200 mb-1">
+                        {surah.englishName}
+                      </h3>
+                      <p className="text-sm text-emerald-600 mb-1">{surah.englishNameTranslation}</p>
+                      <p className="text-xs text-gray-500" dir="rtl">سُورَةُ {surah.name}</p>
+                      <p className="text-xs text-gray-400 mt-1">{surah.numberOfAyahs} verses</p>
+                    </div>
+                    
+                    <div className="flex flex-col items-center gap-2">
+                      {!isOffline && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownloadForOffline(surah);
+                          }}
+                          disabled={downloading}
+                          className="h-8 w-8"
+                          title="Download for offline reading"
+                        >
+                          {downloading ? (
+                            <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <Download className="w-4 h-4" />
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {searchTerm && filteredSurahs.length === 0 && (
+            <div className="text-center py-8">
+              <p className="text-gray-500 mb-4">No surahs found matching "{searchTerm}"</p>
+              <Button variant="outline" onClick={clearSearch}>
+                Clear Search
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 

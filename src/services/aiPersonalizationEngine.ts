@@ -27,7 +27,7 @@ export interface PersonalizationStats {
   currentStreak: number;
 }
 
-export type ContentType = 'quran' | 'hadith' | 'dua' | 'dhikr' | 'reflection';
+export type AIContentType = 'quran' | 'hadith' | 'dua' | 'dhikr' | 'reflection';
 
 class AIPersonalizationEngine {
   private userPreferences = {
@@ -49,7 +49,7 @@ class AIPersonalizationEngine {
     { type: 'dua', content: 'Morning Adhkar', duration: 10, engagement: 9 },
   ];
 
-  trackReadingSession(type: ContentType, content: string, duration: number, engagement: number) {
+  trackReadingSession(type: AIContentType, content: string, duration: number, engagement: number) {
     this.readingHistory.push({ type, content, duration, engagement });
     this.userStats.totalSessions++;
     this.userStats.averageEngagement = (this.userStats.averageEngagement + engagement) / 2;
@@ -153,4 +153,4 @@ class AIPersonalizationEngine {
 }
 
 export const aiPersonalizationEngine = new AIPersonalizationEngine();
-export type { ContentType };
+export type { AIContentType };
