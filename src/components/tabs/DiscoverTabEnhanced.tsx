@@ -17,7 +17,9 @@ import {
   Brain,
   Users,
   Calculator,
-  Heart
+  Heart,
+  Target,
+  BarChart3
 } from 'lucide-react';
 import IslamicBookLibrary from '@/components/IslamicBookLibrary';
 import VoiceReadingMode from '@/components/VoiceReadingMode';
@@ -29,17 +31,35 @@ import QuickActionShortcuts from '@/components/QuickActionShortcuts';
 import AIIslamicLearningAssistant from '@/components/AIIslamicLearningAssistant';
 import CommunityPrayerRequestsSystem from '@/components/CommunityPrayerRequestsSystem';
 import IslamicFinanceCalculatorEnhanced from '@/components/IslamicFinanceCalculatorEnhanced';
+import IslamicHabitBuilder from '@/components/IslamicHabitBuilder';
+import IslamicHabitVisualization from '@/components/IslamicHabitVisualization';
 
 const DiscoverTabEnhanced = () => {
   const [currentVerse, setCurrentVerse] = useState(1);
 
   const features = [
     {
+      id: 'habit-builder',
+      title: 'بناء العادات',
+      description: 'نظام تتبع العادات الإسلامية مع التحفيز',
+      icon: Target,
+      badge: 'جديد',
+      component: IslamicHabitBuilder
+    },
+    {
+      id: 'habit-visualization',
+      title: 'مرئيات العادات',
+      description: 'تحليل بصري لتقدم العادات الروحية',
+      icon: BarChart3,
+      badge: 'جديد',
+      component: IslamicHabitVisualization
+    },
+    {
       id: 'ai-assistant',
       title: 'المساعد الذكي',
       description: 'مساعد AI للأسئلة الإسلامية',
       icon: Brain,
-      badge: 'جديد',
+      badge: 'محدث',
       component: AIIslamicLearningAssistant
     },
     {
@@ -47,7 +67,7 @@ const DiscoverTabEnhanced = () => {
       title: 'طلبات الدعاء',
       description: 'شبكة مجتمعية للدعاء',
       icon: Heart,
-      badge: 'جديد',
+      badge: 'محدث',
       component: CommunityPrayerRequestsSystem
     },
     {
@@ -55,7 +75,7 @@ const DiscoverTabEnhanced = () => {
       title: 'الحاسبة المالية',
       description: 'زكاة وصدقات واستثمار حلال',
       icon: Calculator,
-      badge: 'جديد',
+      badge: 'محدث',
       component: IslamicFinanceCalculatorEnhanced
     },
     {
@@ -132,6 +152,10 @@ const DiscoverTabEnhanced = () => {
                 <span>شبكة مجتمعية</span>
               </div>
               <div className="flex items-center gap-2">
+                <Target className="w-4 h-4" />
+                <span>تتبع العادات</span>
+              </div>
+              <div className="flex items-center gap-2">
                 <Zap className="w-4 h-4" />
                 <span>استجابة فورية</span>
               </div>
@@ -141,8 +165,8 @@ const DiscoverTabEnhanced = () => {
       </Card>
 
       {/* Features Tabs */}
-      <Tabs defaultValue="ai-assistant" className="w-full">
-        <TabsList className="grid grid-cols-3 lg:grid-cols-9 h-auto p-2 bg-gray-100 dark:bg-gray-800 rounded-xl">
+      <Tabs defaultValue="habit-builder" className="w-full">
+        <TabsList className="grid grid-cols-3 lg:grid-cols-11 h-auto p-2 bg-gray-100 dark:bg-gray-800 rounded-xl">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
@@ -183,6 +207,8 @@ const DiscoverTabEnhanced = () => {
                 <p className="text-gray-600">{feature.description}</p>
               </CardHeader>
               <CardContent>
+                {feature.id === 'habit-builder' && <IslamicHabitBuilder />}
+                {feature.id === 'habit-visualization' && <IslamicHabitVisualization />}
                 {feature.id === 'ai-assistant' && <AIIslamicLearningAssistant />}
                 {feature.id === 'prayer-requests' && <CommunityPrayerRequestsSystem />}
                 {feature.id === 'finance-calculator' && <IslamicFinanceCalculatorEnhanced />}

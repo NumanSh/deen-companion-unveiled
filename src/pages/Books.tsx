@@ -7,8 +7,10 @@ import EnhancedOnboarding from '@/components/EnhancedOnboarding';
 import SmartNotificationSystem from '@/components/SmartNotificationSystem';
 import FloatingHelpSystem from '@/components/FloatingHelpSystem';
 import EnhancedSearchExperience from '@/components/EnhancedSearchExperience';
+import IslamicHabitBuilder from '@/components/IslamicHabitBuilder';
+import IslamicHabitVisualization from '@/components/IslamicHabitVisualization';
 import { Card } from '@/components/ui/card';
-import { BookOpen, Heart, Search, Star } from 'lucide-react';
+import { BookOpen, Heart, Search, Star, Target, BarChart3 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const Books = () => {
@@ -108,6 +110,27 @@ const Books = () => {
     }
   }, []);
 
+  const renderHabitsContent = () => (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
+          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <Target className="w-6 h-6 text-amber-600" />
+            بناء العادات الإسلامية
+          </h2>
+          <IslamicHabitBuilder />
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <BarChart3 className="w-6 h-6 text-purple-600" />
+            تصور التقدم
+          </h2>
+          <IslamicHabitVisualization />
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pb-20 relative overflow-hidden">
       {/* Enhanced Onboarding */}
@@ -154,7 +177,7 @@ const Books = () => {
               </div>
             </div>
             <p className="text-xl text-emerald-700 dark:text-emerald-300 font-medium">
-              Explore the Quran, Hadith, Duas, and Islamic knowledge with live API integration
+              Explore the Quran, Hadith, Duas, Islamic knowledge with live API integration & habit tracking
             </p>
             <div className="flex justify-center items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
               <div className="flex items-center gap-1">
@@ -164,6 +187,10 @@ const Books = () => {
               <div className="flex items-center gap-1">
                 <BookOpen className="w-4 h-4" />
                 <span>114 Surahs</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Target className="w-4 h-4" />
+                <span>Habit Tracking</span>
               </div>
               <div className="flex items-center gap-1">
                 <Search className="w-4 h-4" />
@@ -182,13 +209,17 @@ const Books = () => {
           </Card>
 
           {/* Tab Content */}
-          <TabContent 
-            activeTab={activeTab} 
-            onAddToBookmarks={handleAddToBookmarks}
-            onSurahRead={handleSurahRead}
-            readingSurahs={readingSurahs}
-            isLoading={false}
-          />
+          {activeTab === 'habits' ? (
+            renderHabitsContent()
+          ) : (
+            <TabContent 
+              activeTab={activeTab} 
+              onAddToBookmarks={handleAddToBookmarks}
+              onSurahRead={handleSurahRead}
+              readingSurahs={readingSurahs}
+              isLoading={false}
+            />
+          )}
         </div>
       </div>
       
