@@ -1,11 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Clock, Phone, Navigation, Star } from 'lucide-react';
+import { MapPin, Clock, Phone, Navigation, Star, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { prayerTimesApi } from '@/services/prayerTimesApi';
 
 interface Mosque {
   id: string;
@@ -14,7 +15,7 @@ interface Mosque {
   distance: string;
   rating: number;
   phone: string;
-  prayerTimes: {
+  prayerTimes?: {
     fajr: string;
     dhuhr: string;
     asr: string;
@@ -23,14 +24,19 @@ interface Mosque {
   };
   features: string[];
   isOpen: boolean;
+  latitude: number;
+  longitude: number;
 }
 
 const VirtualMosqueFinder: React.FC = () => {
   const [searchLocation, setSearchLocation] = useState('');
   const [selectedMosque, setSelectedMosque] = useState<Mosque | null>(null);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [isLoadingPrayerTimes, setIsLoadingPrayerTimes] = useState(false);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
   const { toast } = useToast();
 
-  const mosques: Mosque[] = [
+  const [mosques, setMosques] = useState<Mosque[]>([
     {
       id: '1',
       name: 'Masjid Al-Noor',
@@ -38,15 +44,10 @@ const VirtualMosqueFinder: React.FC = () => {
       distance: '0.5 miles',
       rating: 4.8,
       phone: '(555) 123-4567',
-      prayerTimes: {
-        fajr: '5:30 AM',
-        dhuhr: '12:45 PM',
-        asr: '4:20 PM',
-        maghrib: '6:45 PM',
-        isha: '8:15 PM'
-      },
       features: ['Parking', 'Wheelchair Access', 'Women\'s Section'],
-      isOpen: true
+      isOpen: true,
+      latitude: 40.7128,
+      longitude: -74.0060
     },
     {
       id: '2',
@@ -55,15 +56,10 @@ const VirtualMosqueFinder: React.FC = () => {
       distance: '1.2 miles',
       rating: 4.6,
       phone: '(555) 987-6543',
-      prayerTimes: {
-        fajr: '5:35 AM',
-        dhuhr: '12:50 PM',
-        asr: '4:25 PM',
-        maghrib: '6:50 PM',
-        isha: '8:20 PM'
-      },
       features: ['Library', 'Quranic School', 'Community Hall'],
-      isOpen: true
+      isOpen: true,
+      latitude: 40.7589,
+      longitude: -73.9851
     },
     {
       id: '3',
@@ -72,19 +68,85 @@ const VirtualMosqueFinder: React.FC = () => {
       distance: '2.1 miles',
       rating: 4.5,
       phone: '(555) 456-7890',
-      prayerTimes: {
-        fajr: '5:25 AM',
-        dhuhr: '12:40 PM',
-        asr: '4:15 PM',
-        maghrib: '6:40 PM',
-        isha: '8:10 PM'
-      },
       features: ['Youth Programs', 'Food Bank', 'Counseling'],
-      isOpen: false
+      isOpen: false,
+      latitude: 40.6782,
+      longitude: -73.9442
     }
-  ];
+  ]);
+
+  const getCurrentLocation = async () => {
+    setIsLoadingLocation(true);
+    try {
+      const coords = await prayerTimesApi.getCurrentLocation();
+      setUserLocation({ lat: coords.latitude, lon: coords.longitude });
+      
+      toast({
+        title: "Location Found",
+        description: "Found your current location successfully",
+      });
+      
+      // Load prayer times for nearby mosques
+      await loadPrayerTimesForMosques();
+      
+    } catch (error) {
+      toast({
+        title: "Location Error",
+        description: "Could not get your location. Please enter manually.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingLocation(false);
+    }
+  };
+
+  const loadPrayerTimesForMosques = async () => {
+    setIsLoadingPrayerTimes(true);
+    try {
+      const updatedMosques = await Promise.all(
+        mosques.map(async (mosque) => {
+          try {
+            const response = await prayerTimesApi.getPrayerTimes(mosque.latitude, mosque.longitude);
+            return {
+              ...mosque,
+              prayerTimes: {
+                fajr: response.data.timings.Fajr,
+                dhuhr: response.data.timings.Dhuhr,
+                asr: response.data.timings.Asr,
+                maghrib: response.data.timings.Maghrib,
+                isha: response.data.timings.Isha
+              }
+            };
+          } catch (error) {
+            console.error(`Failed to load prayer times for ${mosque.name}:`, error);
+            return mosque;
+          }
+        })
+      );
+      
+      setMosques(updatedMosques);
+      
+      toast({
+        title: "Prayer Times Updated",
+        description: "Loaded prayer times for nearby mosques",
+      });
+      
+    } catch (error) {
+      console.error('Error loading prayer times:', error);
+      toast({
+        title: "Prayer Times Error",
+        description: "Could not load prayer times for mosques",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingPrayerTimes(false);
+    }
+  };
 
   const getDirections = (mosque: Mosque) => {
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${mosque.latitude},${mosque.longitude}&travelmode=driving`;
+    window.open(url, '_blank');
+    
     toast({
       title: "Opening Directions",
       description: `Getting directions to ${mosque.name}`,
@@ -92,17 +154,21 @@ const VirtualMosqueFinder: React.FC = () => {
   };
 
   const callMosque = (mosque: Mosque) => {
-    toast({
-      title: "Calling Mosque",
-      description: `Calling ${mosque.name} at ${mosque.phone}`,
-    });
+    if (mosque.phone) {
+      window.open(`tel:${mosque.phone}`, '_self');
+      toast({
+        title: "Calling Mosque",
+        description: `Calling ${mosque.name}`,
+      });
+    }
   };
 
-  const findNearbyMosques = () => {
-    toast({
-      title: "Finding Mosques",
-      description: "Searching for mosques in your area...",
-    });
+  const formatTime = (time: string) => {
+    if (!time) return '--:--';
+    const [hours, minutes] = time.split(':');
+    const hour12 = parseInt(hours) % 12 || 12;
+    const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
+    return `${hour12}:${minutes} ${ampm}`;
   };
 
   return (
@@ -114,24 +180,41 @@ const VirtualMosqueFinder: React.FC = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Search */}
-        <div className="flex gap-2">
-          <Input
-            placeholder="Enter your location..."
-            value={searchLocation}
-            onChange={(e) => setSearchLocation(e.target.value)}
-            className="flex-1"
-          />
-          <Button onClick={findNearbyMosques} className="bg-teal-600 hover:bg-teal-700">
-            Search
-          </Button>
-        </div>
+        {/* Search and Location */}
+        <div className="space-y-3">
+          <div className="flex gap-2">
+            <Input
+              placeholder="Enter your location..."
+              value={searchLocation}
+              onChange={(e) => setSearchLocation(e.target.value)}
+              className="flex-1"
+            />
+            <Button onClick={loadPrayerTimesForMosques} className="bg-teal-600 hover:bg-teal-700">
+              Search
+            </Button>
+          </div>
 
-        {/* Current Location Button */}
-        <Button variant="outline" className="w-full" onClick={findNearbyMosques}>
-          <Navigation className="w-4 h-4 mr-2" />
-          Use Current Location
-        </Button>
+          <Button 
+            variant="outline" 
+            className="w-full" 
+            onClick={getCurrentLocation}
+            disabled={isLoadingLocation}
+          >
+            {isLoadingLocation ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Navigation className="w-4 h-4 mr-2" />
+            )}
+            Use Current Location
+          </Button>
+
+          {isLoadingPrayerTimes && (
+            <div className="flex items-center justify-center py-2">
+              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              <span className="text-sm text-gray-600">Loading prayer times...</span>
+            </div>
+          )}
+        </div>
 
         {/* Mosques List */}
         <div className="space-y-3">
@@ -181,18 +264,18 @@ const VirtualMosqueFinder: React.FC = () => {
               </div>
 
               {/* Prayer Times (when selected) */}
-              {selectedMosque?.id === mosque.id && (
+              {selectedMosque?.id === mosque.id && mosque.prayerTimes && (
                 <div className="bg-teal-50 dark:bg-teal-900/30 p-3 rounded mt-3">
                   <h5 className="font-medium text-teal-800 dark:text-teal-200 mb-2 flex items-center gap-1">
                     <Clock className="w-4 h-4" />
                     Today's Prayer Times
                   </h5>
                   <div className="grid grid-cols-3 gap-2 text-sm">
-                    <div>Fajr: {mosque.prayerTimes.fajr}</div>
-                    <div>Dhuhr: {mosque.prayerTimes.dhuhr}</div>
-                    <div>Asr: {mosque.prayerTimes.asr}</div>
-                    <div>Maghrib: {mosque.prayerTimes.maghrib}</div>
-                    <div>Isha: {mosque.prayerTimes.isha}</div>
+                    <div>Fajr: {formatTime(mosque.prayerTimes.fajr)}</div>
+                    <div>Dhuhr: {formatTime(mosque.prayerTimes.dhuhr)}</div>
+                    <div>Asr: {formatTime(mosque.prayerTimes.asr)}</div>
+                    <div>Maghrib: {formatTime(mosque.prayerTimes.maghrib)}</div>
+                    <div>Isha: {formatTime(mosque.prayerTimes.isha)}</div>
                   </div>
                 </div>
               )}
@@ -223,10 +306,10 @@ const VirtualMosqueFinder: React.FC = () => {
         {/* Quick Prayer Times */}
         <div className="bg-teal-100 dark:bg-teal-800/20 p-3 rounded-lg">
           <h4 className="font-medium text-teal-800 dark:text-teal-200 mb-2">
-            📍 Quick Tip
+            📍 Pro Tip
           </h4>
           <p className="text-sm text-teal-700 dark:text-teal-300">
-            Click on any mosque to see detailed prayer times and features. Use the call button to verify timings before visiting.
+            Click on any mosque to see live prayer times. Use "Current Location" for accurate results and directions.
           </p>
         </div>
       </CardContent>

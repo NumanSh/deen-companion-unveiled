@@ -1,4 +1,3 @@
-
 import React from 'react';
 import HadithSearchEngine from '@/components/HadithSearchEngine';
 import AIHadithCompanion from '@/components/AIHadithCompanion';
@@ -34,6 +33,7 @@ import InteractiveAchievementSystem from '@/components/InteractiveAchievementSys
 import SmartDailyRecommendations from '@/components/SmartDailyRecommendations';
 import PersonalizedContentEngine from '@/components/PersonalizedContentEngine';
 import SmartPersonalizationDashboard from '@/components/SmartPersonalizationDashboard';
+import VirtualMosqueFinder from '@/components/VirtualMosqueFinder';
 
 export const HadithTab = () => (
   <div className="space-y-6">
@@ -106,5 +106,12 @@ export const PersonalizedTab = () => (
   <div className="space-y-6">
     <SmartDailyRecommendations />
     <PersonalizedContentEngine />
+  </div>
+);
+
+// New community tab with mosque finder
+export const CommunityTab = () => (
+  <div className="space-y-6">
+    <VirtualMosqueFinder />
   </div>
 );

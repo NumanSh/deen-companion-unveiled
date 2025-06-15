@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import DashboardTab from '@/components/tabs/DashboardTab';
 import HabitsTab from '@/components/tabs/HabitsTab';
@@ -14,7 +13,8 @@ import {
   AnalyticsTab,
   RemindersTab,
   AchievementsTab,
-  PersonalizedTab
+  PersonalizedTab,
+  CommunityTab
 } from '@/components/tabs/OtherTabs';
 
 interface TabContentProps {
@@ -46,6 +46,8 @@ const TabContent: React.FC<TabContentProps> = ({
       return <DiscoverTab />;
     case 'personalized':
       return <PersonalizedTab />;
+    case 'community':
+      return <CommunityTab />;
     case 'quran':
       return (
         <QuranTab

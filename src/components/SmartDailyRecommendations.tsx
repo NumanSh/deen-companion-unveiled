@@ -94,9 +94,26 @@ const SmartDailyRecommendations = () => {
   };
 
   const handleStartRecommendation = (recommendation: AIRecommendation) => {
+    // Map recommendation types to valid content types
+    let contentType: 'quran' | 'hadith' | 'dua' | 'dhikr';
+    
+    switch (recommendation.type) {
+      case 'reflection':
+        contentType = 'quran';
+        break;
+      case 'quran':
+      case 'hadith':
+      case 'dua':
+      case 'dhikr':
+        contentType = recommendation.type;
+        break;
+      default:
+        contentType = 'quran';
+    }
+    
     // Track the interaction
     aiPersonalizationEngine.trackReadingSession(
-      recommendation.type === 'reflection' ? 'quran' : recommendation.type,
+      contentType,
       recommendation.title,
       recommendation.estimatedTime,
       8 // Assume good engagement when user clicks
