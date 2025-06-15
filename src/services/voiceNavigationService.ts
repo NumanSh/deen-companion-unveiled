@@ -1,5 +1,5 @@
-
 import { voiceReadingService } from './voiceReadingService';
+import '../types/speechRecognition';
 
 interface VoiceCommand {
   patterns: string[];
@@ -21,6 +21,7 @@ class VoiceNavigationService {
     this.setupDefaultCommands();
   }
 
+  
   private initializeSpeechRecognition() {
     if ('webkitSpeechRecognition' in window) {
       this.recognition = new (window as any).webkitSpeechRecognition();

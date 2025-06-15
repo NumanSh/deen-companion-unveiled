@@ -52,6 +52,7 @@ const EnhancedFloatingActionSystem: React.FC = () => {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isConfiguring, setIsConfiguring] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [actions, setActions] = useState<FloatingAction[]>([]);
 
