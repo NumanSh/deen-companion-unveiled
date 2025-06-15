@@ -1,3 +1,4 @@
+
 import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -5,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import MicroInteractionFeedback from '@/components/MicroInteractionFeedback';
 import { prayerTimesApi } from '@/services/prayerTimesApi';
+import { prayerNotificationService } from '@/services/prayerNotificationService';
 import './App.css';
 
 // Lazy load pages for better performance
@@ -35,6 +37,11 @@ function App() {
   useEffect(() => {
     // Initialize prayer times cache on app start
     prayerTimesApi.initializePrayerTimesCache();
+    
+    // Initialize prayer notification service
+    prayerNotificationService.initialize().catch(error => {
+      console.error('Failed to initialize prayer notification service:', error);
+    });
   }, []);
 
   const navigationItems = [
@@ -46,7 +53,8 @@ function App() {
     { id: 'hadith', label: 'Hadith', icon: '📜' },
     { id: 'duas', label: 'Duas', icon: '🤲' },
     { id: 'habits', label: 'Habits', icon: '📊' },
-    { id: 'discover', label: 'Discover', icon: '🌟' }
+    { id: 'discover', label: 'Discover', icon: '🌟' },
+    { id: 'prayer-notifications', label: 'Prayer Notifications', icon: '🔔' }
   ];
 
   return (

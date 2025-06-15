@@ -9,6 +9,7 @@ import SpiritualHabitStreaks from '@/components/SpiritualHabitStreaks';
 import OfflineQuranManager from '@/components/OfflineQuranManager';
 import SmartDailyRecommendations from '@/components/SmartDailyRecommendations';
 import SmartHadithAuthenticityChecker from '@/components/SmartHadithAuthenticityChecker';
+import PersonalizedPrayerNotifications from '@/components/PersonalizedPrayerNotifications';
 import {
   HadithTab,
   AdhkarTab,
@@ -86,6 +87,8 @@ const TabContent: React.FC<TabContentProps> = ({
       return <AchievementsTab />;
     case 'reminders':
       return <RemindersTab />;
+    case 'prayer-notifications':
+      return <PersonalizedPrayerNotifications />;
     default:
       return <DashboardTab />;
   }
