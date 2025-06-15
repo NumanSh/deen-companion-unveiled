@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -123,12 +124,20 @@ const QuranTab: React.FC<QuranTabProps> = ({
     });
   };
 
-  // Show surah reader if a surah is selected
+  // Show surah reader if a surah is selected and both surahs have ayahs
   if (selectedSurah && arabicSurah && translationSurah && arabicSurah.ayahs && translationSurah.ayahs) {
+    // Type assertion to satisfy QuranReader's requirements
+    const arabicSurahWithAyahs = arabicSurah as QuranSurah & { 
+      ayahs: Array<{ number: number; text: string; numberInSurah: number; }> 
+    };
+    const translationSurahWithAyahs = translationSurah as QuranSurah & { 
+      ayahs: Array<{ number: number; text: string; numberInSurah: number; }> 
+    };
+
     return (
       <QuranReader
-        arabicSurah={arabicSurah}
-        translationSurah={translationSurah}
+        arabicSurah={arabicSurahWithAyahs}
+        translationSurah={translationSurahWithAyahs}
         showTranslation={showTranslation}
         onToggleTranslation={toggleTranslation}
         onBack={handleBackToList}
