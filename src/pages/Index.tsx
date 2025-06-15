@@ -10,12 +10,15 @@ import {
   Settings,
   Star,
   Heart,
-  Search
+  Search,
+  TrendingUp,
+  Award
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from '@/hooks/use-toast';
 import BottomTabBar from "@/components/BottomTabBar";
-import PersonalDashboard from "@/components/PersonalDashboard";
+import SmartPersonalizationDashboard from "@/components/SmartPersonalizationDashboard";
+import InteractiveAchievementSystem from "@/components/InteractiveAchievementSystem";
 import QuranicVerseOfDay from "@/components/QuranicVerseOfDay";
 import IslamicQuoteWidget from "@/components/IslamicQuoteWidget";
 import PrayerTimesWidget from "@/components/PrayerTimesWidget";
@@ -26,6 +29,7 @@ import { cn } from "@/lib/utils";
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [activeSection, setActiveSection] = useState<'dashboard' | 'achievements'>('dashboard');
 
   const quickActions = [
     {
@@ -59,14 +63,12 @@ const Index = () => {
   ];
 
   const handleQuickAction = (action: any) => {
-    // Instant feedback principle
     toast({
       title: `Opening ${action.title}`,
       description: action.description,
       duration: 1000,
     });
     
-    // Slight delay for better UX
     setTimeout(() => {
       action.action();
     }, 150);
@@ -74,7 +76,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pb-20">
-      {/* Enhanced Header with better touch targets */}
+      {/* Enhanced Header */}
       <div className="bg-gradient-to-br from-teal-600 to-teal-700 pt-12 pb-6 px-4">
         <div className="flex justify-between items-center mb-6">
           <Button 
@@ -106,17 +108,45 @@ const Index = () => {
 
         <div className="text-center text-white">
           <h1 className="text-3xl font-bold mb-2">Deen Companion</h1>
-          <p className="text-teal-100 text-base">Your spiritual journey dashboard</p>
+          <p className="text-teal-100 text-base">Your personalized spiritual journey</p>
+        </div>
+
+        {/* Section Toggle */}
+        <div className="flex justify-center mt-6">
+          <div className="bg-white/20 rounded-lg p-1 flex">
+            <Button
+              variant={activeSection === 'dashboard' ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setActiveSection('dashboard')}
+              className={`text-white ${activeSection === 'dashboard' ? 'bg-white/30' : ''}`}
+            >
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Dashboard
+            </Button>
+            <Button
+              variant={activeSection === 'achievements' ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setActiveSection('achievements')}
+              className={`text-white ${activeSection === 'achievements' ? 'bg-white/30' : ''}`}
+            >
+              <Award className="w-4 h-4 mr-2" />
+              Achievements
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Main Content with improved spacing */}
+      {/* Main Content */}
       <div className="flex-1 px-4 py-6 space-y-6 -mt-4">
         <div className="max-w-md mx-auto space-y-6">
-          {/* Personal Dashboard */}
-          <PersonalDashboard />
+          {/* Smart Dashboard or Achievements */}
+          {activeSection === 'dashboard' ? (
+            <SmartPersonalizationDashboard />
+          ) : (
+            <InteractiveAchievementSystem />
+          )}
           
-          {/* Quick Actions with enhanced UX */}
+          {/* Quick Actions */}
           <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-xl border-gray-200/50">
             <CardContent className="p-6">
               <h3 className="font-bold text-xl text-gray-800 dark:text-gray-200 mb-6 text-center">Quick Actions</h3>
@@ -155,9 +185,7 @@ const Index = () => {
         </div>
       </div>
       
-      {/* Floating Quick Access Widget */}
       <FloatingQuickAccess />
-      
       <BottomTabBar />
     </div>
   );
