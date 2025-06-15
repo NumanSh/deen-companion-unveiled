@@ -5,13 +5,15 @@ import HabitsTab from '@/components/tabs/HabitsTab';
 import DiscoverTab from '@/components/tabs/DiscoverTab';
 import QuranTab from '@/components/tabs/QuranTab';
 import DuasSection from '@/components/DuasSection';
+import SpiritualHabitStreaks from '@/components/SpiritualHabitStreaks';
 import {
   HadithTab,
   AdhkarTab,
   DhikrTab,
   BookmarksTab,
   AnalyticsTab,
-  RemindersTab
+  RemindersTab,
+  AchievementsTab
 } from '@/components/tabs/OtherTabs';
 
 interface TabContentProps {
@@ -38,7 +40,7 @@ const TabContent: React.FC<TabContentProps> = ({
     case 'dashboard':
       return <DashboardTab />;
     case 'habits':
-      return <HabitsTab />;
+      return <SpiritualHabitStreaks />;
     case 'discover':
       return <DiscoverTab />;
     case 'quran':
@@ -62,6 +64,8 @@ const TabContent: React.FC<TabContentProps> = ({
       return <BookmarksTab />;
     case 'analytics':
       return <AnalyticsTab />;
+    case 'achievements':
+      return <AchievementsTab />;
     case 'reminders':
       return <RemindersTab />;
     default:

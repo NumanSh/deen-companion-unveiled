@@ -1,5 +1,5 @@
 
-// Re-export all types and functions for backward compatibility
+// Main hadith API service - consolidated exports
 export type { HadithApiResponse, HadithCollection, SunnahCollection, SunnahBook, SunnahHadith } from '../types/hadith';
 export { SUNNAH_API_BASE, SUNNAH_COLLECTIONS, FALLBACK_HADITHS } from '../data/hadithData';
 export { 
@@ -13,5 +13,6 @@ export {
 export { 
   fetchRandomHadiths, 
   fetchHadithCollections, 
-  searchHadiths 
+  searchHadiths,
+  fetchHadithByCollection
 } from '../services/hadithService';
