@@ -1,89 +1,68 @@
 
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Home, Settings, Calendar, Book, Search, Heart } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useLanguage } from "@/contexts/LanguageContext";
-
-type TabItem = {
-  key: string;
-  labelKey: string;
-  icon: React.ReactNode;
-  href: string;
-};
-
-const tabs: TabItem[] = [
-  {
-    key: "quran",
-    labelKey: "quran-tab",
-    icon: <Book size={20} />,
-    href: "/books",
-  },
-  {
-    key: "explore",
-    labelKey: "explore-tab", 
-    icon: <Search size={20} />,
-    href: "/books",
-  },
-  {
-    key: "home",
-    labelKey: "home-tab",
-    icon: <Home size={20} />,
-    href: "/",
-  },
-  {
-    key: "duas",
-    labelKey: "duas-tab",
-    icon: <Heart size={20} />,
-    href: "/books",
-  },
-  {
-    key: "notes",
-    labelKey: "notes-tab",
-    icon: <Settings size={20} />,
-    href: "/settings",
-  },
-];
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Home, BookOpen, Calendar, Settings } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const BottomTabBar: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { t } = useLanguage();
 
+  const tabs = [
+    { 
+      id: 'home', 
+      label: 'Home', 
+      icon: Home, 
+      path: '/home',
+      isActive: location.pathname === '/home'
+    },
+    { 
+      id: 'books', 
+      label: 'Books', 
+      icon: BookOpen, 
+      path: '/books',
+      isActive: location.pathname === '/books'
+    },
+    { 
+      id: 'calendar', 
+      label: 'Calendar', 
+      icon: Calendar, 
+      path: '/calendar',
+      isActive: location.pathname === '/calendar'
+    },
+    { 
+      id: 'settings', 
+      label: 'Settings', 
+      icon: Settings, 
+      path: '/settings',
+      isActive: location.pathname === '/settings'
+    }
+  ];
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-200 shadow-lg">
-      <div className="flex justify-around items-center h-16 max-w-md mx-auto">
-        {tabs.map(tab => {
-          // Home tab is active when on root path, others match exact path
-          const active = tab.key === 'home' 
-            ? location.pathname === '/' 
-            : location.pathname === tab.href;
-          
+    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-2 z-50">
+      <div className="flex justify-around items-center max-w-md mx-auto">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
           return (
-            <button
-              key={tab.key}
+            <Link
+              key={tab.id}
+              to={tab.path}
               className={cn(
-                "flex flex-col items-center justify-center text-xs px-3 py-2 transition-colors duration-200",
-                active
-                  ? "text-teal-600 font-semibold"
-                  : "text-gray-500 hover:text-teal-600"
+                "flex flex-col items-center gap-1 p-2 rounded-lg transition-colors",
+                tab.isActive 
+                  ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20" 
+                  : "text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400"
               )}
-              onClick={() => navigate(tab.href)}
-              aria-label={t(tab.labelKey)}
-              tabIndex={0}
-              type="button"
             >
-              <span className="mb-1">
-                {tab.icon}
-              </span>
-              <span className="text-xs">
-                {t(tab.labelKey)}
-              </span>
-            </button>
+              <Icon className="w-5 h-5" />
+              <span className="text-xs font-medium">{tab.label}</span>
+            </Link>
           );
         })}
       </div>
-    </nav>
+    </div>
   );
 };
 
