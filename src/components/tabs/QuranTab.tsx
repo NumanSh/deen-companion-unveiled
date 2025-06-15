@@ -1,10 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Book, ArrowLeft, TrendingUp } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { fetchAllSurahs, fetchSurahArabic, fetchSurahTranslation, searchSurahs, QuranSurah } from '@/services/quranService';
+import { QuranSurah } from '@/services/quranService';
 import EnhancedQuranReader from '@/components/EnhancedQuranReader';
 import AdvancedQuranSearch from '@/components/AdvancedQuranSearch';
 import ReadingProgressTracker from '@/components/ReadingProgressTracker';
@@ -12,6 +11,8 @@ import QuranSearchControls from '@/components/QuranSearchControls';
 import QuranSurahGrid from '@/components/QuranSurahGrid';
 import QuranStats from '@/components/QuranStats';
 import QuranLoadingStates from '@/components/QuranLoadingStates';
+import { useQuranData } from '@/hooks/useQuranData';
+import { useSurahContent } from '@/hooks/useSurahContent';
 
 interface QuranTabProps {
   onAddToBookmarks: (item: any, type: 'surah' | 'dua' | 'hadith') => void;
@@ -26,99 +27,32 @@ const QuranTab: React.FC<QuranTabProps> = ({
   readingSurahs,
   isLoading: parentLoading
 }) => {
-  const { toast } = useToast();
-  const [surahs, setSurahs] = useState<QuranSurah[]>([]);
-  const [filteredSurahs, setFilteredSurahs] = useState<QuranSurah[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isLoadingSurahs, setIsLoadingSurahs] = useState(true);
-  const [selectedSurah, setSelectedSurah] = useState<QuranSurah | null>(null);
-  const [arabicSurah, setArabicSurah] = useState<QuranSurah | null>(null);
-  const [translationSurah, setTranslationSurah] = useState<QuranSurah | null>(null);
-  const [isLoadingSurahContent, setIsLoadingSurahContent] = useState(false);
   const [showTranslation, setShowTranslation] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
 
-  // Load all surahs on component mount
-  useEffect(() => {
-    const loadSurahs = async () => {
-      try {
-        setIsLoadingSurahs(true);
-        const surahsData = await fetchAllSurahs();
-        setSurahs(surahsData);
-        setFilteredSurahs(surahsData);
-        console.log('Loaded surahs:', surahsData.length);
-      } catch (error) {
-        console.error('Failed to load surahs:', error);
-        toast({
-          title: 'Error Loading Surahs',
-          description: 'Failed to load Quran data. Using offline content.',
-          variant: 'destructive'
-        });
-      } finally {
-        setIsLoadingSurahs(false);
-      }
-    };
+  // Custom hooks for data management
+  const {
+    surahs,
+    filteredSurahs,
+    searchTerm,
+    setSearchTerm,
+    isLoading: isLoadingSurahs,
+    clearSearch
+  } = useQuranData();
 
-    loadSurahs();
-  }, [toast]);
+  const {
+    selectedSurah,
+    arabicSurah,
+    translationSurah,
+    isLoading: isLoadingSurahContent,
+    loadSurahContent,
+    resetSurahContent
+  } = useSurahContent(onSurahRead);
 
-  // Filter surahs based on search term
-  useEffect(() => {
-    setFilteredSurahs(searchSurahs(surahs, searchTerm));
-  }, [searchTerm, surahs]);
-
-  const handleSurahClick = async (surah: QuranSurah) => {
-    try {
-      setIsLoadingSurahContent(true);
-      setSelectedSurah(surah);
-      
-      console.log(`Loading surah ${surah.number}: ${surah.englishName}`);
-      
-      // Record reading session start
-      const sessionStart = Date.now();
-      
-      // Fetch both Arabic and translation concurrently
-      const [arabicData, translationData] = await Promise.all([
-        fetchSurahArabic(surah.number),
-        fetchSurahTranslation(surah.number, 'en.asad')
-      ]);
-      
-      setArabicSurah(arabicData);
-      setTranslationSurah(translationData);
-      onSurahRead(surah);
-      
-      // Record reading session
-      const session = {
-        surahNumber: surah.number,
-        surahName: surah.englishName,
-        versesRead: 0,
-        totalVerses: surah.numberOfAyahs,
-        date: new Date().toISOString().split('T')[0],
-        duration: Math.round((Date.now() - sessionStart) / 1000 / 60),
-        completed: false
-      };
-      
-      const savedSessions = localStorage.getItem('quran-reading-sessions');
-      const sessions = savedSessions ? JSON.parse(savedSessions) : [];
-      sessions.push(session);
-      localStorage.setItem('quran-reading-sessions', JSON.stringify(sessions));
-      
-      toast({
-        title: 'Surah Loaded',
-        description: `${surah.englishName} is ready to read`,
-      });
-    } catch (error) {
-      console.error('Error loading surah:', error);
-      toast({
-        title: 'Error Loading Surah',
-        description: 'Failed to load surah content. Please try again.',
-        variant: 'destructive'
-      });
-    } finally {
-      setIsLoadingSurahContent(false);
-    }
+  const handleSurahClick = (surah: QuranSurah) => {
+    loadSurahContent(surah);
   };
 
   const handleAddToBookmarks = (surah: QuranSurah) => {
@@ -131,9 +65,7 @@ const QuranTab: React.FC<QuranTabProps> = ({
   };
 
   const handleBackToList = () => {
-    setSelectedSurah(null);
-    setArabicSurah(null);
-    setTranslationSurah(null);
+    resetSurahContent();
     setIsPlaying(false);
   };
 
@@ -143,14 +75,6 @@ const QuranTab: React.FC<QuranTabProps> = ({
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
-    toast({
-      title: isPlaying ? 'Audio Paused' : 'Audio Playing',
-      description: `${selectedSurah?.englishName} recitation`,
-    });
-  };
-
-  const clearSearch = () => {
-    setSearchTerm('');
   };
 
   // Show advanced search modal
