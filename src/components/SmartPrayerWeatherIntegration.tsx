@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import {
   Cloud, 
   Sun, 
   CloudRain, 
-  Snow, 
+  Snowflake, 
   Wind,
   Clock,
   MapPin,
@@ -99,7 +98,7 @@ const SmartPrayerWeatherIntegration = () => {
       case 'clear': return Sun;
       case 'cloudy': return Cloud;
       case 'rain': return CloudRain;
-      case 'snow': return Snow;
+      case 'snow': return Snowflake;
       default: return Sun;
     }
   };
