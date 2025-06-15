@@ -3,6 +3,8 @@ import React from 'react';
 import BottomTabBar from '@/components/BottomTabBar';
 import EnhancedDashboard from '@/components/EnhancedDashboard';
 import NewUserWelcome from '@/components/NewUserWelcome';
+import CustomizableHomeWidgets from '@/components/CustomizableHomeWidgets';
+import EnhancedFloatingActionSystem from '@/components/EnhancedFloatingActionSystem';
 
 const Home = () => {
   return (
@@ -23,12 +25,17 @@ const Home = () => {
       </div>
 
       <div className="flex-1 px-4 py-6 relative">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto space-y-8">
           <NewUserWelcome />
+          
+          {/* Customizable Home Widgets */}
+          <CustomizableHomeWidgets />
+          
           <EnhancedDashboard />
         </div>
       </div>
       
+      <EnhancedFloatingActionSystem />
       <BottomTabBar />
     </div>
   );

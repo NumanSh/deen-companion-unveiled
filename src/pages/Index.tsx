@@ -23,7 +23,7 @@ import SmartReadingAnalytics from "@/components/SmartReadingAnalytics";
 import QuranicVerseOfDay from "@/components/QuranicVerseOfDay";
 import IslamicQuoteWidget from "@/components/IslamicQuoteWidget";
 import PrayerTimesWidget from "@/components/PrayerTimesWidget";
-import EnhancedFloatingSystem from "@/components/EnhancedFloatingSystem";
+import EnhancedFloatingActionSystem from "@/components/EnhancedFloatingActionSystem";
 import ModernHeader from "@/components/ModernHeader";
 import ModernCard from "@/components/ModernCard";
 import { cn } from "@/lib/utils";
@@ -224,7 +224,7 @@ const Index = () => {
         </div>
       </div>
       
-      <EnhancedFloatingSystem />
+      <EnhancedFloatingActionSystem />
       <BottomTabBar />
     </div>
   );
