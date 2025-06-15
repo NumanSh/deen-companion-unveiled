@@ -156,7 +156,7 @@ const DuasSection: React.FC = () => {
       setFavorites(prev => new Set([...prev, duaId]));
       toast({
         title: t('added-to-bookmarks'),
-        description: t('dua-saved-bookmarks', { title: dua.title }),
+        description: t('dua-saved-bookmarks'),
       });
     } else {
       bookmarks.splice(existingIndex, 1);
@@ -167,7 +167,7 @@ const DuasSection: React.FC = () => {
       });
       toast({
         title: t('removed-from-bookmarks'),
-        description: t('dua-removed-bookmarks', { title: dua.title }),
+        description: t('dua-removed-bookmarks'),
       });
     }
     
@@ -183,7 +183,11 @@ const DuasSection: React.FC = () => {
     ) || [];
 
   const handleCopyArabic = (dua: Dua) => {
-    copyToClipboard(dua.arabic, t('dua-arabic-copied', { title: dua.title }));
+    copyToClipboard(dua.arabic);
+    toast({
+      title: t('dua-arabic-copied'),
+      description: dua.title,
+    });
   };
 
   return (

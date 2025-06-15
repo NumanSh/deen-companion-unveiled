@@ -4,7 +4,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface LanguageContextType {
   language: 'en' | 'ar';
   setLanguage: (lang: 'en' | 'ar') => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string>) => string;
+  isRTL: boolean;
 }
 
 const translations = {
@@ -49,7 +50,64 @@ const translations = {
     'say-astaghfirullah-100-times': 'Say "Astaghfirullah" 100 times',
     'all-goals-completed': 'All Goals Completed!',
     'may-allah-accept-efforts': 'May Allah accept your efforts',
-    'add-custom-goal': 'Add Custom Goal'
+    'add-custom-goal': 'Add Custom Goal',
+
+    // Duas section translations
+    'daily-duas': 'Daily Duas',
+    'morning-dua': 'Morning Dua',
+    'evening-dua': 'Evening Dua',
+    'morning-dua-translation': 'We have entered the morning and the kingdom belongs to Allah, and all praise is due to Allah',
+    'evening-dua-translation': 'We have entered the evening and the kingdom belongs to Allah, and all praise is due to Allah',
+    'food-drink': 'Food & Drink',
+    'before-eating': 'Before Eating',
+    'after-eating': 'After Eating',
+    'before-eating-translation': 'In the name of Allah',
+    'after-eating-translation': 'Praise be to Allah who fed me this and provided it for me without any power or strength from me',
+    'travel': 'Travel',
+    'when-starting-journey': 'When Starting Journey',
+    'travel-dua-translation': 'Glory be to Him who has subjected this to us, and we could never have it (by our efforts). And to our Lord, surely, must we return',
+    'protection': 'Protection',
+    'ayat-kursi': 'Ayat ul-Kursi',
+    'ayat-kursi-translation': 'Allah - there is no deity except Him, the Ever-Living, the Self-Sustaining',
+    'daily-duas-supplications': 'Daily Duas & Supplications',
+    'search-duas-placeholder': 'Search duas...',
+    'transliteration': 'Transliteration',
+    'translation': 'Translation',
+    'reference': 'Reference',
+    'show-less': 'Show Less',
+    'show-translation': 'Show Translation',
+    'no-duas-found': 'No duas found matching your search',
+    'added-to-bookmarks': 'Added to Bookmarks',
+    'removed-from-bookmarks': 'Removed from Bookmarks',
+    'dua-saved-bookmarks': 'Dua saved to bookmarks',
+    'dua-removed-bookmarks': 'Dua removed from bookmarks',
+    'copy-arabic-text': 'Copy Arabic Text',
+    'click-to-copy': 'Click to copy',
+    'dua-arabic-copied': 'Arabic text copied to clipboard',
+
+    // Settings translations
+    'settings': 'Settings',
+    'location': 'Location',
+    'current-location': 'Current Location',
+    'update-location': 'Update Location',
+    'notifications': 'Notifications',
+    'prayer-notifications': 'Prayer Notifications',
+    'prayer-notifications-desc': 'Get notified for prayer times',
+    'adhan-sound': 'Adhan Sound',
+    'adhan-sound-desc': 'Play adhan sound for prayers',
+    'general-notifications': 'General Notifications',
+    'general-notifications-desc': 'Receive app notifications',
+    'appearance': 'Appearance',
+    'dark-mode': 'Dark Mode',
+    'dark-mode-desc': 'Switch to dark theme',
+    'language': 'Language',
+    'language-desc': 'Choose your preferred language',
+    'arabic': 'العربية',
+    'english': 'English',
+    'about-app': 'About App',
+    'version': 'Version',
+    'app-description': 'Your comprehensive Islamic companion',
+    'customize-journey': 'Customize your spiritual journey'
   },
   ar: {
     // Dashboard and progress
@@ -92,7 +150,64 @@ const translations = {
     'say-astaghfirullah-100-times': 'قل "أستغفر الله" مائة مرة',
     'all-goals-completed': 'تم إنجاز جميع الأهداف!',
     'may-allah-accept-efforts': 'تقبل الله جهودكم',
-    'add-custom-goal': 'أضف هدفاً مخصصاً'
+    'add-custom-goal': 'أضف هدفاً مخصصاً',
+
+    // Duas section translations  
+    'daily-duas': 'أدعية يومية',
+    'morning-dua': 'دعاء الصباح',
+    'evening-dua': 'دعاء المساء',
+    'morning-dua-translation': 'أصبحنا وأصبح الملك لله والحمد لله',
+    'evening-dua-translation': 'أمسينا وأمسى الملك لله والحمد لله',
+    'food-drink': 'الطعام والشراب',
+    'before-eating': 'قبل الأكل',
+    'after-eating': 'بعد الأكل',
+    'before-eating-translation': 'بسم الله',
+    'after-eating-translation': 'الحمد لله الذي أطعمني هذا ورزقنيه من غير حول مني ولا قوة',
+    'travel': 'السفر',
+    'when-starting-journey': 'عند بدء الرحلة',
+    'travel-dua-translation': 'سبحان الذي سخر لنا هذا وما كنا له مقرنين وإنا إلى ربنا لمنقلبون',
+    'protection': 'الحماية',
+    'ayat-kursi': 'آية الكرسي',
+    'ayat-kursi-translation': 'الله لا إله إلا هو الحي القيوم',
+    'daily-duas-supplications': 'الأدعية والأذكار اليومية',
+    'search-duas-placeholder': 'البحث في الأدعية...',
+    'transliteration': 'النقل الصوتي',
+    'translation': 'الترجمة',
+    'reference': 'المرجع',
+    'show-less': 'إظهار أقل',
+    'show-translation': 'إظهار الترجمة',
+    'no-duas-found': 'لم يتم العثور على أدعية تطابق بحثك',
+    'added-to-bookmarks': 'تمت الإضافة للمفضلة',
+    'removed-from-bookmarks': 'تمت الإزالة من المفضلة',
+    'dua-saved-bookmarks': 'تم حفظ الدعاء في المفضلة',
+    'dua-removed-bookmarks': 'تم حذف الدعاء من المفضلة',
+    'copy-arabic-text': 'نسخ النص العربي',
+    'click-to-copy': 'اضغط للنسخ',
+    'dua-arabic-copied': 'تم نسخ النص العربي',
+
+    // Settings translations
+    'settings': 'الإعدادات',
+    'location': 'الموقع',
+    'current-location': 'الموقع الحالي',
+    'update-location': 'تحديث الموقع',
+    'notifications': 'الإشعارات',
+    'prayer-notifications': 'إشعارات الصلاة',
+    'prayer-notifications-desc': 'احصل على إشعارات أوقات الصلاة',
+    'adhan-sound': 'صوت الأذان',
+    'adhan-sound-desc': 'تشغيل صوت الأذان للصلوات',
+    'general-notifications': 'الإشعارات العامة',
+    'general-notifications-desc': 'تلقي إشعارات التطبيق',
+    'appearance': 'المظهر',
+    'dark-mode': 'الوضع المظلم',
+    'dark-mode-desc': 'التبديل إلى الثيم المظلم',
+    'language': 'اللغة',
+    'language-desc': 'اختر لغتك المفضلة',
+    'arabic': 'العربية',
+    'english': 'English',
+    'about-app': 'حول التطبيق',
+    'version': 'الإصدار',
+    'app-description': 'رفيقك الإسلامي الشامل',
+    'customize-journey': 'خصص رحلتك الروحية'
   }
 };
 
@@ -101,12 +216,23 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<'en' | 'ar'>('en');
 
-  const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations['en']] || key;
+  const t = (key: string, params?: Record<string, string>): string => {
+    let translation = translations[language][key as keyof typeof translations['en']] || key;
+    
+    // Handle parameter substitution if params are provided
+    if (params && typeof translation === 'string') {
+      Object.keys(params).forEach(paramKey => {
+        translation = translation.replace(`{${paramKey}}`, params[paramKey]);
+      });
+    }
+    
+    return translation;
   };
 
+  const isRTL = language === 'ar';
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, isRTL }}>
       {children}
     </LanguageContext.Provider>
   );
