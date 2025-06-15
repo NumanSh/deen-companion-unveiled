@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import DashboardTab from '@/components/tabs/DashboardTab';
 import HabitsTab from '@/components/tabs/HabitsTab';
@@ -17,6 +16,8 @@ import EnhancedVirtualStudyCircle from '@/components/EnhancedVirtualStudyCircle'
 import VirtualIslamicStudyGroup from '@/components/VirtualIslamicStudyGroup';
 import AdvancedCommunityAnalytics from '@/components/AdvancedCommunityAnalytics';
 import CommunityMentorshipSystem from '@/components/CommunityMentorshipSystem';
+import CommunityPrayerTimeSync from '@/components/CommunityPrayerTimeSync';
+import AdvancedCommunityLearningDashboard from '@/components/AdvancedCommunityLearningDashboard';
 import {
   HadithTab,
   AdhkarTab,
@@ -110,6 +111,10 @@ const TabContent: React.FC<TabContentProps> = ({
       return <RemindersTab />;
     case 'prayer-notifications':
       return <PersonalizedPrayerNotifications />;
+    case 'community-prayer-sync':
+      return <CommunityPrayerTimeSync />;
+    case 'community-learning-dashboard':
+      return <AdvancedCommunityLearningDashboard />;
     default:
       return <DashboardTab />;
   }
