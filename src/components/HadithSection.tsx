@@ -6,6 +6,10 @@ import { BookOpen, Heart, Search, ChevronDown, ChevronUp, Star, RefreshCw } from
 import { cn } from "@/lib/utils";
 import { fetchHadithCollections } from "@/services/hadithApi";
 import { useToast } from "@/hooks/use-toast";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import ApiErrorBoundary from "@/components/ApiErrorBoundary";
+import { HadithApiErrorHandler } from "@/utils/apiErrorHandler";
+import { validateSearchQuery } from "@/utils/inputValidation";
 
 type Hadith = {
   id: string;
@@ -36,7 +40,18 @@ const HadithSection: React.FC = () => {
       setIsLoading(true);
       try {
         console.log('Loading hadith collections from API...');
-        const collections = await fetchHadithCollections();
+        const collections = await HadithApiErrorHandler.withRetry(
+          () => fetchHadithCollections(),
+          { maxRetries: 3 },
+          (attempt, error) => {
+            toast({
+              title: 'Retrying Hadith Loading',
+              description: `Attempt ${attempt}: ${error.message}`,
+              duration: 2000
+            });
+          }
+        );
+        
         setHadithCollections(collections);
         console.log('Loaded hadith collections:', collections.length);
         
@@ -48,11 +63,8 @@ const HadithSection: React.FC = () => {
         }
       } catch (error) {
         console.error('Failed to load hadith collections:', error);
-        toast({
-          title: 'خطأ في التحميل',
-          description: 'فشل في تحميل الأحاديث من الخادم',
-          variant: 'destructive'
-        });
+        const apiError = HadithApiErrorHandler.parseError(error);
+        toast(HadithApiErrorHandler.getErrorToast(apiError));
       } finally {
         setIsLoading(false);
       }
@@ -107,7 +119,13 @@ const HadithSection: React.FC = () => {
   });
 
   return (
-    <div className="relative">
+    <ErrorBoundary section="Hadith Section">
+      <ApiErrorBoundary 
+        apiName="Hadith API" 
+        fallbackData={hadithCollections.length > 0 ? hadithCollections : null}
+        onRetry={() => window.location.reload()}
+      >
+        <div className="relative">
       {/* Islamic Pattern Background */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
         <div className="w-full h-full bg-gradient-to-br from-emerald-600 via-blue-600 to-purple-600"></div>
@@ -159,7 +177,12 @@ const HadithSection: React.FC = () => {
                 type="text"
                 placeholder="Search hadith by content, narrator, or category..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  const validation = validateSearchQuery(e.target.value, 'mixed');
+                  if (validation.isValid) {
+                    setSearchTerm(validation.sanitized!);
+                  }
+                }}
                 className="w-full pl-12 pr-4 py-3 border-2 border-emerald-200 dark:border-emerald-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:focus:border-emerald-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-emerald-400 dark:placeholder-emerald-500 transition-all duration-200"
               />
             </div>
@@ -328,7 +351,9 @@ const HadithSection: React.FC = () => {
           )}
         </CardContent>
       </Card>
-    </div>
+        </div>
+      </ApiErrorBoundary>
+    </ErrorBoundary>
   );
 };
 

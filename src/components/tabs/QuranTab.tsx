@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Book, ArrowLeft, TrendingUp, Download, WifiOff } from 'lucide-react';
 import { QuranSurah } from '@/services/quranService';
 import EnhancedQuranReader from '@/components/EnhancedQuranReader';
-import AdvancedQuranSearch from '@/components/AdvancedQuranSearch';
 import ReadingProgressTracker from '@/components/ReadingProgressTracker';
 import QuranSearchControls from '@/components/QuranSearchControls';
 import QuranSurahGrid from '@/components/QuranSurahGrid';
@@ -20,6 +19,11 @@ import { useSurahContent } from '@/hooks/useSurahContent';
 import { useOfflineQuran } from '@/hooks/useOfflineQuran';
 import QuranWordSearch from '@/components/QuranWordSearch';
 import { useToast } from '@/hooks/use-toast';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import LazyWrapper from '@/components/LazyWrapper';
+import { LazyAdvancedQuranSearch } from '@/components/lazy/LazyAdvancedQuranSearch';
+import { validateSearchQuery } from '@/utils/inputValidation';
+import { QuranApiErrorHandler } from '@/utils/apiErrorHandler';
 
 interface QuranTabProps {
   onAddToBookmarks: (item: any, type: 'surah' | 'dua' | 'hadith') => void;
@@ -108,7 +112,17 @@ const QuranTab: React.FC<QuranTabProps> = ({
   };
 
   const handleEnhancedSearch = (term: string) => {
-    setSearchTerm(term);
+    const validation = validateSearchQuery(term, 'mixed');
+    if (!validation.isValid) {
+      toast({
+        title: 'Invalid Search',
+        description: validation.error,
+        variant: 'destructive'
+      });
+      return;
+    }
+    
+    setSearchTerm(validation.sanitized!);
     setShowEnhancedSearch(false);
   };
 
@@ -119,36 +133,42 @@ const QuranTab: React.FC<QuranTabProps> = ({
   // Show word search modal
   if (showWordSearch) {
     return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Quran Word Search</h2>
-          <Button variant="ghost" onClick={() => setShowWordSearch(false)}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Surahs
-          </Button>
+      <ErrorBoundary section="Word Search">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Quran Word Search</h2>
+            <Button variant="ghost" onClick={() => setShowWordSearch(false)}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Surahs
+            </Button>
+          </div>
+          <QuranWordSearch />
+          <FloatingQuickActions
+            onQuickSearch={() => setShowEnhancedSearch(true)}
+            onWordSearch={() => setShowWordSearch(false)}
+            onAddBookmark={handleQuickBookmark}
+            onStartTimer={() => setShowTimer(true)}
+          />
         </div>
-        <QuranWordSearch />
-        <FloatingQuickActions
-          onQuickSearch={() => setShowEnhancedSearch(true)}
-          onWordSearch={() => setShowWordSearch(false)}
-          onAddBookmark={handleQuickBookmark}
-          onStartTimer={() => setShowTimer(true)}
-        />
-      </div>
+      </ErrorBoundary>
     );
   }
 
   // Show advanced search modal
   if (showAdvancedSearch) {
     return (
-      <AdvancedQuranSearch
-        surahs={surahs}
-        onSurahSelect={(surah) => {
-          setShowAdvancedSearch(false);
-          handleSurahClick(surah);
-        }}
-        onClose={() => setShowAdvancedSearch(false)}
-      />
+      <ErrorBoundary section="Advanced Quran Search">
+        <LazyWrapper fallback={<QuranLoadingStates type="content" />}>
+          <LazyAdvancedQuranSearch
+            surahs={surahs}
+            onSurahSelect={(surah) => {
+              setShowAdvancedSearch(false);
+              handleSurahClick(surah);
+            }}
+            onClose={() => setShowAdvancedSearch(false)}
+          />
+        </LazyWrapper>
+      </ErrorBoundary>
     );
   }
 
@@ -193,16 +213,18 @@ const QuranTab: React.FC<QuranTabProps> = ({
 
     return (
       <>
-        <EnhancedQuranReader
-          arabicSurah={arabicSurahWithAyahs}
-          translationSurah={translationSurahWithAyahs}
-          showTranslation={showTranslation}
-          onToggleTranslation={toggleTranslation}
-          onBack={handleBackToList}
-          onAddToBookmarks={() => handleAddToBookmarks(selectedSurah)}
-          isPlaying={isPlaying}
-          onTogglePlay={togglePlay}
-        />
+        <ErrorBoundary section="Quran Reader">
+          <EnhancedQuranReader
+            arabicSurah={arabicSurahWithAyahs}
+            translationSurah={translationSurahWithAyahs}
+            showTranslation={showTranslation}
+            onToggleTranslation={toggleTranslation}
+            onBack={handleBackToList}
+            onAddToBookmarks={() => handleAddToBookmarks(selectedSurah)}
+            isPlaying={isPlaying}
+            onTogglePlay={togglePlay}
+          />
+        </ErrorBoundary>
         <FloatingQuickActions
           onQuickSearch={() => setShowEnhancedSearch(true)}
           onWordSearch={() => setShowWordSearch(true)}
@@ -215,10 +237,12 @@ const QuranTab: React.FC<QuranTabProps> = ({
           </div>
         )}
         {showEnhancedSearch && (
-          <EnhancedQuranSearch
-            onSearch={handleEnhancedSearch}
-            onClose={() => setShowEnhancedSearch(false)}
-          />
+          <ErrorBoundary section="Enhanced Search">
+            <EnhancedQuranSearch
+              onSearch={handleEnhancedSearch}
+              onClose={() => setShowEnhancedSearch(false)}
+            />
+          </ErrorBoundary>
         )}
         {shareVerse && (
           <VerseShareCard
@@ -242,23 +266,29 @@ const QuranTab: React.FC<QuranTabProps> = ({
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Book className="w-5 h-5 text-emerald-600" />
-            القرآن الكريم - Holy Quran
-          </CardTitle>
-          <p className="text-sm text-gray-600">Read and explore the complete Quran with translations and audio</p>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Search Controls */}
-          <QuranSearchControls
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            onAdvancedSearchClick={() => setShowAdvancedSearch(true)}
-            onProgressClick={() => setShowProgress(true)}
-            onWordSearchClick={() => setShowWordSearch(true)}
-          />
+      <ErrorBoundary section="Quran Tab">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Book className="w-5 h-5 text-emerald-600" />
+              القرآن الكريم - Holy Quran
+            </CardTitle>
+            <p className="text-sm text-gray-600">Read and explore the complete Quran with translations and audio</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Search Controls */}
+            <QuranSearchControls
+              searchTerm={searchTerm}
+              onSearchChange={(value) => {
+                const validation = validateSearchQuery(value, 'mixed');
+                if (validation.isValid) {
+                  setSearchTerm(validation.sanitized!);
+                }
+              }}
+              onAdvancedSearchClick={() => setShowAdvancedSearch(true)}
+              onProgressClick={() => setShowProgress(true)}
+              onWordSearchClick={() => setShowWordSearch(true)}
+            />
 
           {/* Loading state */}
           {isLoadingSurahs && <QuranLoadingStates type="surahs" />}
@@ -342,6 +372,7 @@ const QuranTab: React.FC<QuranTabProps> = ({
           )}
         </CardContent>
       </Card>
+      </ErrorBoundary>
 
       {/* Floating Quick Actions */}
       <FloatingQuickActions
@@ -359,10 +390,12 @@ const QuranTab: React.FC<QuranTabProps> = ({
       )}
       
       {showEnhancedSearch && (
-        <EnhancedQuranSearch
-          onSearch={handleEnhancedSearch}
-          onClose={() => setShowEnhancedSearch(false)}
-        />
+        <ErrorBoundary section="Enhanced Search">
+          <EnhancedQuranSearch
+            onSearch={handleEnhancedSearch}
+            onClose={() => setShowEnhancedSearch(false)}
+          />
+        </ErrorBoundary>
       )}
       
       {shareVerse && (

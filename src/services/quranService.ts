@@ -41,8 +41,10 @@ export const fetchAllSurahs = async (): Promise<QuranSurah[]> => {
     return data.data;
   } catch (error) {
     console.error('Error fetching surahs:', error);
-    // Return fallback data
-    return generateFallbackSurahs();
+    // Return fallback data for offline functionality
+    const fallbackSurahs = generateFallbackSurahs();
+    console.log('Using fallback surahs:', fallbackSurahs.length);
+    return fallbackSurahs;
   }
 };
 

@@ -100,7 +100,7 @@ const SupportUsAdButton: React.FC<SupportUsAdButtonProps> = ({
       <Button
         onClick={playAd}
         variant="outline"
-        size={size}
+        size={size === 'md' ? 'default' : size}
         className="border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300"
         disabled={isAdPlaying}
       >

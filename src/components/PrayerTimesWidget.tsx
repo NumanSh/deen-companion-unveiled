@@ -5,6 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Clock, MapPin, Loader2, Sun, Moon, Sunrise, Sunset } from 'lucide-react';
 import { prayerTimesApi, PrayerTimesResponse } from '@/services/prayerTimesApi';
 import { useToast } from '@/hooks/use-toast';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import ApiErrorBoundary from '@/components/ApiErrorBoundary';
+import { PrayerApiErrorHandler } from '@/utils/apiErrorHandler';
 
 interface PrayerTimesWidgetProps {
   showQibla?: boolean;
@@ -29,8 +32,30 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
   const getPrayerTimes = async () => {
     setIsLoading(true);
     try {
-      const coords = await prayerTimesApi.getCurrentLocation();
-      const response = await prayerTimesApi.getPrayerTimes(coords.latitude, coords.longitude);
+      const coords = await PrayerApiErrorHandler.withRetry(
+        () => prayerTimesApi.getCurrentLocation(),
+        { maxRetries: 2 },
+        (attempt, error) => {
+          toast({
+            title: 'Retrying Location',
+            description: `Attempt ${attempt}: ${error.message}`,
+            duration: 2000
+          });
+        }
+      );
+      
+      const response = await PrayerApiErrorHandler.withRetry(
+        () => prayerTimesApi.getPrayerTimes(coords.latitude, coords.longitude),
+        { maxRetries: 3 },
+        (attempt, error) => {
+          toast({
+            title: 'Retrying Prayer Times',
+            description: `Attempt ${attempt}: ${error.message}`,
+            duration: 2000
+          });
+        }
+      );
+      
       setPrayerData(response);
       calculateNextPrayer(response);
       
@@ -40,11 +65,8 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
       });
     } catch (error) {
       console.error('Error fetching prayer times:', error);
-      toast({
-        title: 'Error',
-        description: 'Could not fetch prayer times. Please try again.',
-        variant: 'destructive'
-      });
+      const apiError = PrayerApiErrorHandler.parseError(error);
+      toast(PrayerApiErrorHandler.getErrorToast(apiError));
     } finally {
       setIsLoading(false);
     }
@@ -115,92 +137,100 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
   }, [prayerData]);
 
   return (
-    <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-blue-600" />
-            Prayer Times
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={getPrayerTimes}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <MapPin className="w-4 h-4" />
+    <ErrorBoundary section="Prayer Times Widget">
+      <ApiErrorBoundary 
+        apiName="Prayer Times API" 
+        fallbackData={prayerData}
+        onRetry={getPrayerTimes}
+      >
+        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-blue-600" />
+                Prayer Times
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={getPrayerTimes}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <MapPin className="w-4 h-4" />
+                )}
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {!prayerData && !isLoading && (
+              <div className="text-center py-4">
+                <Button onClick={getPrayerTimes} className="bg-blue-600 hover:bg-blue-700">
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Get Prayer Times
+                </Button>
+              </div>
             )}
-          </Button>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {!prayerData && !isLoading && (
-          <div className="text-center py-4">
-            <Button onClick={getPrayerTimes} className="bg-blue-600 hover:bg-blue-700">
-              <MapPin className="w-4 h-4 mr-2" />
-              Get Prayer Times
-            </Button>
-          </div>
-        )}
 
-        {nextPrayer && (
-          <div className="bg-blue-100 dark:bg-blue-800 p-4 rounded-lg text-center">
-            <p className="text-sm text-blue-700 dark:text-blue-300">Next Prayer</p>
-            <p className="text-xl font-bold text-blue-900 dark:text-blue-100">
-              {nextPrayer.name} - {formatTime(nextPrayer.time)}
-            </p>
-            <p className="text-sm text-blue-600 dark:text-blue-400">
-              in {getTimeUntilNext()}
-            </p>
-          </div>
-        )}
+            {nextPrayer && (
+              <div className="bg-blue-100 dark:bg-blue-800 p-4 rounded-lg text-center">
+                <p className="text-sm text-blue-700 dark:text-blue-300">Next Prayer</p>
+                <p className="text-xl font-bold text-blue-900 dark:text-blue-100">
+                  {nextPrayer.name} - {formatTime(nextPrayer.time)}
+                </p>
+                <p className="text-sm text-blue-600 dark:text-blue-400">
+                  in {getTimeUntilNext()}
+                </p>
+              </div>
+            )}
 
-        {prayerData && (
-          <div className="space-y-3">
-            <div className="text-sm text-gray-600 dark:text-gray-400 text-center">
-              {prayerData.data.date.readable}
-            </div>
-            
-            {Object.entries(prayerData.data.timings)
-              .filter(([name]) => ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].includes(name))
-              .map(([name, time]) => {
-                const Icon = prayerIcons[name as keyof typeof prayerIcons];
-                const isNext = nextPrayer?.name === name;
+            {prayerData && (
+              <div className="space-y-3">
+                <div className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                  {prayerData.data.date.readable}
+                </div>
                 
-                return (
-                  <div
-                    key={name}
-                    className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
-                      isNext 
-                        ? 'bg-blue-200 dark:bg-blue-700' 
-                        : 'bg-white dark:bg-gray-800'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Icon className={`w-5 h-5 ${isNext ? 'text-blue-700 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400'}`} />
-                      <span className={`font-medium ${isNext ? 'text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`}>
-                        {name}
-                      </span>
-                    </div>
-                    <span className={`font-mono ${isNext ? 'text-blue-800 dark:text-blue-200' : 'text-gray-700 dark:text-gray-300'}`}>
-                      {formatTime(time)}
-                    </span>
-                  </div>
-                );
-              })}
-          </div>
-        )}
+                {Object.entries(prayerData.data.timings)
+                  .filter(([name]) => ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].includes(name))
+                  .map(([name, time]) => {
+                    const Icon = prayerIcons[name as keyof typeof prayerIcons];
+                    const isNext = nextPrayer?.name === name;
+                    
+                    return (
+                      <div
+                        key={name}
+                        className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
+                          isNext 
+                            ? 'bg-blue-200 dark:bg-blue-700' 
+                            : 'bg-white dark:bg-gray-800'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Icon className={`w-5 h-5 ${isNext ? 'text-blue-700 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400'}`} />
+                          <span className={`font-medium ${isNext ? 'text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`}>
+                            {name}
+                          </span>
+                        </div>
+                        <span className={`font-mono ${isNext ? 'text-blue-800 dark:text-blue-200' : 'text-gray-700 dark:text-gray-300'}`}>
+                          {formatTime(time)}
+                        </span>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
 
-        {prayerData && (
-          <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-            Location: {prayerData.data.meta.latitude.toFixed(2)}, {prayerData.data.meta.longitude.toFixed(2)}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+            {prayerData && (
+              <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                Location: {prayerData.data.meta.latitude.toFixed(2)}, {prayerData.data.meta.longitude.toFixed(2)}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </ApiErrorBoundary>
+    </ErrorBoundary>
   );
 };
 
