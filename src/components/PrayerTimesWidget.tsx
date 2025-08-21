@@ -8,6 +8,10 @@ import { useToast } from '@/hooks/use-toast';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import ApiErrorBoundary from '@/components/ApiErrorBoundary';
 import { PrayerApiErrorHandler } from '@/utils/apiErrorHandler';
+import EnhancedLoadingStates from '@/components/EnhancedLoadingStates';
+import OfflineIndicator from '@/components/OfflineIndicator';
+import { useOfflineStatus, useOfflinePrayerTimes } from '@/hooks/useOfflineStatus';
+import { useApiCache } from '@/hooks/usePerformanceOptimizations';
 
 interface PrayerTimesWidgetProps {
   showQibla?: boolean;
@@ -19,6 +23,9 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [nextPrayer, setNextPrayer] = useState<{ name: string; time: string } | null>(null);
   const { toast } = useToast();
+  const { isOffline } = useOfflineStatus();
+  const { calculatePrayerTimes } = useOfflinePrayerTimes();
+  const { getCachedData, setCachedData } = useApiCache<PrayerTimesResponse>('prayer-times', 30 * 60 * 1000); // 30 minutes cache
 
   const prayerIcons = {
     Fajr: Moon,
@@ -30,6 +37,78 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
   };
 
   const getPrayerTimes = async () => {
+    // Try cache first
+    const cachedData = getCachedData();
+    if (cachedData && !isOffline) {
+      setPrayerData(cachedData);
+      calculateNextPrayer(cachedData);
+      return;
+    }
+
+    if (isOffline) {
+      // Use offline calculation
+      try {
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error('Geolocation not supported'));
+            return;
+          }
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+        
+        const offlineTimes = calculatePrayerTimes(
+          position.coords.latitude, 
+          position.coords.longitude
+        );
+        
+        // Create a simplified mock response for offline times
+        const offlineResponse = {
+          data: {
+            timings: {
+              Fajr: offlineTimes.fajr,
+              Sunrise: offlineTimes.sunrise,
+              Dhuhr: offlineTimes.dhuhr,
+              Asr: offlineTimes.asr,
+              Maghrib: offlineTimes.maghrib,
+              Isha: offlineTimes.isha
+            },
+            date: {
+              readable: new Date().toLocaleDateString(),
+              hijri: {
+                date: '1',
+                month: { en: 'Muharram', ar: 'محرم' },
+                year: '1446'
+              }
+            },
+            meta: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+              method: { id: 0, name: 'Offline Calculation' }
+            }
+          }
+        } as PrayerTimesResponse;
+        
+        setPrayerData(offlineResponse);
+        calculateNextPrayer(offlineResponse);
+        
+        toast({
+          title: 'Offline Prayer Times',
+          description: 'Using approximate prayer times (offline mode)',
+          duration: 3000
+        });
+        
+        return;
+      } catch (error) {
+        toast({
+          title: 'Location Error',
+          description: 'Cannot get location for offline prayer times',
+          variant: 'destructive'
+        });
+        return;
+      }
+    }
+
     setIsLoading(true);
     try {
       const coords = await PrayerApiErrorHandler.withRetry(
@@ -57,6 +136,7 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
       );
       
       setPrayerData(response);
+      setCachedData(response); // Cache the response
       calculateNextPrayer(response);
       
       toast({
@@ -143,6 +223,13 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
         fallbackData={prayerData}
         onRetry={getPrayerTimes}
       >
+        {isOffline && (
+          <OfflineIndicator 
+            className="mb-4" 
+            onRetry={getPrayerTimes}
+          />
+        )}
+        
         <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
@@ -155,6 +242,8 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
                 size="sm"
                 onClick={getPrayerTimes}
                 disabled={isLoading}
+                aria-label={isLoading ? 'Loading prayer times' : 'Refresh prayer times'}
+                title={isLoading ? 'Loading prayer times' : 'Refresh prayer times'}
               >
                 {isLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -165,9 +254,17 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {isLoading && (
+              <EnhancedLoadingStates type="prayer-times" title="Loading prayer times..." />
+            )}
+
             {!prayerData && !isLoading && (
               <div className="text-center py-4">
-                <Button onClick={getPrayerTimes} className="bg-blue-600 hover:bg-blue-700">
+                <Button 
+                  onClick={getPrayerTimes} 
+                  className="bg-blue-600 hover:bg-blue-700"
+                  aria-label="Get prayer times for your location"
+                >
                   <MapPin className="w-4 h-4 mr-2" />
                   Get Prayer Times
                 </Button>
@@ -186,10 +283,15 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
               </div>
             )}
 
-            {prayerData && (
+            {prayerData && !isLoading && (
               <div className="space-y-3">
                 <div className="text-sm text-gray-600 dark:text-gray-400 text-center">
                   {prayerData.data.date.readable}
+                  {isOffline && (
+                    <span className="block text-xs text-orange-600 dark:text-orange-400 mt-1">
+                      (Approximate times - offline mode)
+                    </span>
+                  )}
                 </div>
                 
                 {Object.entries(prayerData.data.timings)
@@ -201,14 +303,20 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
                     return (
                       <div
                         key={name}
-                        className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
+                        className={`flex items-center justify-between p-3 rounded-lg transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 ${
                           isNext 
                             ? 'bg-blue-200 dark:bg-blue-700' 
                             : 'bg-white dark:bg-gray-800'
                         }`}
+                        tabIndex={0}
+                        role="listitem"
+                        aria-label={`${name} prayer at ${formatTime(time)}${isNext ? ' - next prayer' : ''}`}
                       >
                         <div className="flex items-center gap-3">
-                          <Icon className={`w-5 h-5 ${isNext ? 'text-blue-700 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400'}`} />
+                          <Icon 
+                            className={`w-5 h-5 ${isNext ? 'text-blue-700 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400'}`}
+                            aria-hidden="true"
+                          />
                           <span className={`font-medium ${isNext ? 'text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`}>
                             {name}
                           </span>
