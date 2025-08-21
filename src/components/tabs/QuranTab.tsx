@@ -24,6 +24,10 @@ import LazyWrapper from '@/components/LazyWrapper';
 import { LazyAdvancedQuranSearch } from '@/components/lazy/LazyAdvancedQuranSearch';
 import { validateSearchQuery } from '@/utils/inputValidation';
 import { QuranApiErrorHandler } from '@/utils/apiErrorHandler';
+import AccessibilityEnhancements from '@/components/AccessibilityEnhancements';
+import { useOptimizedSearch, usePerformanceMonitoring } from '@/hooks/usePerformanceOptimizations';
+import OfflineIndicator from '@/components/OfflineIndicator';
+import { useOfflineStatus } from '@/hooks/useOfflineStatus';
 
 interface QuranTabProps {
   onAddToBookmarks: (item: any, type: 'surah' | 'dua' | 'hadith') => void;
@@ -39,6 +43,9 @@ const QuranTab: React.FC<QuranTabProps> = ({
   isLoading: parentLoading
 }) => {
   const { toast } = useToast();
+  const { markStart, markEnd } = usePerformanceMonitoring();
+  const { isOffline } = useOfflineStatus();
+  
   const [showTranslation, setShowTranslation] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
@@ -74,7 +81,9 @@ const QuranTab: React.FC<QuranTabProps> = ({
   } = useOfflineQuran();
 
   const handleSurahClick = (surah: QuranSurah) => {
+    markStart('surah-load');
     loadSurahContent(surah);
+    markEnd('surah-load');
   };
 
   const handleAddToBookmarks = (surah: QuranSurah) => {
@@ -127,6 +136,14 @@ const QuranTab: React.FC<QuranTabProps> = ({
   };
 
   const handleDownloadForOffline = async (surah: QuranSurah) => {
+    if (isOffline) {
+      toast({
+        title: 'Offline Mode',
+        description: 'Cannot download content while offline',
+        variant: 'destructive'
+      });
+      return;
+    }
     await downloadSurah(surah);
   };
 
@@ -266,8 +283,33 @@ const QuranTab: React.FC<QuranTabProps> = ({
 
   return (
     <>
+      <AccessibilityEnhancements
+        onQuickSearch={() => setShowEnhancedSearch(true)}
+        onGoToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNextSection={() => {
+          const nextSurah = filteredSurahs.find(s => s.number > (selectedSurah?.number || 0));
+          if (nextSurah) handleSurahClick(nextSurah);
+        }}
+        onPrevSection={() => {
+          const prevSurahs = filteredSurahs.filter(s => s.number < (selectedSurah?.number || Infinity));
+          const prevSurah = prevSurahs[prevSurahs.length - 1];
+          if (prevSurah) handleSurahClick(prevSurah);
+        }}
+      />
+      
+      {isOffline && (
+        <OfflineIndicator 
+          className="mb-4" 
+          showDetails 
+          onDownloadOfflineContent={() => toast({
+            title: 'Offline Content',
+            description: 'Use the download button on individual surahs to save for offline reading.'
+          })}
+        />
+      )}
+      
       <ErrorBoundary section="Quran Tab">
-        <Card>
+        <Card id="main-content">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Book className="w-5 h-5 text-emerald-600" />
@@ -302,19 +344,28 @@ const QuranTab: React.FC<QuranTabProps> = ({
           {/* Enhanced Surahs Grid with Offline Support */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredSurahs.map((surah) => {
-              const isOffline = isSurahAvailableOffline(surah.number);
+              const isOfflineAvailable = isSurahAvailableOffline(surah.number);
               const downloading = isDownloading(surah.number);
               
               return (
                 <div
                   key={surah.number}
-                  className="p-4 rounded-lg border transition-all cursor-pointer hover:shadow-md border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 relative"
+                  className="p-4 rounded-lg border transition-all cursor-pointer hover:shadow-md border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 relative focus-within:ring-2 focus-within:ring-emerald-500 focus-within:ring-offset-2"
                   onClick={() => handleSurahClick(surah)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleSurahClick(surah);
+                    }
+                  }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Read Surah ${surah.englishName} - ${surah.englishNameTranslation}, ${surah.numberOfAyahs} verses`}
                 >
                   {/* Offline Indicator */}
-                  {isOffline && (
-                    <div className="absolute top-2 right-2">
-                      <WifiOff className="w-4 h-4 text-green-600" />
+                  {isOfflineAvailable && (
+                    <div className="absolute top-2 right-2" title="Available offline">
+                      <WifiOff className="w-4 h-4 text-green-600" aria-label="Available offline" />
                     </div>
                   )}
                   
@@ -325,19 +376,23 @@ const QuranTab: React.FC<QuranTabProps> = ({
                           {surah.number}
                         </div>
                         {readingSurahs.has(surah.number) && (
-                          <span className="w-2 h-2 bg-emerald-500 rounded-full" />
+                          <span 
+                            className="w-2 h-2 bg-emerald-500 rounded-full" 
+                            aria-label="Currently reading"
+                            title="Currently reading"
+                          />
                         )}
                       </div>
                       <h3 className="font-bold text-lg text-gray-800 dark:text-gray-200 mb-1">
                         {surah.englishName}
                       </h3>
                       <p className="text-sm text-emerald-600 mb-1">{surah.englishNameTranslation}</p>
-                      <p className="text-xs text-gray-500" dir="rtl">سُورَةُ {surah.name}</p>
+                      <p className="text-xs text-gray-500" dir="rtl" lang="ar">سُورَةُ {surah.name}</p>
                       <p className="text-xs text-gray-400 mt-1">{surah.numberOfAyahs} verses</p>
                     </div>
                     
                     <div className="flex flex-col items-center gap-2">
-                      {!isOffline && (
+                      {!isOfflineAvailable && (
                         <Button
                           variant="ghost"
                           size="icon"
@@ -345,8 +400,10 @@ const QuranTab: React.FC<QuranTabProps> = ({
                             e.stopPropagation();
                             handleDownloadForOffline(surah);
                           }}
-                          disabled={downloading}
+                          disabled={downloading || isOffline}
                           className="h-8 w-8"
+                          aria-label={`Download ${surah.englishName} for offline reading`}
+                          title={isOffline ? 'Cannot download while offline' : 'Download for offline reading'}
                         >
                           {downloading ? (
                             <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />

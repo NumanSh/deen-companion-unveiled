@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
+import EnhancedLoadingStates from '@/components/EnhancedLoadingStates';
 
 interface QuranLoadingStatesProps {
   type: 'surahs' | 'content';
@@ -13,32 +14,19 @@ const QuranLoadingStates: React.FC<QuranLoadingStatesProps> = ({
   selectedSurahName
 }) => {
   if (type === 'surahs') {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
-        <span className="ml-2 text-emerald-600">Loading Quran surahs...</span>
-      </div>
-    );
+    return <EnhancedLoadingStates type="quran-list" title="Loading Quran chapters..." />;
   }
 
   if (type === 'content') {
     return (
-      <Card>
-        <CardContent className="flex items-center justify-center py-12">
-          <div className="text-center space-y-4">
-            <Loader2 className="w-12 h-12 animate-spin mx-auto text-emerald-600" />
-            <div>
-              <h3 className="text-lg font-semibold">Loading Surah...</h3>
-              <p className="text-gray-600">
-                {selectedSurahName 
-                  ? `Loading ${selectedSurahName}...` 
-                  : 'Please wait while we fetch the content'
-                }
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <EnhancedLoadingStates 
+        type="quran-content" 
+        title="Loading Surah Content..."
+        description={selectedSurahName 
+          ? `Loading ${selectedSurahName}...` 
+          : 'Please wait while we fetch the verses'
+        }
+      />
     );
   }
 
