@@ -19,17 +19,48 @@ interface QuranApiResponse {
   data: QuranSurah;
 }
 
+// Enhanced API integration - now uses multiple sources for better reliability
 export const QURAN_API_BASE = 'https://api.alquran.cloud/v1';
+export const QURAN_COM_API = 'https://api.quran.com/api/v4';
 
-// Get all surahs list
+// Enhanced surah fetching with multiple API fallbacks
 export const fetchAllSurahs = async (): Promise<QuranSurah[]> => {
   try {
-    console.log('Fetching all surahs from Quran API...');
+    console.log('Fetching all surahs from enhanced Quran APIs...');
+    
+    // Try Quran.com API first for most comprehensive data
+    try {
+      const response = await fetch(`${QURAN_COM_API}/chapters`, {
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'Islamic-Companion-App/1.0'
+        },
+        signal: AbortSignal.timeout(10000)
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Successfully fetched from Quran.com API:', data.chapters.length);
+        return data.chapters.map((chapter: any) => ({
+          number: chapter.id,
+          name: chapter.name_arabic,
+          englishName: chapter.name_simple,
+          englishNameTranslation: chapter.translated_name.name,
+          numberOfAyahs: chapter.verses_count,
+          revelationType: chapter.revelation_place
+        }));
+      }
+    } catch (quranComError) {
+      console.log('Quran.com API failed, trying AlQuran Cloud...');
+    }
+
+    // Fallback to AlQuran Cloud API
     const response = await fetch(`${QURAN_API_BASE}/surah`, {
       headers: {
         'Accept': 'application/json',
-        'User-Agent': 'Islamic-App/1.0'
-      }
+        'User-Agent': 'Islamic-Companion-App/1.0'
+      },
+      signal: AbortSignal.timeout(10000)
     });
     
     if (!response.ok) {
