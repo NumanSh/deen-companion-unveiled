@@ -1,0 +1,249 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - button [ref=e11] [cursor=pointer]:
+          - img
+        - generic [ref=e12]:
+          - button "3" [ref=e14] [cursor=pointer]:
+            - img
+            - generic [ref=e15] [cursor=pointer]: "3"
+          - button [ref=e16] [cursor=pointer]:
+            - img
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - heading "مساء النور" [level=1] [ref=e19]
+          - paragraph [ref=e20]: Good Evening
+        - generic [ref=e21]:
+          - img [ref=e23]
+          - heading "Deen Companion" [level=2] [ref=e26]
+          - generic [ref=e27]:
+            - img [ref=e28]
+            - img [ref=e30]
+        - paragraph [ref=e32]: Your personalized spiritual journey towards closeness to Allah
+        - generic [ref=e34]: ✨ Active Today
+    - generic [ref=e38]:
+      - button "Dashboard" [ref=e39] [cursor=pointer]:
+        - img
+        - text: Dashboard
+      - button "Achievements" [ref=e40] [cursor=pointer]:
+        - img
+        - text: Achievements
+      - button "Analytics" [ref=e41] [cursor=pointer]:
+        - img
+        - text: Analytics
+    - generic [ref=e43]:
+      - generic [ref=e45]:
+        - generic [ref=e48]:
+          - generic [ref=e49]:
+            - heading "مساء النور" [level=2] [ref=e50]
+            - paragraph [ref=e51]: Reflect on your day with evening recitation
+          - generic [ref=e52]:
+            - generic [ref=e53]:
+              - img [ref=e54]
+              - generic [ref=e56]: "5"
+            - paragraph [ref=e57]: day streak
+        - generic [ref=e58]:
+          - generic [ref=e60]:
+            - img [ref=e62]
+            - generic [ref=e65]: "240"
+            - generic [ref=e66]: minutes read
+          - generic [ref=e68]:
+            - img [ref=e70]
+            - generic [ref=e72]: "127"
+            - generic [ref=e73]: verses read
+        - generic [ref=e74]:
+          - heading "Weekly Reading Goal" [level=3] [ref=e76]:
+            - img [ref=e77]
+            - text: Weekly Reading Goal
+          - generic [ref=e82]:
+            - generic [ref=e83]:
+              - generic [ref=e84]: 240 min
+              - generic [ref=e85]: 300 min
+            - progressbar [ref=e86]
+            - generic [ref=e89]: 80% complete
+        - generic [ref=e90]:
+          - heading "Recent Achievements" [level=3] [ref=e92]:
+            - img [ref=e93]
+            - text: Recent Achievements
+          - generic [ref=e97]:
+            - generic [ref=e98]:
+              - img [ref=e99]
+              - text: Early Bird
+            - generic [ref=e101]:
+              - img [ref=e102]
+              - text: Consistent Reader
+        - generic [ref=e104]:
+          - heading "Recommended for You" [level=3] [ref=e106]:
+            - img [ref=e107]
+            - text: Recommended for You
+          - generic [ref=e110]:
+            - button "Continue Surah Al-Fatiha Pick up where you left off" [ref=e111] [cursor=pointer]:
+              - generic [ref=e112] [cursor=pointer]:
+                - generic [ref=e113] [cursor=pointer]: Continue Surah Al-Fatiha
+                - generic [ref=e114] [cursor=pointer]: Pick up where you left off
+            - button "Morning Dhikr Start your day with remembrance" [ref=e115] [cursor=pointer]:
+              - generic [ref=e116] [cursor=pointer]:
+                - generic [ref=e117] [cursor=pointer]: Morning Dhikr
+                - generic [ref=e118] [cursor=pointer]: Start your day with remembrance
+      - generic [ref=e119]:
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - img [ref=e126]
+            - generic [ref=e130]:
+              - heading "Quick Actions" [level=3] [ref=e131]
+              - paragraph [ref=e132]: Jump to your spiritual activities
+          - generic [ref=e134]: 4 actions
+        - generic [ref=e136]:
+          - button "The Quran Read & Study" [ref=e137] [cursor=pointer]:
+            - generic [ref=e139] [cursor=pointer]:
+              - img
+            - generic [ref=e140] [cursor=pointer]:
+              - generic [ref=e141] [cursor=pointer]: The Quran
+              - generic [ref=e142] [cursor=pointer]: Read & Study
+          - button "Prayer Times Times & Tracker" [ref=e144] [cursor=pointer]:
+            - generic [ref=e146] [cursor=pointer]:
+              - img
+            - generic [ref=e147] [cursor=pointer]:
+              - generic [ref=e148] [cursor=pointer]: Prayer Times
+              - generic [ref=e149] [cursor=pointer]: Times & Tracker
+          - button "Qibla Find Direction" [ref=e151] [cursor=pointer]:
+            - generic [ref=e153] [cursor=pointer]:
+              - img
+            - generic [ref=e154] [cursor=pointer]:
+              - generic [ref=e155] [cursor=pointer]: Qibla
+              - generic [ref=e156] [cursor=pointer]: Find Direction
+          - button "Duas Supplications" [ref=e158] [cursor=pointer]:
+            - generic [ref=e160] [cursor=pointer]:
+              - img
+            - generic [ref=e161] [cursor=pointer]:
+              - generic [ref=e162] [cursor=pointer]: Duas
+              - generic [ref=e163] [cursor=pointer]: Supplications
+      - generic [ref=e166]:
+        - generic [ref=e167]:
+          - heading "آية اليوم تحديث" [level=3] [ref=e169]:
+            - generic [ref=e170]:
+              - img [ref=e171]
+              - text: آية اليوم
+            - button "تحديث" [disabled]:
+              - img
+              - text: تحديث
+          - generic [ref=e173]:
+            - generic [ref=e175]: الخميس، ٢٧ صفر ١٤٤٧ هـ
+            - generic [ref=e176]:
+              - generic [ref=e177]:
+                - generic [ref=e178]: الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
+                - generic [ref=e179]:
+                  - generic [ref=e180]: Al-Fatihah - آية 2
+                  - generic [ref=e181]: Gratitude
+              - paragraph [ref=e183]: All praise is due to Allah, Lord of the worlds.
+              - generic [ref=e184]: Alhamdu lillahi rabbi al-alameen
+              - generic [ref=e185]:
+                - button "استمع" [ref=e186] [cursor=pointer]:
+                  - img
+                  - text: استمع
+                - button "احفظ" [ref=e187] [cursor=pointer]:
+                  - img
+                  - text: احفظ
+                - button "شارك" [ref=e188] [cursor=pointer]:
+                  - img
+                  - text: شارك
+            - generic [ref=e189]:
+              - heading "تأمل وتدبر" [level=4] [ref=e190]:
+                - img [ref=e191]
+                - text: تأمل وتدبر
+              - paragraph [ref=e193]: This verse reminds us to always be grateful to Allah, the Lord of all creation.
+            - generic [ref=e194]:
+              - generic [ref=e195]: مصدر البيانات
+              - generic [ref=e196]:
+                - generic [ref=e197]: 🌐
+                - generic [ref=e198]: القرآن الكريم API
+                - generic [ref=e199]: جاري التحديث...
+        - generic [ref=e202]:
+          - generic [ref=e203]: ✨ Islamic Quote of the Day
+          - blockquote [ref=e204]: "\"And Allah is the best of planners.\""
+          - generic [ref=e205]:
+            - generic [ref=e206]: Quran
+            - generic [ref=e207]: 8:30
+          - generic [ref=e208]:
+            - button [ref=e209] [cursor=pointer]:
+              - img
+            - button [ref=e210] [cursor=pointer]:
+              - img
+            - button [ref=e211] [cursor=pointer]:
+              - img
+      - generic [ref=e212]:
+        - heading "Prayer Times Refresh prayer times" [level=3] [ref=e214]:
+          - generic [ref=e215]:
+            - img [ref=e216]
+            - text: Prayer Times
+          - button "Refresh prayer times" [ref=e219] [cursor=pointer]:
+            - img
+        - button "Get prayer times for your location" [ref=e222] [cursor=pointer]:
+          - img
+          - text: Get Prayer Times
+      - generic [ref=e223]:
+        - generic [ref=e228]:
+          - img [ref=e230]
+          - generic [ref=e232]:
+            - heading "Today's Progress" [level=3] [ref=e233]
+            - paragraph [ref=e234]: Keep up the excellent work!
+        - generic [ref=e236]:
+          - generic [ref=e237]:
+            - img [ref=e239]
+            - generic [ref=e241]:
+              - paragraph [ref=e242]: +25 pts
+              - paragraph [ref=e243]: Spiritual Growth
+          - generic [ref=e244]:
+            - paragraph [ref=e245]: Daily Streak
+            - paragraph [ref=e246]: 3 days strong! 🔥
+    - generic [ref=e248]:
+      - button [ref=e249] [cursor=pointer]:
+        - img
+      - generic [ref=e251]:
+        - generic:
+          - generic:
+            - generic: Read Quran
+        - button [ref=e252] [cursor=pointer]:
+          - img
+      - generic [ref=e254]:
+        - generic:
+          - generic:
+            - generic: Prayer Times
+        - button [ref=e255] [cursor=pointer]:
+          - img
+      - generic [ref=e257]:
+        - generic:
+          - generic:
+            - generic: Qibla Direction
+        - button [ref=e258] [cursor=pointer]:
+          - img
+      - button [ref=e259] [cursor=pointer]:
+        - generic [ref=e260] [cursor=pointer]:
+          - img
+      - generic:
+        - generic: "+5"
+    - generic [ref=e262]:
+      - button "Home" [ref=e263] [cursor=pointer]:
+        - img [ref=e265] [cursor=pointer]
+        - generic [ref=e268] [cursor=pointer]: Home
+      - button "Library" [ref=e269] [cursor=pointer]:
+        - img [ref=e271] [cursor=pointer]
+        - generic [ref=e273] [cursor=pointer]: Library
+      - button "Prayer" [ref=e274] [cursor=pointer]:
+        - img [ref=e276] [cursor=pointer]
+        - generic [ref=e279] [cursor=pointer]: Prayer
+      - button "Calendar" [ref=e280] [cursor=pointer]:
+        - img [ref=e282] [cursor=pointer]
+        - generic [ref=e284] [cursor=pointer]: Calendar
+      - button "Settings" [ref=e285] [cursor=pointer]:
+        - img [ref=e287] [cursor=pointer]
+        - generic [ref=e290] [cursor=pointer]: Settings
+  - region "Notifications (F8)":
+    - list
+  - button [ref=e293] [cursor=pointer]:
+    - img
+```

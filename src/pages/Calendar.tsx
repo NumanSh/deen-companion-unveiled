@@ -31,8 +31,8 @@ const Calendar = () => {
         </svg>
       </div>
 
-      <div className="flex-1 px-4 py-6 relative">
-        <div className="max-w-6xl mx-auto space-y-6">
+      <div className="flex-1 px-4 md:px-6 lg:px-8 py-6 relative">
+        <div className="w-full max-w-[1400px] mx-auto space-y-6">
           {/* Enhanced Header */}
           <div className="text-center space-y-4 mb-8">
             <div className="relative inline-flex items-center gap-3">
@@ -54,9 +54,9 @@ const Calendar = () => {
           </div>
 
           {/* Main Calendar Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             {/* Traditional Islamic Calendar */}
-            <Card className="relative backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 border-emerald-200 dark:border-emerald-800 shadow-xl">
+            <Card className="relative backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 border-emerald-200 dark:border-emerald-800 shadow-xl md:col-span-7 lg:col-span-8">
               <CardHeader className="bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-950 dark:to-blue-950 border-b border-emerald-100 dark:border-emerald-800">
                 <CardTitle className="flex items-center gap-3">
                   <CalendarIcon className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
@@ -71,7 +71,7 @@ const Calendar = () => {
             </Card>
 
             {/* AI-Powered Calendar */}
-            <div className="space-y-6">
+            <div className="space-y-6 md:col-span-5 lg:col-span-4">
               <AIIslamicCalendar />
             </div>
           </div>

@@ -25,18 +25,20 @@ const Home = () => {
         </svg>
       </div>
 
-      <div className="flex-1 px-4 py-6 relative">
-        <div className="max-w-6xl mx-auto space-y-8">
-          <NewUserWelcome />
-          
-          {/* Customizable Home Widgets */}
-          <CustomizableHomeWidgets />
-          
-          <EnhancedDashboard />
-          
-          {/* Support Us Widget */}
-          <div className="max-w-md mx-auto">
-            <SupportUsAdButton variant="widget" />
+      <div className="flex-1 px-4 md:px-6 lg:px-8 py-6 relative">
+        <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8">
+          {/* Main column */}
+          <div className="md:col-span-8 lg:col-span-9 space-y-8">
+            <NewUserWelcome />
+            {/* Customizable Home Widgets */}
+            <CustomizableHomeWidgets />
+            <EnhancedDashboard />
+          </div>
+          {/* Sidebar */}
+          <div className="md:col-span-4 lg:col-span-3 space-y-8">
+            <div className="w-full">
+              <SupportUsAdButton variant="widget" />
+            </div>
           </div>
         </div>
       </div>

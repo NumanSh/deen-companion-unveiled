@@ -14,6 +14,7 @@ const Progress = React.forwardRef<
       "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
       className
     )}
+    aria-label={(props as any)["aria-label"] || "Progress"}
     {...props}
   >
     <ProgressPrimitive.Indicator

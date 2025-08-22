@@ -230,6 +230,8 @@ const EnhancedFloatingActionSystem: React.FC = () => {
                   hover:scale-110 active:scale-95 text-white
                   ${action.color}
                 `}
+                aria-label={action.label}
+                title={action.label}
               >
                 {action.icon}
               </Button>
@@ -242,6 +244,8 @@ const EnhancedFloatingActionSystem: React.FC = () => {
           onClick={() => setIsExpanded(!isExpanded)}
           size="icon"
           className="w-14 h-14 rounded-full bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 text-white"
+          aria-label={isExpanded ? 'Close quick actions' : 'Open quick actions'}
+          title={isExpanded ? 'Close quick actions' : 'Open quick actions'}
         >
           <div className={`transition-transform duration-300 ${isExpanded ? 'rotate-45' : 'rotate-0'}`}>
             {isExpanded ? <X className="w-6 h-6" /> : <Plus className="w-6 h-6" />}

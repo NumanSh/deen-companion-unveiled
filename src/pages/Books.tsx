@@ -196,8 +196,8 @@ const Books = () => {
         </svg>
       </div>
 
-      <div className="flex-1 px-4 py-6 relative">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex-1 px-4 md:px-6 lg:px-8 py-6 relative">
+        <div className="w-full max-w-[1400px] mx-auto space-y-6">
           {/* Enhanced Header */}
           <div className="text-center space-y-4 mb-8">
             <div className="relative inline-flex items-center gap-3">

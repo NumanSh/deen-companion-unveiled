@@ -20,7 +20,7 @@ const NewUserWelcome: React.FC<NewUserWelcomeProps> = ({ onComplete }) => {
 
   const steps = [
     {
-      title: t('welcome-islamic-journey'),
+      title: t('welcome islamic journey'),
       description: t('assalamu-alaikum-start-journey'),
       icon: <Heart className="w-8 h-8 text-emerald-600" />,
       content: t('app-help-track-prayers')

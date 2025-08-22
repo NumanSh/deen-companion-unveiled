@@ -160,7 +160,7 @@ const QuranicVerseOfDay = () => {
               {dailyVerse.arabic}
             </div>
             <div className="flex items-center justify-center gap-2">
-              <Badge className="bg-blue-500 text-white">
+              <Badge className="bg-blue-100 text-blue-800">
                 {dailyVerse.surahName} - آية {dailyVerse.verseNumber}
               </Badge>
               <Badge variant="outline" className="border-blue-300 text-blue-700">

@@ -119,9 +119,9 @@ const Index = () => {
       <ModernHeader timeOfDay={timeOfDay} />
 
       {/* Enhanced Section Toggle */}
-      <div className="px-4 -mt-6 relative z-10">
-        <div className="max-w-md mx-auto">
-          <div className="bg-white/90 backdrop-blur-md rounded-2xl p-1.5 flex shadow-lg border border-white/20">
+      <div className="px-4 md:px-6 lg:px-8 -mt-6 relative z-10">
+        <div className="w-full max-w-[1400px] mx-auto">
+          <div className="bg-white/90 backdrop-blur-md rounded-2xl p-1.5 flex shadow-lg border border-white/20 w-full">
             {sections.map((section) => (
               <Button
                 key={section.id}
@@ -144,83 +144,89 @@ const Index = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 px-4 py-6 space-y-6">
-        <div className="max-w-md mx-auto space-y-6">
-          {/* Dynamic Section Content */}
-          <div className="animate-fade-in">
-            {sections.find(s => s.id === activeSection)?.component}
-          </div>
-          
-          {/* Enhanced Quick Actions */}
-          <ModernCard
-            title="Quick Actions"
-            subtitle="Jump to your spiritual activities"
-            icon={<Target className="w-5 h-5 text-emerald-600" />}
-            badge={`${quickActions.length} actions`}
-            gradient="from-white to-emerald-50/50"
-          >
-            <div className="grid grid-cols-2 gap-4">
-              {quickActions.map((action, index) => {
-                const Icon = action.icon;
-                return (
-                  <Button
-                    key={index}
-                    onClick={() => handleQuickAction(action)}
-                    variant="outline"
-                    className="h-32 p-4 flex flex-col items-center gap-3 hover:shadow-lg transition-all duration-300 border-2 hover:border-gray-300 active:scale-95 group relative overflow-hidden bg-white hover:bg-gray-50"
-                  >
-                    {/* Gradient accent */}
-                    <div className={cn("absolute top-0 left-0 right-0 h-1 bg-gradient-to-r", action.color)} />
-                    
-                    <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 bg-gray-50 group-hover:bg-white group-hover:shadow-md")}>
-                      <Icon className={cn("w-6 h-6", action.iconColor)} />
-                    </div>
-                    <div className="text-center">
-                      <span className="text-sm font-semibold block group-hover:text-gray-700 transition-colors">{action.title}</span>
-                      <span className="text-xs text-gray-500 block mt-1">{action.description}</span>
-                    </div>
-
-                    {/* Hover shine effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-700" />
-                  </Button>
-                );
-              })}
+      <div className="flex-1 px-4 md:px-6 lg:px-8 py-6">
+        <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-6">
+          {/* Left/Main column */}
+          <div className="md:col-span-8 lg:col-span-9 space-y-6">
+            {/* Dynamic Section Content */}
+            <div className="animate-fade-in">
+              {sections.find(s => s.id === activeSection)?.component}
             </div>
-          </ModernCard>
 
-          {/* Daily Content */}
-          <div className="space-y-4">
-            <QuranicVerseOfDay />
-            <IslamicQuoteWidget />
+            {/* Enhanced Quick Actions */}
+            <ModernCard
+              title="Quick Actions"
+              subtitle="Jump to your spiritual activities"
+              icon={<Target className="w-5 h-5 text-emerald-600" />}
+              badge={`${quickActions.length} actions`}
+              gradient="from-white to-emerald-50/50"
+            >
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {quickActions.map((action, index) => {
+                  const Icon = action.icon;
+                  return (
+                    <Button
+                      key={index}
+                      onClick={() => handleQuickAction(action)}
+                      variant="outline"
+                      className="h-32 p-4 flex flex-col items-center gap-3 hover:shadow-lg transition-all duration-300 border-2 hover:border-gray-300 active:scale-95 group relative overflow-hidden bg-white hover:bg-gray-50"
+                    >
+                      {/* Gradient accent */}
+                      <div className={cn("absolute top-0 left-0 right-0 h-1 bg-gradient-to-r", action.color)} />
+
+                      <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 bg-gray-50 group-hover:bg-white group-hover:shadow-md")}>
+                        <Icon className={cn("w-6 h-6", action.iconColor)} />
+                      </div>
+                      <div className="text-center">
+                        <span className="text-sm font-semibold block group-hover:text-gray-700 transition-colors">{action.title}</span>
+                        <span className="text-xs text-gray-500 block mt-1">{action.description}</span>
+                      </div>
+
+                      {/* Hover shine effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-700" />
+                    </Button>
+                  );
+                })}
+              </div>
+            </ModernCard>
+
+            {/* Daily Content */}
+            <div className="space-y-4">
+              <QuranicVerseOfDay />
+              <IslamicQuoteWidget />
+            </div>
           </div>
 
-          {/* Prayer Times */}
-          <PrayerTimesWidget />
+          {/* Right/Sidebar column */}
+          <div className="md:col-span-4 lg:col-span-3 space-y-6">
+            {/* Prayer Times */}
+            <PrayerTimesWidget />
 
-          {/* Enhanced Progress Summary */}
-          <ModernCard
-            title="Today's Progress"
-            subtitle="Keep up the excellent work!"
-            icon={<Zap className="w-5 h-5 text-yellow-500" />}
-            gradient="from-yellow-50 to-orange-50"
-            size="sm"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500">
-                  <Star className="w-5 h-5 text-white" />
+            {/* Enhanced Progress Summary */}
+            <ModernCard
+              title="Today's Progress"
+              subtitle="Keep up the excellent work!"
+              icon={<Zap className="w-5 h-5 text-yellow-500" />}
+              gradient="from-yellow-50 to-orange-50"
+              size="sm"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500">
+                    <Star className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-yellow-700 text-lg">+25 pts</p>
+                    <p className="text-xs text-yellow-600">Spiritual Growth</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-bold text-yellow-700 text-lg">+25 pts</p>
-                  <p className="text-xs text-yellow-600">Spiritual Growth</p>
+                <div className="text-right">
+                  <p className="text-sm font-medium text-gray-700">Daily Streak</p>
+                  <p className="text-xs text-gray-500">3 days strong! 🔥</p>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="text-sm font-medium text-gray-700">Daily Streak</p>
-                <p className="text-xs text-gray-500">3 days strong! 🔥</p>
-              </div>
-            </div>
-          </ModernCard>
+            </ModernCard>
+          </div>
         </div>
       </div>
       

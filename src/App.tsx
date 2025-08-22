@@ -1,9 +1,11 @@
 
-import React, { Suspense, lazy, useEffect } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/contexts/LanguageContext';
+import { performanceMonitor } from '@/services/performanceMonitoring';
+import PerformanceDashboard from '@/components/PerformanceDashboard';
 import MicroInteractionFeedback from '@/components/MicroInteractionFeedback';
 import { prayerTimesApi } from '@/services/prayerTimesApi';
 import { prayerNotificationService } from '@/services/prayerNotificationService';
@@ -36,6 +38,8 @@ const LoadingFallback = () => (
 );
 
 const App: React.FC = () => {
+  const [showPerformanceDashboard, setShowPerformanceDashboard] = useState(false);
+
   useEffect(() => {
     // Initialize prayer times cache on app start
     prayerTimesApi.initializePrayerTimesCache();
@@ -47,6 +51,16 @@ const App: React.FC = () => {
 
     // Initialize voice-guided prayer service
     voiceGuidedPrayerService.initialize();
+
+    // Show performance dashboard in development mode
+    if (process.env.NODE_ENV === 'development') {
+      setShowPerformanceDashboard(true);
+    }
+
+    // Cleanup performance monitor on unmount
+    return () => {
+      performanceMonitor.destroy();
+    };
   }, []);
 
   return (
@@ -68,6 +82,10 @@ const App: React.FC = () => {
             <Toaster />
             <MicroInteractionFeedback />
             <KeyboardShortcutsManager />
+            <PerformanceDashboard 
+              isVisible={showPerformanceDashboard}
+              onClose={() => setShowPerformanceDashboard(false)}
+            />
           </div>
         </Router>
       </LanguageProvider>
