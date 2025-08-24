@@ -8,9 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { PrayerTimesWidget } from '@/features/prayer';
 import { QuranicWordLearning } from '@/features/quran';
 import { SmartLearningDashboard, AdvancedAnalyticsDashboard } from '@/features/learning';
-import { IntelligentHabitTracker, PersonalizedContentEngine, IslamicAchievementSystem, CommunityPrayerRequests, DailyIslamicChallenges } from '@/features/community';
 import { UnifiedFloatingActions } from '@/shared';
-import { SmartNotificationCenter } from '@/features/learning';
 
 const DashboardTab = () => {
   const navigate = useNavigate();
@@ -24,7 +22,7 @@ const DashboardTab = () => {
 
   return (
     <div className="space-y-6 relative">
-      {/* Enhanced Header with Notifications */}
+      {/* Enhanced Header */}
       <Card className="bg-gradient-to-r from-teal-50 to-blue-50 dark:from-teal-900/20 dark:to-blue-900/20">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -36,7 +34,6 @@ const DashboardTab = () => {
                 May this day bring you closer to Allah
               </p>
             </div>
-            <SmartNotificationCenter />
           </div>
         </CardHeader>
       </Card>
@@ -61,23 +58,18 @@ const DashboardTab = () => {
         })}
       </div>
 
-      {/* NEW: Daily Islamic Challenges - COMMUNITY & GAMIFICATION FEATURE */}
-      <DailyIslamicChallenges />
+      {/* Community Features Placeholder */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Community Features</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">Community features coming soon...</p>
+        </CardContent>
+      </Card>
 
-      {/* NEW: Islamic Achievement System - COMMUNITY & GAMIFICATION FEATURE */}
-      <IslamicAchievementSystem />
-
-      {/* NEW: Community Prayer Requests - COMMUNITY & GAMIFICATION FEATURE */}
-      <CommunityPrayerRequests />
-
-      {/* Advanced Analytics Dashboard - AI-POWERED FEATURE */}
+      {/* Advanced Analytics Dashboard */}
       <AdvancedAnalyticsDashboard />
-
-      {/* Intelligent Habit Tracker - AI-POWERED FEATURE */}
-      <IntelligentHabitTracker />
-
-      {/* Personalized Content Engine - AI-POWERED FEATURE */}
-      <PersonalizedContentEngine />
 
       {/* Enhanced Smart Learning Dashboard */}
       <SmartLearningDashboard />
@@ -179,7 +171,7 @@ const DashboardTab = () => {
         </CardContent>
       </Card>
 
-      {/* Unified Floating Actions Widget - REPLACES ALL OTHER FLOATING COMPONENTS */}
+      {/* Unified Floating Actions Widget */}
       <UnifiedFloatingActions />
     </div>
   );

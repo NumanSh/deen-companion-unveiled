@@ -1,5 +1,5 @@
 
-"use client"
+import * as React from "react"
 
 import {
   Toast,
@@ -12,24 +12,18 @@ import {
 import { useToast } from "@/hooks/use-toast"
 
 export function Toaster() {
-  const { toasts } = useToast()
+  const { visible, message } = useToast()
+
+  if (!visible) return null
 
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        )
-      })}
+      <Toast>
+        <div className="grid gap-1">
+          <ToastDescription>{message}</ToastDescription>
+        </div>
+        <ToastClose />
+      </Toast>
       <ToastViewport />
     </ToastProvider>
   )
