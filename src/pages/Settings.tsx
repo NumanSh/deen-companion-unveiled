@@ -19,7 +19,7 @@ import {
   Shield,
   Languages
 } from "lucide-react";
-import BottomTabBar from "@/components/BottomTabBar";
+import { BottomTabBar } from "@/layout";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 

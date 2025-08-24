@@ -1,21 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
-import BottomTabBar from '@/components/BottomTabBar';
-import TabNavigation from '@/components/TabNavigation';
-import TabContent from '@/components/TabContent';
-import EnhancedOnboarding from '@/components/EnhancedOnboarding';
-import SmartNotificationSystem from '@/components/SmartNotificationSystem';
-import FloatingHelpSystem from '@/components/FloatingHelpSystem';
-import EnhancedSearchExperience from '@/components/EnhancedSearchExperience';
-import IslamicHabitBuilder from '@/components/IslamicHabitBuilder';
-import IslamicHabitVisualization from '@/components/IslamicHabitVisualization';
-import IslamicBookLibrary from '@/components/IslamicBookLibrary';
+import { BottomTabBar } from '@/layout';
+import { TabNavigation, TabContent } from '@/layout';
+import { EnhancedOnboarding, FloatingHelpSystem, EnhancedSearchExperience } from '@/shared';
+import { SmartNotificationSystem } from '@/features/learning';
+import { IslamicHabitBuilder, IslamicHabitVisualization, IslamicBookLibrary } from '@/features/tracking';
 import { Card } from '@/components/ui/card';
 import { BookOpen, Heart, Search, Star, Target, BarChart3, Library } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import EnhancedFloatingActionsSystem from '@/components/EnhancedFloatingActionsSystem';
-import InteractiveIslamicAchievements from '@/components/InteractiveIslamicAchievements';
-import AdvancedReadingAnalyticsDashboard from '@/components/AdvancedReadingAnalyticsDashboard';
+import { EnhancedFloatingActionsSystem, InteractiveIslamicAchievements } from '@/shared';
+import { AdvancedReadingAnalyticsDashboard } from '@/features/learning';
 
 const Books = () => {
   const { toast } = useToast();

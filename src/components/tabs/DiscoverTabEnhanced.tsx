@@ -29,29 +29,15 @@ import {
   Bell,
   Bot
 } from 'lucide-react';
-import IslamicBookLibrary from '@/components/IslamicBookLibrary';
-import VoiceReadingMode from '@/components/VoiceReadingMode';
-import ReadingProgressVisualization from '@/components/ReadingProgressVisualization';
-import SmartBookmarksCollections from '@/components/SmartBookmarksCollections';
-import DailyIslamicCalendar from '@/components/DailyIslamicCalendar';
-import EnhancedTypographyControls from '@/components/EnhancedTypographyControls';
-import QuickActionShortcuts from '@/components/QuickActionShortcuts';
-import AIIslamicLearningAssistant from '@/components/AIIslamicLearningAssistant';
-import CommunityPrayerRequestsSystem from '@/components/CommunityPrayerRequestsSystem';
-import IslamicFinanceCalculatorEnhanced from '@/components/IslamicFinanceCalculatorEnhanced';
-import IslamicHabitBuilder from '@/components/IslamicHabitBuilder';
-import IslamicHabitVisualization from '@/components/IslamicHabitVisualization';
-import SmartPrayerWeatherIntegration from '@/components/SmartPrayerWeatherIntegration';
-import AIPersonalizedLearningPath from '@/components/AIPersonalizedLearningPath';
-import IslamicDreamJournal from '@/components/IslamicDreamJournal';
-import VirtualStudyCircle from '@/components/VirtualStudyCircle';
-import TafsirComparisonTool from '@/components/TafsirComparisonTool';
-import SmartQiblaCompassAR from '@/components/SmartQiblaCompassAR';
-import IslamicPodcastLibrary from '@/components/IslamicPodcastLibrary';
-import EnhancedZakatCalculator from '@/components/EnhancedZakatCalculator';
-import AIIslamicChatbot from '@/components/AIIslamicChatbot';
-import SmartNotificationDashboard from '@/components/SmartNotificationDashboard';
-import CommunityEngagementHub from '@/components/CommunityEngagementHub';
+import { IslamicBookLibrary, IslamicHabitBuilder, IslamicHabitVisualization } from '@/features/tracking';
+import { VoiceReadingMode } from '@/shared';
+import { ReadingProgressVisualization } from '@/features/quran';
+import { SmartBookmarksCollections } from '@/shared';
+import { DailyIslamicCalendar } from '@/features/tracking';
+import { EnhancedTypographyControls, QuickActionShortcuts } from '@/shared';
+import { AIIslamicLearningAssistant, CommunityPrayerRequestsSystem, SmartPrayerWeatherIntegration, AIPersonalizedLearningPath, IslamicDreamJournal, VirtualStudyCircle, SmartQiblaCompassAR, IslamicPodcastLibrary, AIIslamicChatbot, SmartNotificationDashboard, CommunityEngagementHub } from '@/features/community';
+import { TafsirComparisonTool } from '@/features/quran';
+import { EnhancedZakatCalculator } from '@/features/learning';
 
 const DiscoverTabEnhanced = () => {
   const [currentVerse, setCurrentVerse] = useState(1);

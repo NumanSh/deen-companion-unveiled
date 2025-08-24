@@ -5,17 +5,12 @@ import { Progress } from '@/components/ui/progress';
 import { TrendingUp, BookOpen, Clock, Target, Star, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import PrayerTimesWidget from '@/components/PrayerTimesWidget';
-import QuranicWordLearning from '@/components/QuranicWordLearning';
-import SmartLearningDashboard from '@/components/SmartLearningDashboard';
-import AdvancedAnalyticsDashboard from '@/components/AdvancedAnalyticsDashboard';
-import IntelligentHabitTracker from '@/components/IntelligentHabitTracker';
-import PersonalizedContentEngine from '@/components/PersonalizedContentEngine';
-import IslamicAchievementSystem from '@/components/IslamicAchievementSystem';
-import CommunityPrayerRequests from '@/components/CommunityPrayerRequests';
-import DailyIslamicChallenges from '@/components/DailyIslamicChallenges';
-import UnifiedFloatingActions from '@/components/UnifiedFloatingActions';
-import SmartNotificationCenter from '@/components/SmartNotificationCenter';
+import { PrayerTimesWidget } from '@/features/prayer';
+import { QuranicWordLearning } from '@/features/quran';
+import { SmartLearningDashboard, AdvancedAnalyticsDashboard } from '@/features/learning';
+import { IntelligentHabitTracker, PersonalizedContentEngine, IslamicAchievementSystem, CommunityPrayerRequests, DailyIslamicChallenges } from '@/features/community';
+import { UnifiedFloatingActions } from '@/shared';
+import { SmartNotificationCenter } from '@/features/learning';
 
 const DashboardTab = () => {
   const navigate = useNavigate();

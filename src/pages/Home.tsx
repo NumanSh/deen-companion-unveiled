@@ -1,11 +1,11 @@
 
 import React from 'react';
-import BottomTabBar from '@/components/BottomTabBar';
-import EnhancedDashboard from '@/components/EnhancedDashboard';
-import NewUserWelcome from '@/components/NewUserWelcome';
-import CustomizableHomeWidgets from '@/components/CustomizableHomeWidgets';
-import EnhancedFloatingActionSystem from '@/components/EnhancedFloatingActionSystem';
-import SupportUsAdButton from '@/components/SupportUsAdButton';
+import { BottomTabBar } from '@/layout';
+import { EnhancedDashboard } from '@/features/tracking';
+import { NewUserWelcome } from '@/shared';
+import { CustomizableHomeWidgets } from '@/shared';
+import { EnhancedFloatingActionSystem } from '@/shared';
+import { SupportUsAdButton } from '@/shared';
 
 const Home = () => {
   return (

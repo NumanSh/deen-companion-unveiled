@@ -77,6 +77,7 @@ describe('ApiErrorHandler', () => {
   describe('shouldRetry', () => {
     it('should retry network errors', () => {
       const networkError = {
+        message: 'Network error',
         isNetworkError: true,
         isServerError: false,
         isClientError: false
@@ -88,6 +89,7 @@ describe('ApiErrorHandler', () => {
 
     it('should retry server errors', () => {
       const serverError = {
+        message: 'Server error',
         isNetworkError: false,
         isServerError: true,
         isClientError: false
@@ -99,6 +101,7 @@ describe('ApiErrorHandler', () => {
 
     it('should retry 429 errors', () => {
       const rateLimitError = {
+        message: 'Rate limit exceeded',
         isNetworkError: false,
         isServerError: false,
         isClientError: true,
@@ -111,6 +114,7 @@ describe('ApiErrorHandler', () => {
 
     it('should not retry client errors (except 429)', () => {
       const clientError = {
+        message: 'Bad request',
         isNetworkError: false,
         isServerError: false,
         isClientError: true,
@@ -123,6 +127,7 @@ describe('ApiErrorHandler', () => {
 
     it('should not retry after max attempts', () => {
       const networkError = {
+        message: 'Network error',
         isNetworkError: true,
         isServerError: false,
         isClientError: false

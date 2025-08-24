@@ -2,9 +2,8 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Clock, Navigation, MapPin } from 'lucide-react';
-import BottomTabBar from '@/components/BottomTabBar';
-import PrayerTimesWidget from '@/components/PrayerTimesWidget';
-import QiblaCompass from '@/components/QiblaCompass';
+import { BottomTabBar } from '@/layout';
+import { PrayerTimesWidget, QiblaCompass } from '@/features/prayer';
 
 const PrayerTimes = () => {
   return (
