@@ -4,13 +4,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/contexts/LanguageContext';
-import { performanceMonitor } from '@/services/performanceMonitoring';
-import PerformanceDashboard from '@/components/PerformanceDashboard';
-import MicroInteractionFeedback from '@/components/MicroInteractionFeedback';
-import { prayerTimesApi } from '@/services/prayerTimesApi';
-import { prayerNotificationService } from '@/services/prayerNotificationService';
-import { voiceGuidedPrayerService } from '@/services/voiceGuidedPrayerService';
-import KeyboardShortcutsManager from '@/components/KeyboardShortcutsManager';
+import { performanceMonitor } from '@/features/tracking/services/performanceMonitoring';
+import { PerformanceDashboard } from '@/features/tracking';
+import { MicroInteractionFeedback } from '@/shared';
+import { prayerTimesApi } from '@/features/prayer/services/prayerTimesApi';
+import { prayerNotificationService } from '@/features/prayer/services/prayerNotificationService';
+import { voiceGuidedPrayerService } from '@/features/community/services/voiceGuidedPrayerService';
+import { KeyboardShortcutsManager } from '@/shared';
 import './App.css';
 
 // Lazy load pages for better performance

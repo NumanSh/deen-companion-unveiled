@@ -2,13 +2,10 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar as CalendarIcon, Clock, MapPin, Star, Moon, Sun, Bell } from "lucide-react";
-import BottomTabBar from "@/components/BottomTabBar";
-import IslamicCalendar from "@/components/IslamicCalendar";
-import PrayerTimesWidget from "@/components/PrayerTimesWidget";
-import QiblaCompass from "@/components/QiblaCompass";
-import AIIslamicCalendar from "@/components/AIIslamicCalendar";
-import HijriCalendarWidget from "@/components/HijriCalendarWidget";
-import IslamicCalendarEvents from "@/components/IslamicCalendarEvents";
+import { BottomTabBar } from "@/layout";
+import { IslamicCalendar, HijriCalendarWidget, IslamicCalendarEvents } from "@/features/calendar";
+import { PrayerTimesWidget, QiblaCompass } from "@/features/prayer";
+import { AIIslamicCalendar } from "@/features/learning";
 import { cn } from "@/lib/utils";
 
 const Calendar = () => {

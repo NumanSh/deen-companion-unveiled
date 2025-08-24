@@ -16,16 +16,11 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from '@/hooks/use-toast';
-import BottomTabBar from "@/components/BottomTabBar";
-import SmartPersonalizationDashboard from "@/components/SmartPersonalizationDashboard";
-import InteractiveAchievementSystem from "@/components/InteractiveAchievementSystem";
-import SmartReadingAnalytics from "@/components/SmartReadingAnalytics";
-import QuranicVerseOfDay from "@/components/QuranicVerseOfDay";
-import IslamicQuoteWidget from "@/components/IslamicQuoteWidget";
-import PrayerTimesWidget from "@/components/PrayerTimesWidget";
-import EnhancedFloatingActionSystem from "@/components/EnhancedFloatingActionSystem";
-import ModernHeader from "@/components/ModernHeader";
-import ModernCard from "@/components/ModernCard";
+import { BottomTabBar, ModernHeader } from "@/layout";
+import { SmartPersonalizationDashboard, InteractiveAchievementSystem, SmartReadingAnalytics, EnhancedFloatingActionSystem, ModernCard } from "@/shared";
+import { QuranicVerseOfDay } from "@/features/quran";
+import { IslamicQuoteWidget } from "@/features/learning";
+import { PrayerTimesWidget } from "@/features/prayer";
 import { cn } from "@/lib/utils";
 
 const Index = () => {

@@ -14,7 +14,7 @@ import {
   Sparkles,
   Clock
 } from 'lucide-react';
-import PersonalizedPrayerNotifications from '@/components/PersonalizedPrayerNotifications';
+import { PersonalizedPrayerNotifications } from '@/features/prayer';
 
 export const HadithTab = () => (
   <div className="space-y-6">
