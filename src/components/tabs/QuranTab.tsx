@@ -8,10 +8,12 @@ import { EnhancedQuranReader, ReadingProgressTracker, QuranSearchControls, Quran
 import { useQuranData, useSurahContent, useOfflineQuran } from '@/features/quran';
 import { useToast } from '@/shared';
 import { ErrorBoundary, LazyWrapper, AccessibilityEnhancements, OfflineIndicator, FloatingQuickActions } from '@/shared';
-import { LazyAdvancedQuranSearch } from '@/features/quran';
-import { validateSearchQuery } from '@/shared';
-import { QuranApiErrorHandler } from '@/shared';
-import { useOptimizedSearch, usePerformanceMonitoring, useOfflineStatus } from '@/shared';
+import { LazyAdvancedQuranSearch } from '@/components/lazy/LazyAdvancedQuranSearch';
+import { validateSearchQuery } from '@/utils/inputValidation';
+import { QuranApiErrorHandler } from '@/utils/apiErrorHandler';
+import { useOptimizedSearch } from '@/shared/hooks/useOptimizedSearch';
+import { usePerformanceMonitoring } from '@/hooks/usePerformanceOptimizations';
+import { useOfflineStatus } from '@/hooks/useOfflineStatus';
 
 interface QuranTabProps {
   onAddToBookmarks: (item: any, type: 'surah' | 'dua' | 'hadith') => void;

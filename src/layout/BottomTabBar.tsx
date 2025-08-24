@@ -1,15 +1,17 @@
 
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Home, BookOpen, Calendar, Clock, Settings } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface TabItem {
   id: string;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-  href: string;
-  badge?: number;
-}import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Calendar, Clock, Settings } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+  path: string;
+  color: string;
+  description: string;
+}
 
 const BottomTabBar = () => {
   const navigate = useNavigate();
@@ -59,7 +61,7 @@ const BottomTabBar = () => {
     },
   ];
 
-  const handleTabClick = (tab: unknown) => {
+  const handleTabClick = (tab: TabItem) => {
     // Instant feedback principle - immediate confirmation
     if (location.pathname !== tab.path) {
       toast({

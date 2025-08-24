@@ -49,7 +49,8 @@ export { default as InteractiveIslamicAchievements } from './components/Interact
 export { default as IslamicAchievementSystem } from './components/IslamicAchievementSystem';
 export { default as FastingTracker } from './components/FastingTracker';
 export { default as FiqhQASection } from './components/FiqhQASection';
-export { default as GlobalCounterReset } from './components/GlobalCounterReset';
+export { default as SmartBookmarksCollections } from './components/SmartBookmarksCollections';
+export * from './hooks/useOptimizedSearch';
 
 // Hooks
 export { default as useMobile } from './hooks/use-mobile';
