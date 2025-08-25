@@ -8,13 +8,8 @@ export { default as HadithSearchFilters } from './components/HadithSearchFilters
 export { default as HadithSearchResults } from './components/HadithSearchResults';
 export { default as SmartHadithAuthenticityChecker } from './components/SmartHadithAuthenticityChecker';
 
-// Services
-export * from './services/hadithApi';
+// Services - Remove duplicates
 export * from './services/hadithService';
-export * from './services/hadithSearchService';
-export * from './services/hadithApiClient';
-export * from './services/hadithDataProcessor';
-export * from './services/enhancedHadithService';
 
 // Types
 export * from './types/hadith';

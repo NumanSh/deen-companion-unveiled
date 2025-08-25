@@ -1,4 +1,4 @@
-import { ApiErrorHandler } from '@/utils/apiErrorHandler';
+import ApiErrorHandler from '@/utils/apiErrorHandler';
 
 export interface EnhancedHadith {
   id: string;

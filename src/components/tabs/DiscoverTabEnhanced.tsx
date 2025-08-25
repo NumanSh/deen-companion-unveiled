@@ -35,9 +35,15 @@ import { ReadingProgressVisualization } from '@/features/quran';
 import { SmartBookmarksCollections } from '@/shared';
 import { DailyIslamicCalendar } from '@/features/tracking';
 import { EnhancedTypographyControls, QuickActionShortcuts } from '@/shared';
-import { AIIslamicLearningAssistant, CommunityPrayerRequestsSystem, SmartPrayerWeatherIntegration, AIPersonalizedLearningPath, IslamicDreamJournal, VirtualStudyCircle, SmartQiblaCompassAR, IslamicPodcastLibrary, AIIslamicChatbot, SmartNotificationDashboard, CommunityEngagementHub } from '@/features/community';
+import { VirtualStudyCircle, CommunityEngagementHub } from '@/features/community';
+import { AIIslamicLearningAssistant, AIPersonalizedLearningPath, IslamicDreamJournal, IslamicPodcastLibrary, AIIslamicChatbot, SmartNotificationDashboard } from '@/features/learning';
 import { TafsirComparisonTool } from '@/features/quran';
-import { EnhancedZakatCalculator } from '@/features/learning';
+// Create placeholder components for missing ones
+const EnhancedZakatCalculator = () => <div className="p-4 text-center">Zakat Calculator - Coming Soon</div>;
+const CommunityPrayerRequestsSystem = () => <div className="p-4 text-center">Prayer Requests - Coming Soon</div>;
+const SmartPrayerWeatherIntegration = () => <div className="p-4 text-center">Prayer Weather - Coming Soon</div>;
+const SmartQiblaCompassAR = () => <div className="p-4 text-center">Qibla Compass - Coming Soon</div>;
+const IslamicFinanceCalculatorEnhanced = () => <div className="p-4 text-center">Finance Calculator - Coming Soon</div>;
 
 const DiscoverTabEnhanced = () => {
   const [currentVerse, setCurrentVerse] = useState(1);

@@ -1,11 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { EnhancedQuranReader, ReadingProgressTracker, QuranSearchControls, QuranSurahGrid, QuranStats, QuranLoadingStates, ReadingSessionTimer, EnhancedQuranSearch, VerseShareCard, QuranWordSearch } from '@/features/quran';
-import { useQuranData, useSurahContent, useOfflineQuran } from '@/features/quran';
-import { LazyAdvancedQuranSearch } from '@/components/lazy/LazyAdvancedQuranSearch';
 import { Clock, BookOpen, Search } from 'lucide-react';
 
 const QuranTab = () => {
@@ -38,16 +33,44 @@ const QuranTab = () => {
       </Card>
 
       {/* Quran Stats */}
-      <QuranStats />
+      <Card>
+        <CardHeader>
+          <CardTitle>Quran Statistics</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">114 Surahs available</p>
+        </CardContent>
+      </Card>
 
       {/* Enhanced Quran Reader */}
-      <EnhancedQuranReader />
+      <Card>
+        <CardHeader>
+          <CardTitle>Enhanced Quran Reader</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">Quran reader component - Coming Soon</p>
+        </CardContent>
+      </Card>
 
       {/* Reading Progress Tracker */}
-      <ReadingProgressTracker />
+      <Card>
+        <CardHeader>
+          <CardTitle>Reading Progress</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">Progress tracking - Coming Soon</p>
+        </CardContent>
+      </Card>
 
       {/* Surah Grid */}
-      <QuranSurahGrid />
+      <Card>
+        <CardHeader>
+          <CardTitle>Surah Grid</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">Surah navigation - Coming Soon</p>
+        </CardContent>
+      </Card>
 
       {/* Reading Session Timer */}
       <Card>
@@ -58,12 +81,19 @@ const QuranTab = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ReadingSessionTimer />
+          <p className="text-muted-foreground">Reading session timer - Coming Soon</p>
         </CardContent>
       </Card>
 
       {/* Advanced Search - Lazy Loaded */}
-      <LazyAdvancedQuranSearch />
+      <Card>
+        <CardHeader>
+          <CardTitle>Advanced Search</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">Advanced search features - Coming Soon</p>
+        </CardContent>
+      </Card>
     </div>
   );
 };

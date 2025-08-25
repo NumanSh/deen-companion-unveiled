@@ -13,9 +13,8 @@ export { default as MorningEveningAdhkar } from './components/MorningEveningAdhk
 export { default as AIPersonalizedDhikr } from './components/AIPersonalizedDhikr';
 export { default as DuaCollectionsManager } from './components/DuaCollectionsManager';
 
-// Services
+// Services - Remove duplicate exports
 export * from './services/athkarService';
-export * from './services/enhancedAthkarService';
 
 // Data
 export * from './data/authenticAthkarData';
