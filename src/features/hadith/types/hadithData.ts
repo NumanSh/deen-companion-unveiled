@@ -22,6 +22,7 @@ export const FALLBACK_HADITHS: HadithApiResponse[] = [
   {
     id: 'fallback-1',
     text: 'إنما الأعمال بالنيات وإنما لكل امرئ ما نوى، فمن كانت هجرته إلى الله ورسوله فهجرته إلى الله ورسوله، ومن كانت هجرته لدنيا يصيبها أو امرأة ينكحها فهجرته إلى ما هاجر إليه',
+    reference: 'البخاري 1',
     narrator: 'عمر بن الخطاب رضي الله عنه',
     source: 'صحيح البخاري',
     book: 'كتاب بدء الوحي',
@@ -32,6 +33,7 @@ export const FALLBACK_HADITHS: HadithApiResponse[] = [
   {
     id: 'fallback-2',
     text: 'من كان يؤمن بالله واليوم الآخر فليقل خيراً أو ليصمت، ومن كان يؤمن بالله واليوم الآخر فليكرم جاره، ومن كان يؤمن بالله واليوم الآخر فليكرم ضيفه',
+    reference: 'مسلم 47',
     narrator: 'أبو هريرة رضي الله عنه',
     source: 'صحيح مسلم',
     book: 'كتاب الإيمان',
@@ -42,6 +44,7 @@ export const FALLBACK_HADITHS: HadithApiResponse[] = [
   {
     id: 'fallback-3',
     text: 'لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه',
+    reference: 'البخاري 13',
     narrator: 'أنس بن مالك رضي الله عنه',
     source: 'صحيح البخاري',
     book: 'كتاب الإيمان',
@@ -52,6 +55,7 @@ export const FALLBACK_HADITHS: HadithApiResponse[] = [
   {
     id: 'fallback-4',
     text: 'المسلم من سلم المسلمون من لسانه ويده، والمهاجر من هجر ما نهى الله عنه',
+    reference: 'البخاري 10',
     narrator: 'عبد الله بن عمرو رضي الله عنهما',
     source: 'صحيح البخاري',
     book: 'كتاب الإيمان',
@@ -62,6 +66,7 @@ export const FALLBACK_HADITHS: HadithApiResponse[] = [
   {
     id: 'fallback-5',
     text: 'من لا يرحم الناس لا يرحمه الله',
+    reference: 'مسلم 2319',
     narrator: 'جرير بن عبد الله رضي الله عنه',
     source: 'صحيح مسلم',
     book: 'كتاب الفضائل',
@@ -72,6 +77,7 @@ export const FALLBACK_HADITHS: HadithApiResponse[] = [
   {
     id: 'fallback-6',
     text: 'الدين النصيحة، قلنا: لمن؟ قال: لله ولكتابه ولرسوله ولأئمة المسلمين وعامتهم',
+    reference: 'مسلم 55',
     narrator: 'تميم الداري رضي الله عنه',
     source: 'صحيح مسلم',
     book: 'كتاب الإيمان',
@@ -82,6 +88,7 @@ export const FALLBACK_HADITHS: HadithApiResponse[] = [
   {
     id: 'fallback-7',
     text: 'من حسن إسلام المرء تركه ما لا يعنيه',
+    reference: 'الترمذي 2317',
     narrator: 'أبو هريرة رضي الله عنه',
     source: 'جامع الترمذي',
     book: 'كتاب الزهد',
@@ -92,6 +99,7 @@ export const FALLBACK_HADITHS: HadithApiResponse[] = [
   {
     id: 'fallback-8',
     text: 'البر حسن الخلق، والإثم ما حاك في نفسك وكرهت أن يطلع عليه الناس',
+    reference: 'مسلم 2553',
     narrator: 'النواس بن سمعان رضي الله عنه',
     source: 'صحيح مسلم',
     book: 'كتاب البر والصلة والآداب',

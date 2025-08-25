@@ -1,6 +1,5 @@
-
 import { HadithApiResponse } from '../types/hadith';
-import { performLocalSearch } from '../utils/hadithUtils';
+import { performLocalSearch } from '../services/hadithUtils';
 import { fetchFromHadithApi, AVAILABLE_COLLECTIONS } from './hadithApiClient';
 import { processApiHadiths } from './hadithDataProcessor';
 
@@ -43,6 +42,6 @@ export const searchHadithsInApi = async (query: string, source?: string): Promis
   return null;
 };
 
-export const performHadithSearch = (query: string, source?: string, grade?: string): HadithApiResponse[] => {
+export const performHadithSearch = (query: string, source?: string): HadithApiResponse[] => {
   return performLocalSearch(query, source);
 };

@@ -70,11 +70,11 @@ export const searchHadiths = async (query: string, source?: string, grade?: stri
     }
     
     // Fallback to local search
-    return performHadithSearch(query, source, grade);
+    return performHadithSearch(query, source);
     
   } catch (error) {
     console.error('Search error:', error);
-    return performHadithSearch(query, source, grade);
+    return performHadithSearch(query, source);
   }
 };
 
