@@ -1,21 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-
-interface PrayerRequest {
-  id: string;
-  requester: string;
-  request: string;
-  timestamp: Date;
-  status: 'pending' | 'approved' | 'completed';
-  responses: PrayerResponse[];
-}
-
-interface PrayerResponse {
-  id: string;
-  responder: string;
-  message: string;
-  timestamp: Date;
-}import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -235,7 +220,7 @@ const CommunityPrayerRequests = () => {
             <div className="grid grid-cols-2 gap-4">
               <select 
                 value={newRequest.category}
-                onChange={(e) => setNewRequest(prev => ({ ...prev, category: e.target.value as unknown }))}
+                onChange={(e) => setNewRequest(prev => ({ ...prev, category: e.target.value as PrayerRequest['category'] }))}
                 className="p-2 border rounded-md"
               >
                 <option value="general">General</option>

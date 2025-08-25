@@ -1,21 +1,13 @@
 import { useState, useEffect } from 'react';
-
-interface OfflineQuranSurah {
-  number: number;
-  name: string;
-  englishName: string;
-  englishNameTranslation: string;
-  numberOfAyahs: number;
-  revelationType: 'Meccan' | 'Medinan';
-}
+import { QuranSurah } from '@/services/quranService';
 
 export const useOfflineQuran = () => {
-  const [surahs, setSurahs] = useState<OfflineQuranSurah[]>([]);
+  const [surahs, setSurahs] = useState<QuranSurah[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Mock implementation
-    const mockSurahs: OfflineQuranSurah[] = [
+    const mockSurahs: QuranSurah[] = [
       {
         number: 1,
         name: "الفاتحة",

@@ -12,21 +12,15 @@ interface OfflineQuranManagerProps {
   surahs: QuranSurah[];
 }
 
-const OfflineQuranManager: React.FC<OfflineQuranManagerProps> = ({ surahs }) => {
+const OfflineQuranManager: React.FC<OfflineQuranManagerProps> = ({ surahs: allSurahs }) => {
   const {
-    offlineSurahs,
-    storageStats,
+    surahs: offlineSurahs,
+    loading,
     downloadSurah,
-    removeSurah,
-    clearAllSurahs,
-    isSurahAvailableOffline,
-    isDownloading,
-    formatStorageSize,
-    getAvailableSpace,
-    isStorageNearlyFull
+    deleteSurah
   } = useOfflineQuran();
 
-  const storagePercentage = (storageStats.totalSize / (50 * 1024 * 1024)) * 100;
+  const storagePercentage = Math.min((offlineSurahs.length / 114) * 100, 100);
 
   return (
     <Card>
@@ -46,30 +40,27 @@ const OfflineQuranManager: React.FC<OfflineQuranManagerProps> = ({ surahs }) => 
             <span className="text-sm font-medium">Storage Usage</span>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">
-                {formatStorageSize(storageStats.totalSize)} / 50 MB
+                {offlineSurahs.length} surahs downloaded
               </span>
-              {isStorageNearlyFull() && (
-                <Badge variant="destructive" className="text-xs">Nearly Full</Badge>
-              )}
             </div>
           </div>
           <Progress value={storagePercentage} className="h-2" />
           <div className="grid grid-cols-3 gap-4 text-center">
             <div className="space-y-1">
-              <p className="text-2xl font-bold text-blue-600">{storageStats.totalSurahs}</p>
+              <p className="text-2xl font-bold text-blue-600">{offlineSurahs.length}</p>
               <p className="text-xs text-gray-600">Downloaded</p>
             </div>
             <div className="space-y-1">
               <p className="text-2xl font-bold text-green-600">
-                {formatStorageSize(getAvailableSpace())}
+                {114 - offlineSurahs.length}
               </p>
               <p className="text-xs text-gray-600">Available</p>
             </div>
             <div className="space-y-1">
               <p className="text-2xl font-bold text-emerald-600">
-                {114 - storageStats.totalSurahs}
+                114
               </p>
-              <p className="text-xs text-gray-600">Remaining</p>
+              <p className="text-xs text-gray-600">Total Surahs</p>
             </div>
           </div>
         </div>
@@ -79,8 +70,8 @@ const OfflineQuranManager: React.FC<OfflineQuranManagerProps> = ({ surahs }) => 
           <Button
             variant="destructive"
             size="sm"
-            onClick={clearAllSurahs}
-            disabled={storageStats.totalSurahs === 0}
+            onClick={() => offlineSurahs.forEach(s => deleteSurah(s.number))}
+            disabled={offlineSurahs.length === 0}
             className="flex items-center gap-2"
           >
             <Trash2 className="w-4 h-4" />
@@ -92,9 +83,8 @@ const OfflineQuranManager: React.FC<OfflineQuranManagerProps> = ({ surahs }) => 
         <div className="space-y-2">
           <h4 className="font-medium text-sm">Available Surahs</h4>
           <div className="max-h-96 overflow-y-auto space-y-2">
-            {surahs.slice(0, 20).map((surah) => {
-              const isOffline = isSurahAvailableOffline(surah.number);
-              const downloading = isDownloading(surah.number);
+            {allSurahs.slice(0, 20).map((surah) => {
+              const isOffline = offlineSurahs.some(s => s.number === surah.number);
               
               return (
                 <div
@@ -118,7 +108,7 @@ const OfflineQuranManager: React.FC<OfflineQuranManagerProps> = ({ surahs }) => 
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => removeSurah(surah.number)}
+                          onClick={() => deleteSurah(surah.number)}
                           className="h-8 w-8 p-0"
                         >
                           <Trash2 className="w-4 h-4 text-red-500" />
@@ -130,11 +120,11 @@ const OfflineQuranManager: React.FC<OfflineQuranManagerProps> = ({ surahs }) => 
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => downloadSurah(surah)}
-                          disabled={downloading}
+                          onClick={() => downloadSurah(surah.number)}
+                          disabled={loading}
                           className="h-8"
                         >
-                          {downloading ? (
+                          {loading ? (
                             <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
                           ) : (
                             <Download className="w-4 h-4" />
@@ -148,7 +138,7 @@ const OfflineQuranManager: React.FC<OfflineQuranManagerProps> = ({ surahs }) => 
             })}
           </div>
           
-          {surahs.length > 20 && (
+          {allSurahs.length > 20 && (
             <p className="text-xs text-gray-500 text-center">
               Showing first 20 surahs. Access all surahs from the main Quran tab.
             </p>

@@ -24,7 +24,14 @@ import { useToast } from '@/hooks/use-toast';
 
 const AIQuranStudyCompanion = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [analysis, setAnalysis] = useState<unknown>(null);
+  const [analysis, setAnalysis] = useState<{
+    verse: string;
+    context: string;
+    themes: string[];
+    connections: Array<{ verse: string; relation: string }>;
+    lifeApplication: string;
+    scholarCommentary: string;
+  } | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const { toast } = useToast();
 
@@ -123,11 +130,11 @@ const AIQuranStudyCompanion = () => {
                   <Lightbulb className="w-4 h-4" />
                   Connected Verses
                 </h5>
-                {analysis.connections.map((conn: unknown, index: number) => (
-                  <div key={index} className="text-sm mb-2">
-                    <span className="font-medium">{conn.verse}:</span> {conn.relation}
-                  </div>
-                ))}
+                 {analysis.connections.map((conn, index) => (
+                   <div key={index} className="text-sm mb-2">
+                     <span className="font-medium">{conn.verse}:</span> {conn.relation}
+                   </div>
+                 ))}
               </div>
 
               <div className="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-emerald-200 dark:border-emerald-700">

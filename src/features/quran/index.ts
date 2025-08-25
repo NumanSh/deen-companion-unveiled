@@ -43,10 +43,10 @@ export { default as DorarAqeedaIntegration } from './components/DorarAqeedaInteg
 export { default as OfflineQuranManager } from './components/OfflineQuranManager';
 
 // Hooks
-export { default as useQuranData } from './hooks/useQuranData';
-export { default as useSurahContent } from './hooks/useSurahContent';
-export { default as useOfflineQuran } from './hooks/useOfflineQuran';
-export { default as useTafsir } from './hooks/useTafsir';
+export { useQuranData } from './hooks/useQuranData';
+export { useSurahContent } from './hooks/useSurahContent';
+export { useOfflineQuran } from './hooks/useOfflineQuran';
+export { useTafsir } from './hooks/useTafsir';
 
 // Services
 export * from './services/quranApi';
