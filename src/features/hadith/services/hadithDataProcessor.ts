@@ -7,7 +7,8 @@ export const processApiHadiths = (data: ApiHadithResponse, idPrefix: string): Ha
   return data.hadiths.map((hadith, index) => ({
     id: `${idPrefix}-${hadith.id}-${Date.now()}-${index}`,
     text: hadith.arab || 'النص العربي غير متوفر',
-    narrator: 'متنوع', // Generic narrator since API doesn't provide specific narrator info
+    reference: `${data.name || 'مجموعة الأحاديث'} ${index + 1}`,
+    narrator: 'متنوع',
     source: data.name || 'مجموعة الأحاديث',
     book: `كتاب ${index + 1}`,
     chapter: 'باب الأحاديث',

@@ -2,6 +2,8 @@
 export interface HadithApiResponse {
   id: string;
   text: string;
+  arabic?: string;
+  reference: string;
   narrator: string;
   source: string;
   book: string;

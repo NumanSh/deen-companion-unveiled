@@ -44,5 +44,5 @@ export const searchHadithsInApi = async (query: string, source?: string): Promis
 };
 
 export const performHadithSearch = (query: string, source?: string, grade?: string): HadithApiResponse[] => {
-  return performLocalSearch(query, source, grade);
+  return performLocalSearch(query, source);
 };

@@ -110,7 +110,7 @@ export const extractArabicText = (text: string): string => {
   return 'النص العربي متوفر في المصدر الأصلي';
 };
 
-export const performLocalSearch = (query: string, source?: string, grade?: string): HadithApiResponse[] => {
+export const performLocalSearch = (query: string, source?: string): HadithApiResponse[] => {
   const searchTerm = query.toLowerCase().trim();
   
   let results = FALLBACK_HADITHS.filter(hadith => {
@@ -130,27 +130,7 @@ export const performLocalSearch = (query: string, source?: string, grade?: strin
       hadith.source.includes(source)
     );
   }
-  
-  if (grade && grade !== 'الكل' && grade !== 'All') {
-    results = results.filter(hadith => hadith.grade === grade);
-  }
 
-  // If no results found, return a broader search
-  if (results.length === 0 && searchTerm.length > 0) {
-    results = FALLBACK_HADITHS.filter(hadith => {
-      // Try partial word matching
-      const words = searchTerm.split(' ');
-      return words.some(word => 
-        word.length > 2 && (
-          hadith.text.includes(word) || 
-          hadith.narrator.includes(word) ||
-          hadith.topic.some(topic => topic.includes(word))
-        )
-      );
-    });
-  }
-
-  // Final fallback - return some hadiths
   if (results.length === 0) {
     results = FALLBACK_HADITHS.slice(0, 5);
   }

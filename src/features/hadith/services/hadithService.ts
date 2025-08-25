@@ -46,7 +46,7 @@ export const fetchHadithCollections = async (): Promise<HadithCollection[]> => {
       collection: hadith.source,
       book: hadith.book,
       hadithNumber: (index + 1).toString(),
-      arabic: hadith.text,
+      arabic: hadith.arabic || hadith.text,
       english: translateToEnglish(hadith.text),
       narrator: hadith.narrator,
       reference: `${hadith.source} ${index + 1}`,
