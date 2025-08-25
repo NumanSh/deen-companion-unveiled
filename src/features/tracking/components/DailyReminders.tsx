@@ -1,33 +1,21 @@
 
 import React, { useState, useEffect } from 'react';
 
-interface Reminder {
-  id: string;
-  title: string;
-  description: string;
-  time: string;
-  type: 'prayer' | 'quran' | 'dhikr' | 'charity';
-  enabled: boolean;
-  repeat: 'daily' | 'weekly' | 'monthly';
-}
-
-interface ReminderSettings {
-  notifications: boolean;
-  sound: boolean;
-  vibration: boolean;
-}import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Bell, Clock, Sun, Moon, Book, RotateCcw, Plus, X } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/shared';
 
 interface Reminder {
   id: string;
-  type: 'prayer' | 'dhikr' | 'reading' | 'dua';
+  type: 'prayer' | 'quran' | 'dhikr' | 'charity';
   title: string;
+  description: string;
   time: string;
   enabled: boolean;
+  repeat: 'daily' | 'weekly' | 'monthly';
   frequency: 'daily' | 'weekly' | 'monthly';
   days?: string[];
 }
@@ -54,24 +42,30 @@ const DailyReminders: React.FC = () => {
           id: '1',
           type: 'dhikr',
           title: 'Morning Dhikr',
+          description: 'Start your day with morning dhikr',
           time: '07:00',
           enabled: true,
+          repeat: 'daily',
           frequency: 'daily'
         },
         {
           id: '2',
           type: 'dhikr',
           title: 'Evening Dhikr',
+          description: 'End your day with evening dhikr',
           time: '18:00',
           enabled: true,
+          repeat: 'daily',
           frequency: 'daily'
         },
         {
           id: '3',
-          type: 'reading',
+          type: 'quran',
           title: 'Quran Reading',
+          description: 'Daily Quran reading session',
           time: '20:00',
           enabled: false,
+          repeat: 'daily',
           frequency: 'daily'
         }
       ];
@@ -114,11 +108,14 @@ const DailyReminders: React.FC = () => {
 
     const reminder: Reminder = {
       id: Date.now().toString(),
-      type: newReminder.type as any,
-      title: newReminder.title,
-      time: newReminder.time,
+      type: (newReminder.type as Reminder['type']) || 'dhikr',
+      title: newReminder.title || '',
+      description: newReminder.description || '',
+      time: newReminder.time || '',
       enabled: newReminder.enabled || true,
-      frequency: newReminder.frequency as unknown };
+      repeat: (newReminder.frequency as Reminder['repeat']) || 'daily',
+      frequency: (newReminder.frequency as Reminder['frequency']) || 'daily'
+    };
 
     const updated = [...reminders, reminder];
     setReminders(updated);
@@ -147,15 +144,15 @@ const DailyReminders: React.FC = () => {
   const typeIcons = {
     prayer: Bell,
     dhikr: RotateCcw,
-    reading: Book,
-    dua: Moon
+    quran: Book,
+    charity: Moon
   };
 
   const typeColors = {
     prayer: 'text-green-600 bg-green-100',
     dhikr: 'text-purple-600 bg-purple-100',
-    reading: 'text-blue-600 bg-blue-100',
-    dua: 'text-orange-600 bg-orange-100'
+    quran: 'text-blue-600 bg-blue-100',
+    charity: 'text-orange-600 bg-orange-100'
   };
 
   return (
@@ -234,11 +231,11 @@ const DailyReminders: React.FC = () => {
                   <select
                     className="ml-2 text-sm border rounded px-2 py-1"
                     value={newReminder.type}
-                    onChange={(e) => setNewReminder(prev => ({ ...prev, type: e.target.value as unknown }))}
+                    onChange={(e) => setNewReminder(prev => ({ ...prev, type: e.target.value as Reminder['type'] }))}
                   >
                     <option value="dhikr">Dhikr</option>
-                    <option value="reading">Reading</option>
-                    <option value="dua">Dua</option>
+                    <option value="quran">Quran</option>
+                    <option value="charity">Charity</option>
                     <option value="prayer">Prayer</option>
                   </select>
                 </div>
@@ -248,7 +245,7 @@ const DailyReminders: React.FC = () => {
                   <select
                     className="ml-2 text-sm border rounded px-2 py-1"
                     value={newReminder.frequency}
-                    onChange={(e) => setNewReminder(prev => ({ ...prev, frequency: e.target.value as unknown }))}
+                    onChange={(e) => setNewReminder(prev => ({ ...prev, frequency: e.target.value as Reminder['frequency'] }))}
                   >
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>

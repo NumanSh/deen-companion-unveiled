@@ -42,11 +42,13 @@ const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
   surahName = 'Unknown'
 }) => {
   // Fetch tafsir from API
-  const { tafsir, isLoading: tafsirLoading, error: tafsirError } = useTafsir(
-    surahNumber, 
-    ayah.numberInSurah, 
-    showTranslation
-  );
+  const { tafsir, loading: tafsirLoading, getTafsir } = useTafsir();
+  
+  React.useEffect(() => {
+    if (showTranslation) {
+      getTafsir(surahNumber, ayah.numberInSurah);
+    }
+  }, [surahNumber, ayah.numberInSurah, showTranslation, getTafsir]);
 
   const handleShare = () => {
     if (onShareVerse) {
@@ -142,10 +144,6 @@ const QuranVerseDisplay: React.FC<QuranVerseDisplayProps> = ({
               <div className="flex items-center justify-center gap-2 py-2">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 <span className="text-sm">جارٍ تحميل التفسير...</span>
-              </div>
-            ) : tafsirError ? (
-              <div className="text-red-600 dark:text-red-400 text-sm">
-                عذراً، لم نتمكن من تحميل التفسير
               </div>
             ) : (
               tafsir

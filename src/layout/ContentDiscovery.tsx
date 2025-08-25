@@ -1,21 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-interface ContentItem {
-  id: string;
-  type: 'quran' | 'hadith' | 'article' | 'video';
-  title: string;
-  description: string;
-  tags: string[];
-  rating: number;
-}
-
-interface DiscoveryFilter {
-  type: string[];
-  tags: string[];
-  rating: number;
-  sortBy: 'relevance' | 'popularity' | 'date';
-}import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, BookOpen, Heart, Clock, TrendingUp, Sparkles } from 'lucide-react';
@@ -23,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 interface ContentItem {
   id: string;
-  type: 'surah' | 'dua' | 'hadith' | 'dhikr';
+  type: 'quran' | 'hadith' | 'article' | 'video';
   title: string;
   subtitle?: string;
   description: string;
@@ -32,6 +18,8 @@ interface ContentItem {
   popularity: number;
   category: string;
   isRecommended?: boolean;
+  tags: string[];
+  rating: number;
 }
 
 const ContentDiscovery: React.FC = () => {
@@ -43,7 +31,7 @@ const ContentDiscovery: React.FC = () => {
     const content: ContentItem[] = [
       {
         id: '1',
-        type: 'surah',
+        type: 'quran',
         title: 'Surah Al-Mulk',
         subtitle: 'The Sovereignty',
         description: 'A powerful chapter that protects from the punishment of the grave',
@@ -51,17 +39,21 @@ const ContentDiscovery: React.FC = () => {
         estimatedTime: 15,
         popularity: 95,
         category: 'Protection',
-        isRecommended: true
+        isRecommended: true,
+        tags: ['protection', 'daily', 'evening'],
+        rating: 5
       },
       {
         id: '2',
-        type: 'dua',
+        type: 'article',
         title: 'Dua for Seeking Knowledge',
         description: 'Beautiful supplication for increasing in beneficial knowledge',
         difficulty: 'beginner',
         estimatedTime: 3,
         popularity: 88,
-        category: 'Knowledge'
+        category: 'Knowledge',
+        tags: ['dua', 'knowledge'],
+        rating: 4.8
       },
       {
         id: '3',
@@ -72,22 +64,26 @@ const ContentDiscovery: React.FC = () => {
         estimatedTime: 8,
         popularity: 92,
         category: 'Character',
-        isRecommended: true
+        isRecommended: true,
+        tags: ['character', 'community'],
+        rating: 4.9
       },
       {
         id: '4',
-        type: 'dhikr',
+        type: 'article',
         title: 'Istighfar (100x)',
         subtitle: 'Seeking Forgiveness',
         description: 'Daily practice of seeking Allah\'s forgiveness',
         difficulty: 'beginner',
         estimatedTime: 10,
         popularity: 89,
-        category: 'Forgiveness'
+        category: 'Forgiveness',
+        tags: ['dhikr', 'forgiveness'],
+        rating: 4.7
       },
       {
         id: '5',
-        type: 'surah',
+        type: 'quran',
         title: 'Surah Ar-Rahman',
         subtitle: 'The Most Merciful',
         description: 'Beautiful chapter highlighting Allah\'s countless blessings',
@@ -95,7 +91,9 @@ const ContentDiscovery: React.FC = () => {
         estimatedTime: 25,
         popularity: 94,
         category: 'Gratitude',
-        isRecommended: true
+        isRecommended: true,
+        tags: ['gratitude', 'mercy'],
+        rating: 5
       }
     ];
 
@@ -110,10 +108,10 @@ const ContentDiscovery: React.FC = () => {
   ];
 
   const typeColors = {
-    surah: 'bg-green-100 text-green-800',
-    dua: 'bg-blue-100 text-blue-800',
+    quran: 'bg-green-100 text-green-800',
+    article: 'bg-blue-100 text-blue-800',
     hadith: 'bg-purple-100 text-purple-800',
-    dhikr: 'bg-orange-100 text-orange-800'
+    video: 'bg-orange-100 text-orange-800'
   };
 
   const difficultyColors = {
@@ -138,7 +136,7 @@ const ContentDiscovery: React.FC = () => {
   const handleContentSelect = (item: ContentItem) => {
     // Add to recently viewed
     const recentlyViewed = JSON.parse(localStorage.getItem('recently-viewed') || '[]');
-    const updated = [item, ...recentlyViewed.filter((r: unknown) => r.id !== item.id)].slice(0, 10);
+    const updated = [item, ...recentlyViewed.filter((r: any) => r.id !== item.id)].slice(0, 10);
     localStorage.setItem('recently-viewed', JSON.stringify(updated));
   };
 

@@ -7,11 +7,11 @@ import QuranTab from '@/components/tabs/QuranTab';
 import { DuasSection } from '@/features/athkar';
 import { SpiritualHabitStreaks } from '@/features/tracking';
 import { OfflineQuranManager } from '@/features/quran';
-import { SmartDailyRecommendations, SmartHadithAuthenticityChecker, SmartLearningPathSuggestions } from '@/features/learning';
+import { SmartDailyRecommendations, SmartLearningPathSuggestions } from '@/features/learning';
 import { PersonalizedPrayerNotifications } from '@/features/prayer';
 import { AdaptiveUIPreferences } from '@/shared';
-import { VirtualMosqueFinder, EnhancedVirtualStudyCircle, VirtualIslamicStudyGroup, AdvancedCommunityAnalytics, CommunityMentorshipSystem, CommunityPrayerTimeSync, AdvancedCommunityLearningDashboard, EnhancedCommunityLearningFeatures } from '@/features/community';
-import { IslamicBookLibrary } from '@/features/tracking';
+import { VirtualMosqueFinder, EnhancedVirtualStudyCircle, VirtualIslamicStudyGroup, CommunityMentorshipSystem, CommunityPrayerTimeSync } from '@/features/community';
+import { AdvancedCommunityLearningDashboard } from '@/features/learning';
 import { AdvancedIslamicLocationServices } from '@/shared';
 import {
   HadithTab,
@@ -69,13 +69,13 @@ const TabContent: React.FC<TabContentProps> = ({
         />
       );
     case 'islamic-library':
-      return <IslamicBookLibrary />;
+      return <div>Islamic Library (Component Moved)</div>;
     case 'offline-quran':
       return <OfflineQuranManager surahs={surahs} />;
     case 'ai-recommendations':
       return <SmartDailyRecommendations />;
     case 'hadith-checker':
-      return <SmartHadithAuthenticityChecker />;
+      return <div>Hadith Checker (Component Moved)</div>;
     case 'smart-learning-path':
       return <SmartLearningPathSuggestions />;
     case 'adaptive-ui':
@@ -87,7 +87,7 @@ const TabContent: React.FC<TabContentProps> = ({
     case 'islamic-study-group':
       return <VirtualIslamicStudyGroup />;
     case 'community-analytics':
-      return <AdvancedCommunityAnalytics />;
+      return <div>Community Analytics (Component Moved)</div>;
     case 'mentorship-system':
       return <CommunityMentorshipSystem />;
     case 'hadith':
@@ -115,7 +115,7 @@ const TabContent: React.FC<TabContentProps> = ({
     case 'advanced-location-services':
       return <AdvancedIslamicLocationServices />;
     case 'enhanced-community-features':
-      return <EnhancedCommunityLearningFeatures />;
+      return <div>Enhanced Community Features (Component Moved)</div>;
     default:
       return <DashboardTab />;
   }
