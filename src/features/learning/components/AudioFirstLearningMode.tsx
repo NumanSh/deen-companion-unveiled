@@ -229,13 +229,13 @@ const AudioFirstLearningMode: React.FC = () => {
     }
   };
 
-  const updateSettings = (key: keyof AudioLearningSettings, value: unknown) => {
+  const updateSettings = (key: keyof AudioLearningSettings, value: string | number | boolean) => {
     const newSettings = { ...settings, [key]: value };
     setSettings(newSettings);
     localStorage.setItem('audio-learning-settings', JSON.stringify(newSettings));
     
     if (key === 'playbackSpeed') {
-      voiceReadingService.setSettings({ rate: value });
+      voiceReadingService.setSettings({ rate: value as number });
     }
   };
 

@@ -20,6 +20,8 @@ export { default as UnifiedFloatingActions } from './components/UnifiedFloatingA
 export { default as OfflineIndicator } from './components/OfflineIndicator';
 export { default as AccessibilityEnhancements } from './components/AccessibilityEnhancements';
 export { default as SupportUsAdButton } from './components/SupportUsAdButton';
+export { useOfflinePrayerTimes } from './hooks/useOfflinePrayerTimes';
+export { useApiCache } from './hooks/useApiCache';
 export { default as LazyWrapper } from './components/LazyWrapper';
 export { default as EnhancedOnboarding } from './components/EnhancedOnboarding';
 export { default as NewUserWelcome } from './components/NewUserWelcome';

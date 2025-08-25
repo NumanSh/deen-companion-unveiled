@@ -25,6 +25,6 @@ export * from './services/prayerTimesService';
 export * from './services/prayerTimesCacheService';
 export * from './services/prayerNotificationService';
 export * from './services/locationService';
-export * from './services/enhancedPrayerTimesService';
+export { EnhancedPrayerTimesService } from './services/enhancedPrayerTimesService';
 
 // Hooks - No hooks in prayer feature yet

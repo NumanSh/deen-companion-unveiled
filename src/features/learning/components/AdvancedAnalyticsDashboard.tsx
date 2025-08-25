@@ -1,24 +1,29 @@
 
 import React, { useState, useEffect } from 'react';
 
-interface AnalyticsData {
-  period: string;
-  prayers: number;
-  quran: number;
-  dhikr: number;
-  charity: number;
-  streak: number;
+interface AnalyticsResponse {
+  patterns: {
+    preferredTimes: number[];
+    averageSessionLength: number;
+    strongTopics: string[];
+    improvementAreas: string[];
+    learningVelocity: number;
+    consistency: number;
+  } | null;
+  insights: Array<{
+    id: string;
+    type: 'strength' | 'improvement' | 'recommendation' | 'milestone';
+    title: string;
+    description: string;
+    priority: number;
+    actionable: boolean;
+    estimatedImpact: 'low' | 'medium' | 'high';
+  }>;
+  sessionCount: number;
+  lastAnalysis: number | null;
 }
 
-interface ChartData {
-  labels: string[];
-  datasets: Array<{
-    label: string;
-    data: number[];
-    backgroundColor: string;
-    borderColor: string;
-  }>;
-}import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -43,7 +48,7 @@ import { useToast } from '@/shared';
 
 const AdvancedAnalyticsDashboard = () => {
   const { toast } = useToast();
-  const [analytics, setAnalytics] = useState<unknown>(null);
+  const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
   const [selectedInsightType, setSelectedInsightType] = useState<'all' | 'strength' | 'improvement' | 'recommendation' | 'milestone'>('all');
 
   useEffect(() => {

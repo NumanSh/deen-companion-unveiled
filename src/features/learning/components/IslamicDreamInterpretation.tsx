@@ -7,9 +7,11 @@ import { Badge } from '@/components/ui/badge';
 import { Moon, Stars, Brain, BookOpen, Heart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+import { dreamInterpretationService, DreamInterpretation } from '@/services/dreamInterpretationService';
+
 const IslamicDreamInterpretation = () => {
   const [dream, setDream] = useState('');
-  const [interpretation, setInterpretation] = useState<unknown>(null);
+  const [interpretation, setInterpretation] = useState<DreamInterpretation | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const { toast } = useToast();
 
@@ -44,8 +46,12 @@ const IslamicDreamInterpretation = () => {
       dream.toLowerCase().includes(symbol)
     );
 
-    const result = {
-      symbols: foundSymbols.map(([symbol, data]) => ({ symbol, ...data })),
+    const result: DreamInterpretation = {
+      symbols: foundSymbols.map(([symbol, data]) => ({ 
+        symbol, 
+        meaning: data.meaning,
+        significance: data.significance as 'positive' | 'negative' | 'neutral'
+      })),
       generalInterpretation: "Dreams are a gift from Allah. Good dreams are from Allah, while confusing dreams may be from daily thoughts. Seek refuge in Allah from bad dreams and do not share them widely.",
       islamicGuidance: "Prophet Muhammad (peace be upon him) said: 'Good dreams are one of the forty-six parts of prophethood.' Trust in Allah's wisdom and seek His guidance through prayer.",
       recommendation: foundSymbols.length > 0 ? "Your dream contains positive spiritual symbols. Continue your spiritual journey with gratitude." : "Focus on your spiritual growth and maintain strong faith in Allah."
@@ -117,7 +123,7 @@ const IslamicDreamInterpretation = () => {
                   Dream Symbols Found
                 </h4>
                 <div className="space-y-2">
-                  {interpretation.symbols.map((item: unknown, index: number) => (
+                  {interpretation.symbols.map((item, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <Badge 
                         variant={item.significance === 'positive' ? 'default' : 'secondary'}

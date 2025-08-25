@@ -1,14 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 
-interface PrayerTime {
-  fajr: string;
-  dhuhr: string;
-  asr: string;
-  maghrib: string;
-  isha: string;
-  date: string;
-}import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+interface DisplayPrayerTime {
+  name: string;
+  time: string;
+  icon: React.ComponentType<any>;
+  status: 'upcoming' | 'current' | 'completed';
+}
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -31,12 +31,6 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface PrayerTime {
-  name: string;
-  time: string;
-  icon: React.ComponentType<any>;
-  status: 'upcoming' | 'current' | 'completed';
-}
 
 interface CommunityMember {
   id: string;
@@ -67,7 +61,7 @@ const CommunityPrayerTimeSync: React.FC = () => {
     activeTimezones: 67
   });
 
-  const [prayerTimes, setPrayerTimes] = useState<PrayerTime[]>([
+  const [prayerTimes, setPrayerTimes] = useState<DisplayPrayerTime[]>([
     { name: 'Fajr', time: '05:30', icon: Sunrise, status: 'completed' },
     { name: 'Dhuhr', time: '12:45', icon: Sun, status: 'completed' },
     { name: 'Asr', time: '15:30', icon: Sun, status: 'current' },

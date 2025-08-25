@@ -8,5 +8,5 @@ export const LazyAIIslamicScholarChat = lazy(() => import('@/components/AIIslami
 export const LazyAIPersonalizedLearningPath = lazy(() => import('@/components/AIPersonalizedLearningPath'));
 export const LazyVirtualStudyCircle = lazy(() => import('@/components/VirtualStudyCircle'));
 export const LazyAdvancedReadingAnalyticsDashboard = lazy(() => import('@/components/AdvancedReadingAnalyticsDashboard'));
-export const LazySmartLearningDashboard = lazy(() => import('@/components/SmartLearningDashboard'));
-export const LazyAdvancedCommunityLearningDashboard = lazy(() => import('@/components/AdvancedCommunityLearningDashboard'));
+export const LazySmartLearningDashboard = lazy(() => import('@/features/learning/components/AdvancedAnalyticsDashboard'));
+export const LazyAdvancedCommunityLearningDashboard = lazy(() => import('@/components/IslamicBookLibrary'));
