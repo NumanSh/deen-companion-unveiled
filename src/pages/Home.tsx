@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { BottomTabBar } from '@/layout';
-import { EnhancedDashboard } from '@/features/tracking';
+// import { EnhancedDashboard } from '@/features/tracking';
 import { NewUserWelcome } from '@/shared';
 import { CustomizableHomeWidgets } from '@/shared';
 import { EnhancedFloatingActionSystem } from '@/shared';
@@ -32,7 +32,7 @@ const Home = () => {
             <NewUserWelcome />
             {/* Customizable Home Widgets */}
             <CustomizableHomeWidgets />
-            <EnhancedDashboard />
+            {/* <EnhancedDashboard /> */}
           </div>
           {/* Sidebar */}
           <div className="md:col-span-4 lg:col-span-3 space-y-8">

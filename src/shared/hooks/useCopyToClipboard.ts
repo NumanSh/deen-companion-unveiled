@@ -24,5 +24,5 @@ export const useCopyToClipboard = () => {
     }
   };
 
-  return { copyToClipboard, isCopied };
+  return { copyToClipboard, copied: isCopied };
 };

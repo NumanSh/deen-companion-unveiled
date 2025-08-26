@@ -30,7 +30,7 @@ const VerseShareCard: React.FC<VerseShareCardProps> = ({ verse, onClose }) => {
 #Quran #Islam #Verse`;
 
   const handleCopy = () => {
-    copyToClipboard(shareText, 'Verse copied to clipboard!');
+    copyToClipboard(shareText);
   };
 
   const handleShare = async () => {

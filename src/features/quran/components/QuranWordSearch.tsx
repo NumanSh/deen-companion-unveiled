@@ -58,7 +58,7 @@ const QuranWordSearch: React.FC = () => {
 
   const handleCopyVerse = (result: SearchResult) => {
     const verseText = `${result.text}\n\n- سورة ${result.chapter_id}، الآية ${result.verse_number}`;
-    copyToClipboard(verseText, 'Verse copied to clipboard');
+    copyToClipboard(verseText);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

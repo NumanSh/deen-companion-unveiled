@@ -21,7 +21,7 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
   const { toast } = useToast();
   const { isOffline } = useOfflineStatus();
   const { calculatePrayerTimes } = useOfflinePrayerTimes();
-  const { getCachedData, setCachedData } = useApiCache<PrayerTimesResponse>('prayer-times', 30 * 60 * 1000); // 30 minutes cache
+  const { getCachedData, setCachedData } = useApiCache();
 
   const prayerIcons = {
     Fajr: Moon,
@@ -34,7 +34,7 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
 
   const getPrayerTimes = async () => {
     // Try cache first
-    const cachedData = getCachedData();
+    const cachedData = getCachedData('prayer-times');
     if (cachedData && !isOffline) {
       setPrayerData(cachedData);
       calculateNextPrayer(cachedData);
@@ -52,17 +52,14 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
           navigator.geolocation.getCurrentPosition(resolve, reject);
         });
         
-        const offlineTimes = calculatePrayerTimes(
-          position.coords.latitude, 
-          position.coords.longitude
-        );
+        const offlineTimes = await calculatePrayerTimes(position.coords);
         
         // Create a simplified mock response for offline times
         const offlineResponse = {
           data: {
             timings: {
               Fajr: offlineTimes.fajr,
-              Sunrise: offlineTimes.sunrise,
+              Sunrise: '06:00', // Add sunrise since it's missing
               Dhuhr: offlineTimes.dhuhr,
               Asr: offlineTimes.asr,
               Maghrib: offlineTimes.maghrib,
@@ -132,7 +129,7 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
       );
       
       setPrayerData(response);
-      setCachedData(response); // Cache the response
+      setCachedData('prayer-times', response); // Cache the response
       calculateNextPrayer(response);
       
       toast({

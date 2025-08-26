@@ -80,7 +80,7 @@ const EnhancedQuranReader: React.FC<EnhancedQuranReaderProps> = ({
     if (arabicVerse) {
       const text = `${arabicVerse.text}\n\n- سورة ${arabicSurah.name}، الآية ${verseNumber}`;
       
-      copyToClipboard(text, `تم نسخ الآية ${verseNumber}`);
+      copyToClipboard(text);
     }
   };
 

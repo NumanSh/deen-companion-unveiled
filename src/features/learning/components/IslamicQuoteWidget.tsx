@@ -64,7 +64,7 @@ const IslamicQuoteWidget: React.FC = () => {
   const handleCopyQuote = () => {
     if (currentQuote) {
       const fullQuote = `"${currentQuote.text}" - ${currentQuote.author}${currentQuote.reference ? ` (${currentQuote.reference})` : ''}`;
-      copyToClipboard(fullQuote, "Quote copied to clipboard");
+      copyToClipboard(fullQuote);
     }
   };
 

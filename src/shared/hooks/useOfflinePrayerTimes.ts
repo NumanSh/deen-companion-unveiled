@@ -19,5 +19,16 @@ export const useOfflinePrayerTimes = () => {
     }, 100);
   };
 
-  return { cachedTimes, loading, loadOfflineTimes };
+  const calculatePrayerTimes = async (location: any) => {
+    // Mock calculation
+    return {
+      fajr: '05:30',
+      dhuhr: '12:30', 
+      asr: '15:45',
+      maghrib: '18:20',
+      isha: '19:45'
+    };
+  };
+
+  return { cachedTimes, loading, loadOfflineTimes, calculatePrayerTimes };
 };

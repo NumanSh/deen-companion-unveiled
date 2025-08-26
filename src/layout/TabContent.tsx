@@ -9,7 +9,7 @@ import { SpiritualHabitStreaks } from '@/features/tracking';
 import { OfflineQuranManager } from '@/features/quran';
 import { SmartDailyRecommendations, SmartLearningPathSuggestions } from '@/features/learning';
 import { PersonalizedPrayerNotifications } from '@/features/prayer';
-import { AdaptiveUIPreferences } from '@/shared';
+// import { AdaptiveUIPreferences } from '@/shared';
 import { VirtualMosqueFinder, EnhancedVirtualStudyCircle, VirtualIslamicStudyGroup, CommunityMentorshipSystem, CommunityPrayerTimeSync } from '@/features/community';
 import { AdvancedCommunityLearningDashboard } from '@/features/learning';
 import { AdvancedIslamicLocationServices } from '@/shared';
@@ -60,14 +60,7 @@ const TabContent: React.FC<TabContentProps> = ({
     case 'community':
       return <CommunityTab />;
     case 'quran':
-      return (
-        <QuranTab
-          onAddToBookmarks={onAddToBookmarks}
-          onSurahRead={onSurahRead}
-          readingSurahs={readingSurahs}
-          isLoading={isLoading}
-        />
-      );
+      return <QuranTab />;
     case 'islamic-library':
       return <div>Islamic Library (Component Moved)</div>;
     case 'offline-quran':
@@ -79,7 +72,7 @@ const TabContent: React.FC<TabContentProps> = ({
     case 'smart-learning-path':
       return <SmartLearningPathSuggestions />;
     case 'adaptive-ui':
-      return <AdaptiveUIPreferences />;
+      return <div>Adaptive UI Preferences (Component Moved)</div>;
     case 'mosque-finder':
       return <VirtualMosqueFinder />;
     case 'study-circle':

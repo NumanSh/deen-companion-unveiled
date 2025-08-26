@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { performanceMonitor } from '@/features/tracking/services/performanceMonitoring';
-import { PerformanceDashboard } from '@/features/tracking';
+// import { PerformanceDashboard } from '@/features/tracking';
 import { MicroInteractionFeedback } from '@/shared';
 import { prayerTimesApi } from '@/features/prayer/services/prayerTimesApi';
 import { prayerNotificationService } from '@/features/prayer/services/prayerNotificationService';
@@ -82,10 +82,11 @@ const App: React.FC = () => {
             <Toaster />
             <MicroInteractionFeedback />
             <KeyboardShortcutsManager />
-            <PerformanceDashboard 
+            {/* Performance Dashboard commented out */}
+            {/* <PerformanceDashboard 
               isVisible={showPerformanceDashboard}
               onClose={() => setShowPerformanceDashboard(false)}
-            />
+            /> */}
           </div>
         </Router>
       </LanguageProvider>

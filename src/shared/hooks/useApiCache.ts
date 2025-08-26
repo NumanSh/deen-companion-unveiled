@@ -15,5 +15,11 @@ export const useApiCache = () => {
     setCache(new Map());
   };
 
-  return { getCached, setCache: setCacheData, clearCache };
+  return { 
+    getCached, 
+    getCachedData: getCached,
+    setCache: setCacheData, 
+    setCachedData: setCacheData,
+    clearCache 
+  };
 };

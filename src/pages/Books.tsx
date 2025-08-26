@@ -8,7 +8,7 @@ import { IslamicHabitBuilder, IslamicHabitVisualization, IslamicBookLibrary } fr
 import { Card } from '@/components/ui/card';
 import { BookOpen, Heart, Search, Star, Target, BarChart3, Library } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { EnhancedFloatingActionsSystem, InteractiveIslamicAchievements } from '@/shared';
+import { EnhancedFloatingActionSystem, InteractiveAchievementSystem } from '@/shared';
 // import { AdvancedReadingAnalyticsDashboard } from '@/features/learning';
 
 const Books = () => {
@@ -135,7 +135,7 @@ const Books = () => {
         <Star className="w-6 h-6 text-yellow-600" />
         نظام الإنجازات التفاعلي
       </h2>
-      <InteractiveIslamicAchievements />
+      <InteractiveAchievementSystem />
     </div>
   );
 
@@ -174,7 +174,7 @@ const Books = () => {
       <FloatingHelpSystem />
 
       {/* Enhanced Floating Actions System */}
-      <EnhancedFloatingActionsSystem />
+      <EnhancedFloatingActionSystem />
 
       {/* Islamic Pattern Background */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">

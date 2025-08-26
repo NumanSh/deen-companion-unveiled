@@ -51,8 +51,7 @@ const QuranReader: React.FC<QuranReaderProps> = ({
     }).join('\n\n');
     
     copyToClipboard(
-      `Surah ${arabicSurah.englishName} (${arabicSurah.englishNameTranslation})\n\n${fullText}`,
-      'Full surah copied to clipboard'
+      `Surah ${arabicSurah.englishName} (${arabicSurah.englishNameTranslation})\n\n${fullText}`
     );
   };
 
