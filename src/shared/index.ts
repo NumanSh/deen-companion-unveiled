@@ -7,16 +7,7 @@ export { default as ErrorBoundary } from './components/ErrorBoundary';
 export { default as ApiErrorBoundary } from './components/ApiErrorBoundary';
 export { default as EnhancedLoadingStates } from './components/EnhancedLoadingStates';
 export { default as IslamicLoadingStates } from './components/IslamicLoadingStates';
-export { default as FloatingActionButton } from './components/FloatingActionButton';
-export { default as FloatingActionMenu } from './components/FloatingActionMenu';
-export { default as FloatingHelpSystem } from './components/FloatingHelpSystem';
-// export { default as FloatingQuickAccess } from './components/FloatingQuickAccess';
-// export { default as FloatingQuickActions } from './components/FloatingQuickActions';
-// export { default as EnhancedFloatingActions } from './components/EnhancedFloatingActions';
-// export { default as EnhancedFloatingActionsSystem } from './components/EnhancedFloatingActionsSystem';
-export { default as EnhancedFloatingActionSystem } from './components/EnhancedFloatingActionSystem';
-// export { default as EnhancedFloatingSystem } from './components/EnhancedFloatingSystem';
-export { default as UnifiedFloatingActions } from './components/UnifiedFloatingActions';
+// Removed complex floating action systems - simplified UI
 export { default as OfflineIndicator } from './components/OfflineIndicator';
 export { default as AccessibilityEnhancements } from './components/AccessibilityEnhancements';
 export { default as SupportUsAdButton } from './components/SupportUsAdButton';
@@ -36,11 +27,7 @@ export { default as KeyboardShortcutsManager } from './components/KeyboardShortc
 export { default as MicroInteractionFeedback } from './components/MicroInteractionFeedback';
 export { default as CustomizableHomeWidgets } from './components/CustomizableHomeWidgets';
 // export { default as AdaptiveUIPreferences } from './components/AdaptiveUIPreferences';
-export { default as AdvancedCommunityAnalytics } from './components/AdvancedCommunityAnalytics';
-export { default as AdvancedIslamicLocationServices } from './components/AdvancedIslamicLocationServices';
-export { default as AdvancedReadingAnalyticsDashboard } from './components/AdvancedReadingAnalyticsDashboard';
-export { default as PersonalizedContentEngine } from './components/PersonalizedContentEngine';
-export { default as PersonalizedRecommendations } from './components/PersonalizedRecommendations';
+// Removed complex analytics components - focusing on core functionality
 export { default as ProgressIndicator } from './components/ProgressIndicator';
 export { default as QuickAccessWidget } from './components/QuickAccessWidget';
 export { default as QuickActionShortcuts } from './components/QuickActionShortcuts';

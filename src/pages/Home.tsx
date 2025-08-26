@@ -2,9 +2,8 @@
 import React from 'react';
 import { BottomTabBar } from '@/layout';
 // import { EnhancedDashboard } from '@/features/tracking';
-import { NewUserWelcome } from '@/shared';
-import { CustomizableHomeWidgets } from '@/shared';
-import { EnhancedFloatingActionSystem } from '@/shared';
+import { NewUserWelcome, CustomizableHomeWidgets } from '@/shared';
+import SimpleFloatingMenu from '@/components/SimpleFloatingMenu';
 import { SupportUsAdButton } from '@/shared';
 
 const Home = () => {
@@ -43,7 +42,7 @@ const Home = () => {
         </div>
       </div>
       
-      <EnhancedFloatingActionSystem />
+      <SimpleFloatingMenu />
       <BottomTabBar />
     </div>
   );

@@ -2,13 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { BottomTabBar } from '@/layout';
 import { TabNavigation, TabContent } from '@/layout';
-import { EnhancedOnboarding, FloatingHelpSystem, EnhancedSearchExperience } from '@/shared';
+import { EnhancedOnboarding, EnhancedSearchExperience } from '@/shared';
 import { SmartNotificationSystem } from '@/features/learning';
 import { IslamicHabitBuilder, IslamicHabitVisualization, IslamicBookLibrary } from '@/features/tracking';
 import { Card } from '@/components/ui/card';
 import { BookOpen, Heart, Search, Star, Target, BarChart3, Library } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { EnhancedFloatingActionSystem, InteractiveAchievementSystem } from '@/shared';
+import { InteractiveAchievementSystem } from '@/shared';
+import SimpleFloatingMenu from '@/components/SimpleFloatingMenu';
 // import { AdvancedReadingAnalyticsDashboard } from '@/features/learning';
 
 const Books = () => {
@@ -170,11 +171,8 @@ const Books = () => {
       {/* Enhanced Search Experience */}
       <EnhancedSearchExperience />
 
-      {/* Floating Help System */}
-      <FloatingHelpSystem />
-
       {/* Enhanced Floating Actions System */}
-      <EnhancedFloatingActionSystem />
+      <SimpleFloatingMenu />
 
       {/* Islamic Pattern Background */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">

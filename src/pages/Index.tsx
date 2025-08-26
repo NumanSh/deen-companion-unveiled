@@ -17,8 +17,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useToast } from '@/hooks/use-toast';
 import { BottomTabBar, ModernHeader } from "@/layout";
-import { InteractiveAchievementSystem, EnhancedFloatingActionSystem, ModernCard } from "@/shared";
-// import { SmartPersonalizationDashboard, SmartReadingAnalytics } from "@/shared";
+import { InteractiveAchievementSystem, ModernCard } from "@/shared";
+import SimpleFloatingMenu from "@/components/SimpleFloatingMenu";
 import { QuranicVerseOfDay } from "@/features/quran";
 import { IslamicQuoteWidget } from "@/features/learning";
 import { PrayerTimesWidget } from "@/features/prayer";
@@ -226,7 +226,7 @@ const Index = () => {
         </div>
       </div>
       
-      <EnhancedFloatingActionSystem />
+      <SimpleFloatingMenu />
       <BottomTabBar />
     </div>
   );

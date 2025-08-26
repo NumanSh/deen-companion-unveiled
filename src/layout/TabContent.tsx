@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import DashboardTab from '@/components/tabs/DashboardTab';
+import SimpleDashboardTab from '@/components/tabs/SimpleDashboardTab';
 import HabitsTab from '@/components/tabs/HabitsTab';
 import DiscoverTab from '@/components/tabs/DiscoverTab';
 import QuranTab from '@/components/tabs/QuranTab';
@@ -12,7 +12,7 @@ import { PersonalizedPrayerNotifications } from '@/features/prayer';
 // import { AdaptiveUIPreferences } from '@/shared';
 import { VirtualMosqueFinder, EnhancedVirtualStudyCircle, VirtualIslamicStudyGroup, CommunityMentorshipSystem, CommunityPrayerTimeSync } from '@/features/community';
 import { AdvancedCommunityLearningDashboard } from '@/features/learning';
-import { AdvancedIslamicLocationServices } from '@/shared';
+// import { AdvancedIslamicLocationServices } from '@/shared';
 import {
   HadithTab,
   AdhkarTab,
@@ -50,7 +50,7 @@ const TabContent: React.FC<TabContentProps> = ({
 
   switch (activeTab) {
     case 'dashboard':
-      return <DashboardTab />;
+      return <SimpleDashboardTab />;
     case 'habits':
       return <SpiritualHabitStreaks />;
     case 'discover':
@@ -106,11 +106,11 @@ const TabContent: React.FC<TabContentProps> = ({
     case 'community-learning-dashboard':
       return <AdvancedCommunityLearningDashboard />;
     case 'advanced-location-services':
-      return <AdvancedIslamicLocationServices />;
+      return <div>Advanced Location Services (Component Moved)</div>;
     case 'enhanced-community-features':
       return <div>Enhanced Community Features (Component Moved)</div>;
     default:
-      return <DashboardTab />;
+      return <SimpleDashboardTab />;
   }
 };
 

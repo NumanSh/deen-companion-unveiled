@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { PrayerTimesWidget } from '@/features/prayer';
 import { QuranicWordLearning } from '@/features/quran';
 import { SmartLearningDashboard, AdvancedAnalyticsDashboard } from '@/features/learning';
-import { UnifiedFloatingActions } from '@/shared';
 
 const DashboardTab = () => {
   const navigate = useNavigate();
@@ -171,8 +170,7 @@ const DashboardTab = () => {
         </CardContent>
       </Card>
 
-      {/* Unified Floating Actions Widget */}
-      <UnifiedFloatingActions />
+      {/* Quick Actions section provides floating action functionality */}
     </div>
   );
 };
