@@ -1,8 +1,9 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, Clock, Heart, Calendar, TrendingUp } from 'lucide-react';
+import { BookOpen, Clock, Heart, Calendar, TrendingUp, Navigation } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import QuickFeatureCards from '@/components/QuickFeatureCards';
 
 const SimpleDashboardTab: React.FC = () => {
   const navigate = useNavigate();
@@ -15,9 +16,10 @@ const SimpleDashboardTab: React.FC = () => {
   ];
 
   const quickActions = [
-    { title: 'Continue Reading', description: 'Surah Al-Baqarah', action: () => navigate('/quran'), icon: BookOpen },
-    { title: 'Next Prayer', description: 'Maghrib in 2h 15m', action: () => navigate('/prayer'), icon: Clock },
-    { title: 'Daily Duas', description: 'Morning supplications', action: () => navigate('/athkar'), icon: Heart },
+    { title: 'Continue Reading', description: 'Surah Al-Baqarah', action: () => navigate('/'), icon: BookOpen },
+    { title: 'Next Prayer', description: 'Maghrib in 2h 15m', action: () => navigate('/'), icon: Clock },
+    { title: 'Qibla Direction', description: 'Find direction to Mecca', action: () => navigate('/qibla'), icon: Navigation },
+    { title: 'Daily Quotes', description: 'Islamic wisdom & inspiration', action: () => navigate('/quotes'), icon: Heart },
   ];
 
   return (
@@ -46,6 +48,13 @@ const SimpleDashboardTab: React.FC = () => {
           </Card>
         ))}
       </div>
+
+      {/* New Features */}
+      <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border-indigo-200 dark:border-indigo-800">
+        <CardContent className="p-6">
+          <QuickFeatureCards />
+        </CardContent>
+      </Card>
 
       {/* Quick Actions */}
       <Card>

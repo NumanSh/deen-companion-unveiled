@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, BookOpen, Clock, Heart, Calendar } from 'lucide-react';
+import { Plus, BookOpen, Clock, Heart, Calendar, Navigation, Quote } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const SimpleFloatingMenu: React.FC = () => {
@@ -8,9 +8,11 @@ const SimpleFloatingMenu: React.FC = () => {
   const navigate = useNavigate();
 
   const quickActions = [
-    { icon: BookOpen, label: 'Read Quran', path: '/quran' },
-    { icon: Clock, label: 'Prayer Times', path: '/prayer' },
-    { icon: Heart, label: 'Duas & Dhikr', path: '/athkar' },
+    { icon: BookOpen, label: 'Read Quran', path: '/' },
+    { icon: Clock, label: 'Prayer Times', path: '/' },
+    { icon: Heart, label: 'Duas & Dhikr', path: '/' },
+    { icon: Navigation, label: 'Qibla Compass', path: '/qibla' },
+    { icon: Quote, label: 'Islamic Quotes', path: '/quotes' },
     { icon: Calendar, label: 'Islamic Calendar', path: '/calendar' },
   ];
 

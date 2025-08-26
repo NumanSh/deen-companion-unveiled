@@ -17,6 +17,9 @@ import './App.css';
 const Index = lazy(() => import('./pages/Index'));
 const Home = lazy(() => import('./pages/Home'));
 const Books = lazy(() => import('./pages/Books'));
+const QiblaCompass = lazy(() => import('./pages/QiblaCompass'));
+const IslamicQuotes = lazy(() => import('./pages/IslamicQuotes'));
+const IslamicCalendar = lazy(() => import('./pages/IslamicCalendar'));
 const Calendar = lazy(() => import('./pages/Calendar'));
 const PrayerTimes = lazy(() => import('./pages/PrayerTimes'));
 const Settings = lazy(() => import('./pages/Settings'));
@@ -73,7 +76,9 @@ const App: React.FC = () => {
                 <Route path="/" element={<Index />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/books" element={<Books />} />
-                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/qibla" element={<QiblaCompass />} />
+                <Route path="/quotes" element={<IslamicQuotes />} />
+                <Route path="/calendar" element={<IslamicCalendar />} />
                 <Route path="/prayer-times" element={<PrayerTimes />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="*" element={<NotFound />} />
