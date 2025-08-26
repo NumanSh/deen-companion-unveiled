@@ -17,7 +17,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useToast } from '@/hooks/use-toast';
 import { BottomTabBar, ModernHeader } from "@/layout";
-import { SmartPersonalizationDashboard, InteractiveAchievementSystem, SmartReadingAnalytics, EnhancedFloatingActionSystem, ModernCard } from "@/shared";
+import { InteractiveAchievementSystem, EnhancedFloatingActionSystem, ModernCard } from "@/shared";
+// import { SmartPersonalizationDashboard, SmartReadingAnalytics } from "@/shared";
 import { QuranicVerseOfDay } from "@/features/quran";
 import { IslamicQuoteWidget } from "@/features/learning";
 import { PrayerTimesWidget } from "@/features/prayer";
@@ -92,7 +93,7 @@ const Index = () => {
       id: 'dashboard',
       label: 'Dashboard',
       icon: TrendingUp,
-      component: <SmartPersonalizationDashboard />
+      component: <div>Dashboard coming soon</div>
     },
     {
       id: 'achievements',
@@ -104,7 +105,7 @@ const Index = () => {
       id: 'analytics',
       label: 'Analytics',
       icon: BarChart3,
-      component: <SmartReadingAnalytics />
+      component: <div>Analytics coming soon</div>
     }
   ];
 

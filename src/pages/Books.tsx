@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import { BookOpen, Heart, Search, Star, Target, BarChart3, Library } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { EnhancedFloatingActionsSystem, InteractiveIslamicAchievements } from '@/shared';
-import { AdvancedReadingAnalyticsDashboard } from '@/features/learning';
+// import { AdvancedReadingAnalyticsDashboard } from '@/features/learning';
 
 const Books = () => {
   const { toast } = useToast();
@@ -145,7 +145,7 @@ const Books = () => {
         <BarChart3 className="w-6 h-6 text-blue-600" />
         تحليلات القراءة المتقدمة
       </h2>
-      <AdvancedReadingAnalyticsDashboard />
+      <div>Analytics dashboard coming soon</div>
     </div>
   );
 

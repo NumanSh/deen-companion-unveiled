@@ -1,6 +1,7 @@
 // Community Feature - Barrel Exports
 
-// Components
+export { default as CommunityPrayerRequests } from './components/CommunityPrayerRequests';
+export { default as CommunityPrayerTimeSync } from './components/CommunityPrayerTimeSync';
 export { default as VirtualStudyCircle } from './components/VirtualStudyCircle';
 export { default as VirtualIslamicStudyGroup } from './components/VirtualIslamicStudyGroup';
 export { default as VirtualMosqueFinder } from './components/VirtualMosqueFinder';

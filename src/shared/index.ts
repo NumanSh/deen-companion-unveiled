@@ -54,11 +54,10 @@ export { default as FiqhQASection } from './components/FiqhQASection';
 export { default as SmartBookmarksCollections } from './components/SmartBookmarksCollections';
 export * from './hooks/useOptimizedSearch';
 
-// Hooks
-export { default as useMobile } from './hooks/use-mobile';
+// Hooks  
+export { useIsMobile as useMobile } from './hooks/use-mobile';
+export { useCopyToClipboard } from './hooks/useCopyToClipboard';
 export { default as useOfflineStatus } from './hooks/useOfflineStatus';
-export { default as useCopyToClipboard } from './hooks/useCopyToClipboard';
-export { default as usePerformanceOptimizations } from './hooks/usePerformanceOptimizations';
 export { default as useHijriDate } from './hooks/useHijriDate';
 export { useToast } from './hooks/use-toast';
 

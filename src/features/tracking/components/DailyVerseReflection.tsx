@@ -22,8 +22,14 @@ interface VerseReflection {
   mood: string;
 }
 
+interface DailyVerse {
+  arabic: string;
+  translation: string;
+  reference: string;
+}
+
 const DailyVerseReflection: React.FC = () => {
-  const [currentVerse, setCurrentVerse] = useState<unknown>(null);
+  const [currentVerse, setCurrentVerse] = useState<DailyVerse | null>(null);
   const [reflection, setReflection] = useState('');
   const [mood, setMood] = useState('peaceful');
   const [savedReflections, setSavedReflections] = useState<VerseReflection[]>([]);

@@ -34,8 +34,8 @@ const DailyProgress: React.FC = () => {
       const savedTasks = localStorage.getItem(`dailyTasks_${today}`);
       
       if (savedTasks) {
-        const parsedTasks = JSON.parse(savedTasks);
-        setDailyTasks(parsedTasks.map((task: unknown) => ({
+        const parsedTasks = JSON.parse(savedTasks) as DailyTask[];
+        setDailyTasks(parsedTasks.map((task: DailyTask) => ({
           ...task,
           completedAt: task.completedAt ? new Date(task.completedAt) : undefined,
           icon: getTaskIcon(task.id)
