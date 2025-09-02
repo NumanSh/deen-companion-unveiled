@@ -35,8 +35,14 @@ const queryClient = new QueryClient({
 });
 
 const LoadingFallback = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-teal-600"></div>
+  <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50">
+    <div className="text-center space-y-4">
+      <div className="animate-spin rounded-full h-16 w-16 border-4 border-teal-200 border-t-teal-600 mx-auto"></div>
+      <div className="space-y-2">
+        <p className="text-lg font-semibold text-teal-700">Loading Islamic App...</p>
+        <p className="text-sm text-teal-600">بسم الله الرحمن الرحيم</p>
+      </div>
+    </div>
   </div>
 );
 
@@ -44,25 +50,40 @@ const App: React.FC = () => {
   const [showPerformanceDashboard, setShowPerformanceDashboard] = useState(false);
 
   useEffect(() => {
-    // Initialize prayer times cache on app start
-    prayerTimesApi.initializePrayerTimesCache();
-    
-    // Initialize prayer notification service
-    prayerNotificationService.initialize().catch(error => {
-      console.error('Failed to initialize prayer notification service:', error);
-    });
+    // Initialize services asynchronously without blocking UI
+    const initializeServices = async () => {
+      try {
+        // Initialize prayer times cache (non-blocking)
+        prayerTimesApi.initializePrayerTimesCache().catch(error => {
+          console.log('Prayer times cache initialization deferred:', error.message);
+        });
+        
+        // Initialize prayer notification service (non-blocking)
+        prayerNotificationService.initialize().catch(error => {
+          console.log('Prayer notification service initialization deferred:', error.message);
+        });
 
-    // Initialize voice-guided prayer service
-    voiceGuidedPrayerService.initialize();
+        // Initialize voice-guided prayer service (non-blocking)
+        try {
+          voiceGuidedPrayerService.initialize();
+        } catch (error) {
+          console.log('Voice service initialization deferred:', error);
+        }
+      } catch (error) {
+        console.log('Service initialization deferred:', error);
+      }
+    };
 
-    // Show performance dashboard in development mode
-    if (process.env.NODE_ENV === 'development') {
-      setShowPerformanceDashboard(true);
-    }
+    // Run initialization after UI loads
+    setTimeout(initializeServices, 100);
 
     // Cleanup performance monitor on unmount
     return () => {
-      performanceMonitor.destroy();
+      try {
+        performanceMonitor.destroy();
+      } catch (error) {
+        console.log('Performance monitor cleanup completed');
+      }
     };
   }, []);
 

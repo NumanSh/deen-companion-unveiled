@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from '@/hooks/use-toast';
 import { BottomTabBar, ModernHeader } from "@/layout";
 import { InteractiveAchievementSystem, ModernCard } from "@/shared";
+import SafeErrorBoundary from "@/components/SafeErrorBoundary";
 import SimpleFloatingMenu from "@/components/SimpleFloatingMenu";
 import { QuranicVerseOfDay } from "@/features/quran";
 import { IslamicQuoteWidget } from "@/features/learning";
@@ -146,7 +147,9 @@ const Index = () => {
           <div className="md:col-span-8 lg:col-span-9 space-y-6">
             {/* Dynamic Section Content */}
             <div className="animate-fade-in">
-              {sections.find(s => s.id === activeSection)?.component}
+              <SafeErrorBoundary>
+                {sections.find(s => s.id === activeSection)?.component}
+              </SafeErrorBoundary>
             </div>
 
             {/* Enhanced Quick Actions */}
@@ -188,15 +191,21 @@ const Index = () => {
 
             {/* Daily Content */}
             <div className="space-y-4">
-              <QuranicVerseOfDay />
-              <IslamicQuoteWidget />
+              <SafeErrorBoundary>
+                <QuranicVerseOfDay />
+              </SafeErrorBoundary>
+              <SafeErrorBoundary>
+                <IslamicQuoteWidget />
+              </SafeErrorBoundary>
             </div>
           </div>
 
           {/* Right/Sidebar column */}
           <div className="md:col-span-4 lg:col-span-3 space-y-6">
             {/* Prayer Times */}
-            <PrayerTimesWidget />
+            <SafeErrorBoundary>
+              <PrayerTimesWidget />
+            </SafeErrorBoundary>
 
             {/* Enhanced Progress Summary */}
             <ModernCard

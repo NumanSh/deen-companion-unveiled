@@ -72,8 +72,12 @@ const QuranicVerseOfDay = () => {
       setCurrentDate(new Date());
     }, 1000);
 
-    // Fetch verse of the day on component mount
-    fetchVerseOfDay();
+    // Fetch verse of the day on component mount with delay to prevent blocking
+    setTimeout(() => {
+      fetchVerseOfDay().catch(error => {
+        console.log('Using default verse, API fetch deferred');
+      });
+    }, 500);
 
     return () => clearInterval(timer);
   }, []);
