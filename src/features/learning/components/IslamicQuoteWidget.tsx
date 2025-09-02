@@ -53,7 +53,7 @@ const IslamicQuoteWidget: React.FC = () => {
     // Set a random quote on component mount
     const randomQuote = islamicQuotes[Math.floor(Math.random() * islamicQuotes.length)];
     setCurrentQuote(randomQuote);
-  }, []); // TODO: Add missing dependencies
+  }, [islamicQuotes.length]); // Fixed dependencies
 
   const getNewQuote = () => {
     const randomQuote = islamicQuotes[Math.floor(Math.random() * islamicQuotes.length)];

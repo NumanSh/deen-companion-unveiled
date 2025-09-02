@@ -5,9 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Clock, MapPin, Loader2, Sun, Moon, Sunrise, Sunset } from 'lucide-react';
 import { prayerTimesApi, PrayerTimesResponse } from '@/features/prayer/services/prayerTimesApi';
 import { useToast } from '@/hooks/use-toast';
-import { ErrorBoundary, ApiErrorBoundary, EnhancedLoadingStates, OfflineIndicator } from '@/shared';
-import { PrayerApiErrorHandler } from '@/shared';
-import { useOfflineStatus, useOfflinePrayerTimes, useApiCache } from '@/shared';
+import { OfflineIndicator } from '@/shared';
+import SimpleOfflineIndicator from '@/shared/components/SimpleOfflineIndicator';
 
 interface PrayerTimesWidgetProps {
   showQibla?: boolean;
@@ -18,10 +17,8 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
   const [isLoading, setIsLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [nextPrayer, setNextPrayer] = useState<{ name: string; time: string } | null>(null);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const { toast } = useToast();
-  const { isOffline } = useOfflineStatus();
-  const { calculatePrayerTimes } = useOfflinePrayerTimes();
-  const { getCachedData, setCachedData } = useApiCache();
 
   const prayerIcons = {
     Fajr: Moon,
@@ -33,103 +30,38 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
   };
 
   const getPrayerTimes = async () => {
-    // Try cache first
-    const cachedData = getCachedData('prayer-times');
+    // Simple cache using localStorage
+    const cacheKey = 'prayer-times-cache';
+    const cachedData = localStorage.getItem(cacheKey);
+    
     if (cachedData && !isOffline) {
-      setPrayerData(cachedData);
-      calculateNextPrayer(cachedData);
-      return;
-    }
-
-    if (isOffline) {
-      // Use offline calculation
       try {
-        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-          if (!navigator.geolocation) {
-            reject(new Error('Geolocation not supported'));
-            return;
-          }
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-        
-        const offlineTimes = await calculatePrayerTimes(position.coords);
-        
-        // Create a simplified mock response for offline times
-        const offlineResponse = {
-          data: {
-            timings: {
-              Fajr: offlineTimes.fajr,
-              Sunrise: '06:00', // Add sunrise since it's missing
-              Dhuhr: offlineTimes.dhuhr,
-              Asr: offlineTimes.asr,
-              Maghrib: offlineTimes.maghrib,
-              Isha: offlineTimes.isha
-            },
-            date: {
-              readable: new Date().toLocaleDateString(),
-              hijri: {
-                date: '1',
-                month: { en: 'Muharram', ar: 'محرم' },
-                year: '1446'
-              }
-            },
-            meta: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-              method: { id: 0, name: 'Offline Calculation' }
-            }
-          }
-        } as PrayerTimesResponse;
-        
-        setPrayerData(offlineResponse);
-        calculateNextPrayer(offlineResponse);
-        
-        toast({
-          title: 'Offline Prayer Times',
-          description: 'Using approximate prayer times (offline mode)',
-          duration: 3000
-        });
-        
+        const parsed = JSON.parse(cachedData);
+        setPrayerData(parsed);
+        calculateNextPrayer(parsed);
         return;
       } catch (error) {
-        toast({
-          title: 'Location Error',
-          description: 'Cannot get location for offline prayer times',
-          variant: 'destructive'
-        });
-        return;
+        // Clear invalid cache
+        localStorage.removeItem(cacheKey);
       }
+    }
+
+    if (isOffline || !navigator.onLine) {
+      toast({
+        title: 'Offline Mode',
+        description: 'Cannot get current prayer times. Please check your connection.',
+        variant: 'destructive'
+      });
+      return;
     }
 
     setIsLoading(true);
     try {
-      const coords = await PrayerApiErrorHandler.withRetry(
-        () => prayerTimesApi.getCurrentLocation(),
-        { maxRetries: 2 },
-        (attempt, error) => {
-          toast({
-            title: 'Retrying Location',
-            description: `Attempt ${attempt}: ${error.message}`,
-            duration: 2000
-          });
-        }
-      );
-      
-      const response = await PrayerApiErrorHandler.withRetry(
-        () => prayerTimesApi.getPrayerTimes(coords.latitude, coords.longitude),
-        { maxRetries: 3 },
-        (attempt, error) => {
-          toast({
-            title: 'Retrying Prayer Times',
-            description: `Attempt ${attempt}: ${error.message}`,
-            duration: 2000
-          });
-        }
-      );
+      const coords = await prayerTimesApi.getCurrentLocation();
+      const response = await prayerTimesApi.getPrayerTimes(coords.latitude, coords.longitude);
       
       setPrayerData(response);
-      setCachedData('prayer-times', response); // Cache the response
+      localStorage.setItem(cacheKey, JSON.stringify(response)); // Cache the response
       calculateNextPrayer(response);
       
       toast({
@@ -138,8 +70,11 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
       });
     } catch (error) {
       console.error('Error fetching prayer times:', error);
-      const apiError = PrayerApiErrorHandler.parseError(error);
-      toast(PrayerApiErrorHandler.getErrorToast(apiError));
+      toast({
+        title: 'Error',
+        description: 'Could not get prayer times. Please try again.',
+        variant: 'destructive'
+      });
     } finally {
       setIsLoading(false);
     }
@@ -206,132 +141,140 @@ const PrayerTimesWidget: React.FC<PrayerTimesWidgetProps> = ({ showQibla = true 
       }
     }, 60000);
 
-    return () => clearInterval(timer);
+    // Handle online/offline status
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
   }, [prayerData]);
 
   return (
-    <ErrorBoundary section="Prayer Times Widget">
-      <ApiErrorBoundary 
-        apiName="Prayer Times API" 
-        fallbackData={prayerData}
-        onRetry={getPrayerTimes}
-      >
-        {isOffline && (
-          <OfflineIndicator 
-            className="mb-4" 
-            onRetry={getPrayerTimes}
-          />
-        )}
-        
-        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-blue-600" />
-                Prayer Times
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={getPrayerTimes}
-                disabled={isLoading}
-                aria-label={isLoading ? 'Loading prayer times' : 'Refresh prayer times'}
-                title={isLoading ? 'Loading prayer times' : 'Refresh prayer times'}
+    <div className="space-y-4">
+      {isOffline && (
+        <SimpleOfflineIndicator 
+          className="mb-4" 
+          onRetry={getPrayerTimes}
+        />
+      )}
+      
+      <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Clock className="w-5 h-5 text-blue-600" />
+              Prayer Times
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={getPrayerTimes}
+              disabled={isLoading}
+              aria-label={isLoading ? 'Loading prayer times' : 'Refresh prayer times'}
+              title={isLoading ? 'Loading prayer times' : 'Refresh prayer times'}
+            >
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <MapPin className="w-4 h-4" />
+              )}
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {isLoading && (
+            <div className="text-center py-4">
+              <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2" />
+              <p className="text-sm text-gray-600">Loading prayer times...</p>
+            </div>
+          )}
+
+          {!prayerData && !isLoading && (
+            <div className="text-center py-4">
+              <Button 
+                onClick={getPrayerTimes} 
+                className="bg-blue-600 hover:bg-blue-700"
+                aria-label="Get prayer times for your location"
               >
-                {isLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <MapPin className="w-4 h-4" />
-                )}
+                <MapPin className="w-4 h-4 mr-2" />
+                Get Prayer Times
               </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {isLoading && (
-              <EnhancedLoadingStates type="prayer-times" title="Loading prayer times..." />
-            )}
+            </div>
+          )}
 
-            {!prayerData && !isLoading && (
-              <div className="text-center py-4">
-                <Button 
-                  onClick={getPrayerTimes} 
-                  className="bg-blue-600 hover:bg-blue-700"
-                  aria-label="Get prayer times for your location"
-                >
-                  <MapPin className="w-4 h-4 mr-2" />
-                  Get Prayer Times
-                </Button>
+          {nextPrayer && (
+            <div className="bg-blue-100 dark:bg-blue-800 p-4 rounded-lg text-center">
+              <p className="text-sm text-blue-700 dark:text-blue-300">Next Prayer</p>
+              <p className="text-xl font-bold text-blue-900 dark:text-blue-100">
+                {nextPrayer.name} - {formatTime(nextPrayer.time)}
+              </p>
+              <p className="text-sm text-blue-600 dark:text-blue-400">
+                in {getTimeUntilNext()}
+              </p>
+            </div>
+          )}
+
+          {prayerData && !isLoading && (
+            <div className="space-y-3">
+              <div className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                {prayerData.data.date.readable}
+                {isOffline && (
+                  <span className="block text-xs text-orange-600 dark:text-orange-400 mt-1">
+                    (Cached data - offline mode)
+                  </span>
+                )}
               </div>
-            )}
-
-            {nextPrayer && (
-              <div className="bg-blue-100 dark:bg-blue-800 p-4 rounded-lg text-center">
-                <p className="text-sm text-blue-700 dark:text-blue-300">Next Prayer</p>
-                <p className="text-xl font-bold text-blue-900 dark:text-blue-100">
-                  {nextPrayer.name} - {formatTime(nextPrayer.time)}
-                </p>
-                <p className="text-sm text-blue-600 dark:text-blue-400">
-                  in {getTimeUntilNext()}
-                </p>
-              </div>
-            )}
-
-            {prayerData && !isLoading && (
-              <div className="space-y-3">
-                <div className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                  {prayerData.data.date.readable}
-                  {isOffline && (
-                    <span className="block text-xs text-orange-600 dark:text-orange-400 mt-1">
-                      (Approximate times - offline mode)
-                    </span>
-                  )}
-                </div>
-                
-                {Object.entries(prayerData.data.timings)
-                  .filter(([name]) => ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].includes(name))
-                  .map(([name, time]) => {
-                    const Icon = prayerIcons[name as keyof typeof prayerIcons];
-                    const isNext = nextPrayer?.name === name;
-                    
-                    return (
-                      <div
-                        key={name}
-                        className={`flex items-center justify-between p-3 rounded-lg transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 ${
-                          isNext 
-                            ? 'bg-blue-200 dark:bg-blue-700' 
-                            : 'bg-white dark:bg-gray-800'
-                        }`}
-                        tabIndex={0}
-                        role="listitem"
-                        aria-label={`${name} prayer at ${formatTime(time)}${isNext ? ' - next prayer' : ''}`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <Icon 
-                            className={`w-5 h-5 ${isNext ? 'text-blue-700 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400'}`}
-                            aria-hidden="true"
-                          />
-                          <span className={`font-medium ${isNext ? 'text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`}>
-                            {name}
-                          </span>
-                        </div>
-                        <span className={`font-mono ${isNext ? 'text-blue-800 dark:text-blue-200' : 'text-gray-700 dark:text-gray-300'}`}>
-                          {formatTime(time)}
+              
+              {Object.entries(prayerData.data.timings)
+                .filter(([name]) => ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].includes(name))
+                .map(([name, time]) => {
+                  const Icon = prayerIcons[name as keyof typeof prayerIcons];
+                  const isNext = nextPrayer?.name === name;
+                  
+                  return (
+                    <div
+                      key={name}
+                      className={`flex items-center justify-between p-3 rounded-lg transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 ${
+                        isNext 
+                          ? 'bg-blue-200 dark:bg-blue-700' 
+                          : 'bg-white dark:bg-gray-800'
+                      }`}
+                      tabIndex={0}
+                      role="listitem"
+                      aria-label={`${name} prayer at ${formatTime(time)}${isNext ? ' - next prayer' : ''}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon 
+                          className={`w-5 h-5 ${isNext ? 'text-blue-700 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400'}`}
+                          aria-hidden="true"
+                        />
+                        <span className={`font-medium ${isNext ? 'text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`}>
+                          {name}
                         </span>
                       </div>
-                    );
-                  })}
-              </div>
-            )}
+                      <span className={`font-mono ${isNext ? 'text-blue-800 dark:text-blue-200' : 'text-gray-700 dark:text-gray-300'}`}>
+                        {formatTime(time)}
+                      </span>
+                    </div>
+                  );
+                })}
+            </div>
+          )}
 
-            {prayerData && (
-              <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                Location: {prayerData.data.meta.latitude.toFixed(2)}, {prayerData.data.meta.longitude.toFixed(2)}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </ApiErrorBoundary>
-    </ErrorBoundary>
+          {prayerData && (
+            <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
+              Location: {prayerData.data.meta.latitude.toFixed(2)}, {prayerData.data.meta.longitude.toFixed(2)}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

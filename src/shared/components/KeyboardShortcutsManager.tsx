@@ -179,7 +179,7 @@ const KeyboardShortcutsManager: React.FC = () => {
     ];
 
     setShortcuts(defaultShortcuts);
-  }, [navigate, toast]);
+  }, []); // Remove dependencies that cause infinite loops
 
   // Handle keyboard events
   useEffect(() => {
