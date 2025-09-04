@@ -134,6 +134,22 @@ const translations = {
     'remaining': 'Remaining',
     'complete': 'Complete',
 
+    // Habit Builder translations
+    'morning-adhkar': 'Morning Adhkar',
+    'recite-morning-remembrance': 'Recite morning remembrance of Allah',
+    'read-quran': 'Read Quran',
+    'read-one-page-daily': 'Read one page of Quran daily',
+    'make-dua-parents': 'Make Dua for Parents',
+    'remember-parents-prayers': 'Remember parents in prayers',
+    'habit-completed': 'Habit Completed',
+    'streak-days': 'streak days',
+    'level-up': 'Level Up',
+    'reached-level': 'reached level',
+    'worship': 'Worship',
+    'knowledge': 'Knowledge',
+    'character': 'Character',
+    'health': 'Health',
+
     // Tab navigation
     'dashboard': 'Dashboard',
     'quran': 'Quran',
@@ -269,6 +285,22 @@ const translations = {
     'next': 'التالي',
     'remaining': 'المتبقي',
     'complete': 'مكتمل',
+
+    // Habit Builder translations
+    'morning-adhkar': 'أذكار الصباح',
+    'recite-morning-remembrance': 'تلاوة أذكار الصباح',
+    'read-quran': 'قراءة القرآن',
+    'read-one-page-daily': 'قراءة صفحة من القرآن يومياً',
+    'make-dua-parents': 'الدعاء للوالدين',
+    'remember-parents-prayers': 'ذكر الوالدين في الصلوات',
+    'habit-completed': 'تم إنجاز العادة',
+    'streak-days': 'أيام متتالية',
+    'level-up': 'ارتقاء مستوى',
+    'reached-level': 'وصل للمستوى',
+    'worship': 'عبادة',
+    'knowledge': 'معرفة',
+    'character': 'أخلاق',
+    'health': 'صحة',
 
     // Tab navigation
     'dashboard': 'لوحة التحكم',

@@ -98,6 +98,13 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange })
       icon: Bookmark, 
       badge: null,
       description: 'المحتوى المحفوظ'
+    },
+    { 
+      id: 'islamic-library', 
+      label: 'المكتبة', 
+      icon: BookOpen, 
+      badge: null,
+      description: 'المكتبة الإسلامية الرقمية'
     }
   ];
 

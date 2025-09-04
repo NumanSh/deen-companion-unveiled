@@ -10,6 +10,7 @@ import { BookOpen, Heart, Search, Star, Target, BarChart3, Library } from 'lucid
 import { useToast } from '@/hooks/use-toast';
 import { InteractiveAchievementSystem } from '@/shared';
 import SimpleFloatingMenu from '@/components/SimpleFloatingMenu';
+import SafeErrorBoundary from '@/components/SafeErrorBoundary';
 // import { AdvancedReadingAnalyticsDashboard } from '@/features/learning';
 
 const Books = () => {
@@ -110,34 +111,38 @@ const Books = () => {
   }, []);
 
   const renderHabitsContent = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
-          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-            <Target className="w-6 h-6 text-amber-600" />
-            بناء العادات الإسلامية
-          </h2>
-          <IslamicHabitBuilder />
-        </div>
-        <div>
-          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-purple-600" />
-            تصور التقدم
-          </h2>
-          <IslamicHabitVisualization />
+    <SafeErrorBoundary fallback={<div className="p-8 text-center">Loading habits...</div>}>
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
+            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+              <Target className="w-6 h-6 text-amber-600" />
+              بناء العادات الإسلامية
+            </h2>
+            <IslamicHabitBuilder />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+              <BarChart3 className="w-6 h-6 text-purple-600" />
+              تصور التقدم
+            </h2>
+            <IslamicHabitVisualization />
+          </div>
         </div>
       </div>
-    </div>
+    </SafeErrorBoundary>
   );
 
   const renderAchievementsContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-        <Star className="w-6 h-6 text-yellow-600" />
-        نظام الإنجازات التفاعلي
-      </h2>
-      <InteractiveAchievementSystem />
-    </div>
+    <SafeErrorBoundary fallback={<div className="p-8 text-center">Loading achievements...</div>}>
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+          <Star className="w-6 h-6 text-yellow-600" />
+          نظام الإنجازات التفاعلي
+        </h2>
+        <InteractiveAchievementSystem />
+      </div>
+    </SafeErrorBoundary>
   );
 
   const renderAnalyticsContent = () => (
@@ -151,13 +156,15 @@ const Books = () => {
   );
 
   const renderIslamicLibraryContent = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-        <Library className="w-6 h-6 text-emerald-600" />
-        المكتبة الإسلامية الرقمية
-      </h2>
-      <IslamicBookLibrary />
-    </div>
+    <SafeErrorBoundary fallback={<div className="p-8 text-center">Loading library...</div>}>
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+          <Library className="w-6 h-6 text-emerald-600" />
+          المكتبة الإسلامية الرقمية
+        </h2>
+        <IslamicBookLibrary />
+      </div>
+    </SafeErrorBoundary>
   );
 
   return (
